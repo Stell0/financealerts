@@ -1,0 +1,7 @@
+yfinance
+pandas
+numpy
+python-telegram-bot
+asyncio
+ta-lib
+scikit-learn
