@@ -28,5 +28,5 @@ jobs:
         push: true
         tags: stell0/financealerts:latest
     - name: Run the Docker container
-      run: docker run financealerts:latest
+      run: docker run stell0/financealerts:latest
       
