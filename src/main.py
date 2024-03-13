@@ -63,6 +63,7 @@ def main():
             msg = f"{ticker} [{report[signal][ticker]['strength']}] {report[signal][ticker]['reason']} {url}\n"
             report_text += msg
         report_text += "\n"
+
     if report_text != "":
         telegram_alert.send_alert(report_text)
 
