@@ -26,7 +26,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         push: true
-        tags: Stell0/financealerts:latest
+        tags: stell0/financealerts:latest
     - name: Run the Docker container
       run: docker run financealerts:latest
       
