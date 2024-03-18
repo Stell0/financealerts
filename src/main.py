@@ -35,7 +35,7 @@ def main():
         df = signals.bb(df)
        
         # don't send aler if signal date is not today
-        if df.index[-1].strftime('%Y-%m-%d') != datetime.datetime.utcnow().strftime('%Y-%m-%d'):
+        if df.index[-1].strftime('%Y-%m-%d') != datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d'):
             continue
 
         # send telegram alert if last signal is not 0
