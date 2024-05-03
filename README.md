@@ -25,6 +25,8 @@ python3 src/main.py INTC
 
 ## How to setup your github action bot:
 
+- fork this repository
+
 - add into your https://github.com/YOUR_USERNAME/financealerts/settings/secrets/actions the following variables:
 `DOCKERHUB_USERNAME`: your [dockerhub](https://hub.docker.com/) username
 `DOCKERHUB_TOKEN`: dockerhub read/write access token https://hub.docker.com/settings/security
@@ -33,8 +35,6 @@ python3 src/main.py INTC
 `TICKER_LIST`
 - change all "stell0" occurrence in .github/workflows/*.yml with your username
 
-
-- fork this repository
 
 > **_NOTE:_**  go to the Actions tab and enable the scheduled workflows because they are disabled for the forked repositories.
 
