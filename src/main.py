@@ -35,11 +35,15 @@ def main():
         
             df['signal'] = 0
             df['reason'] = ""
-            df = signals.rsi(df)
-            #df = signals.sma(df,label="SMA200")
-            #df = signals.movingAverageCrossover(df,short='SMA50',long='SMA200')
-            #df = signals.macd(df)
-            df = signals.bb(df)
+            if "RSI" in os.environ.get("INDICATORS") or os.environ.get("INDICATORS") == None:
+                df = signals.rsi(df)
+            if "SMA" in os.environ.get("INDICATORS"):
+                df = signals.sma(df,label="SMA200")
+            df = signals.movingAverageCrossover(df,short='SMA50',long='SMA200')
+            if "MACD" in os.environ.get("INDICATORS"):
+                df = signals.macd(df)
+            if "BB" in os.environ.get("INDICATORS"):
+                df = signals.bb(df)
        
             # don't send aler if signal date is not today
             if df.index[-1].strftime('%Y-%m-%d') != datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d'):

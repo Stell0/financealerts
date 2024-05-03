@@ -4,6 +4,8 @@ For each ticker in environment var TICKER_LIST, the software checks RSI and boll
 
 If a Telegram TELEGRAM_CHAT_ID and TELEGRAM_BOT_TOKEN environment variables are provided, alerts are also sent to the Telegram chat
 
+INDICATORS env is the list of indicators that can be used. Possible values: RSI, BB, SMA, MACD
+
 ## Telegram (optional):
 ```
 TELEGRAM_CHAT_ID=-123456789
