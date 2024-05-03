@@ -15,4 +15,4 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TICKER_LIST: ${{ vars.TICKER_LIST }}
-      run: docker run -e TELEGRAM_CHAT_ID -e TELEGRAM_BOT_TOKEN stell0/financealerts:latest
+      run: docker run -e TELEGRAM_CHAT_ID -e TELEGRAM_BOT_TOKEN -e TICKER_LIST stell0/financealerts:latest

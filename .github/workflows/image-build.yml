@@ -28,4 +28,4 @@ jobs:
     - name: Run the Docker container
       env:
         TICKER_LIST: ${{ vars.TICKER_LIST }}
-      run: docker run stell0/financealerts:latest
+      run: docker run -e TICKER_LIST stell0/financealerts:latest
