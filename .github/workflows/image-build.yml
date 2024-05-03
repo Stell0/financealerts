@@ -26,5 +26,6 @@ jobs:
         push: true
         tags: stell0/financealerts:latest
     - name: Run the Docker container
+      env:
+        TICKER_LIST: ${{ vars.TICKER_LIST }}
       run: docker run stell0/financealerts:latest
-      
