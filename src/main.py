@@ -18,6 +18,7 @@ def main():
     # load tickers from environment
     else:
         ticker_list = os.environ.get("TICKER_LIST")
+								print(ticker_list) 
         tickers = ticker_list.split()
 
     report = {}
