@@ -1,6 +1,6 @@
 yfinance
 pandas
-numpy
+numpy==1.26.4
 python-telegram-bot
 asyncio
 ta-lib
