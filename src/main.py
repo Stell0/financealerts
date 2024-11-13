@@ -35,14 +35,15 @@ def main():
         
             df['signal'] = 0
             df['reason'] = ""
-            if "RSI" in os.environ.get("INDICATORS") or os.environ.get("INDICATORS") == None:
+            if os.environ.get("INDICATORS") == None or "RSI" in os.environ.get("INDICATORS"):
+                print("RSI")
                 df = signals.rsi(df)
-            if "SMA" in os.environ.get("INDICATORS"):
+            if os.environ.get("INDICATORS") != None and "SMA" in os.environ.get("INDICATORS"):
                 df = signals.sma(df,label="SMA200")
             df = signals.movingAverageCrossover(df,short='SMA50',long='SMA200')
-            if "MACD" in os.environ.get("INDICATORS"):
+            if os.environ.get("INDICATORS") != None and "MACD" in os.environ.get("INDICATORS"):
                 df = signals.macd(df)
-            if "BB" in os.environ.get("INDICATORS"):
+            if os.environ.get("INDICATORS") != None and "BB" in os.environ.get("INDICATORS"):
                 df = signals.bb(df)
        
             # don't send aler if signal date is not today
@@ -50,17 +51,16 @@ def main():
                 continue
 
             # send telegram alert if last signal is not 0
-            if df.iloc[-1]['signal'] != 0:
-                if df.iloc[-1]['signal'] > 0:
+            if df.iloc[-1]['signal'].iloc[0] != 0:
+                if df.iloc[-1]['signal'].iloc[0] > 0:
                     signal = "BUY"
-                if df.iloc[-1]['signal'] < 0:
+                if df.iloc[-1]['signal'].iloc[0] < 0:
                     signal = "SELL"
                 if not signal in report:
                     report[signal] = {}
-            
                 #remove trailing comma from reason
-                reason = re.sub (r",$", "", df.iloc[-1]['reason'])
-                report[signal][ticker] = {"signal":signal,"strength":df.iloc[-1]['signal'],"reason":reason}
+                reason = re.sub (r",$", "", df.iloc[-1]['reason'].iloc[0])
+                report[signal][ticker] = {"signal":signal,"strength":df.iloc[-1]['signal'].iloc[0],"reason":reason}
 
         except Exception as e:
             print(e)

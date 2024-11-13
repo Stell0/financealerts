@@ -25,18 +25,18 @@ def rsi(df):
 
 def sma(df,label="SMA"):
     # add 1 to signal column if price is approaching SMA from above
-    df.loc[(df['Close'] > df[label]) & (df['LRFORECAST'] < df[label]), 'signal'] += 1
-    df.loc[(df['Close'] > df[label]) & (df['LRFORECAST'] < df[label]), 'reason'] += "price is approaching SMA from above,"
+    df.loc[(df['Close'].to_numpy().flatten() > df[label].to_numpy().flatten()) & (df['LRFORECAST'].to_numpy().flatten() < df[label].to_numpy().flatten()), 'signal'] += 1
+    df.loc[(df['Close'].to_numpy().flatten() > df[label].to_numpy().flatten()) & (df['LRFORECAST'].to_numpy().flatten() < df[label].to_numpy().flatten()), 'reason'] += "price is approaching SMA from above,"
 
     # remove 1 from signal column if price is approaching SMA from below
-    df.loc[(df['Close'] < df[label]) & (df['LRFORECAST'] > df[label]), 'signal'] -= 1
-    df.loc[(df['Close'] < df[label]) & (df['LRFORECAST'] > df[label]), 'reason'] += "price is approaching SMA from below,"
+    df.loc[(df['Close'].to_numpy().flatten() < df[label].to_numpy().flatten()) & (df['LRFORECAST'].to_numpy().flatten() > df[label].to_numpy().flatten()), 'signal'] -= 1
+    df.loc[(df['Close'].to_numpy().flatten() < df[label].to_numpy().flatten()) & (df['LRFORECAST'].to_numpy().flatten() > df[label].to_numpy().flatten()), 'reason'] += "price is approaching SMA from below,"
     return df
 
 def movingAverageCrossover(df,short='SMA40',long='SMA'):
 	# add 1 to signal column if short MA is approaching long MA from above
-	df.loc[(df[short] > df[long]) & (df[short].shift(1) < df[long].shift(1)), 'signal'] += 1
-	df.loc[(df[short] > df[long]) & (df[short].shift(1) < df[long].shift(1)), 'reason'] += f"{short} MA is approaching {long} MA from above,"
+	df.loc[(df[short].to_numpy().flatten() > df[long].to_numpy().flatten()) & (df[short].shift(1).to_numpy().flatten() < df[long].shift(1).to_numpy().flatten()), 'signal'] += 1
+	df.loc[(df[short].to_numpy().flatten() > df[long].to_numpy().flatten()) & (df[short].shift(1).to_numpy().flatten() < df[long].shift(1).to_numpy().flatten()), 'reason'] += f"{short} MA is approaching {long} MA from above,"
 
 	# remove 1 from signal column if short MA is approaching long MA from below
 	df.loc[(df[short] < df[long]) & (df[short].shift(1) > df[long].shift(1)), 'signal'] -= 1
@@ -55,12 +55,12 @@ def macd(df):
 
 def bb(df):
     #add 1 to signal when the price crosses below the lower Bollinger Band
-	df.loc[(df['Close'] < df['BB_LOWER']) & (df['Close'].shift(1) > df['BB_LOWER'].shift(1)), 'signal'] += 1
-	df.loc[(df['Close'] < df['BB_LOWER']) & (df['Close'].shift(1) > df['BB_LOWER'].shift(1)), 'reason'] += "price crosses below the lower Bollinger Band,"
+	df.loc[(df['Close'].to_numpy().flatten() < df['BB_LOWER'].to_numpy().flatten()) & (df['Close'].shift(1).to_numpy().flatten() > df['BB_LOWER'].shift(1).to_numpy().flatten()), 'signal'] += 1
+	df.loc[(df['Close'].to_numpy().flatten() < df['BB_LOWER'].to_numpy().flatten()) & (df['Close'].shift(1).to_numpy().flatten() > df['BB_LOWER'].shift(1).to_numpy().flatten()), 'reason'] += "price crosses below the lower Bollinger Band,"
 
 	#remove 1 from signal when the price crosses above the upper Bollinger Band
-	df.loc[(df['Close'] > df['BB_UPPER']) & (df['Close'].shift(1) < df['BB_UPPER'].shift(1)), 'signal'] -= 1
-	df.loc[(df['Close'] > df['BB_UPPER']) & (df['Close'].shift(1) < df['BB_UPPER'].shift(1)), 'reason'] += "price crosses above the upper Bollinger Band,"
+	df.loc[(df['Close'].to_numpy().flatten() > df['BB_UPPER'].to_numpy().flatten()) & (df['Close'].shift(1).to_numpy().flatten() < df['BB_UPPER'].shift(1).to_numpy().flatten()), 'signal'] -= 1
+	df.loc[(df['Close'].to_numpy().flatten() > df['BB_UPPER'].to_numpy().flatten()) & (df['Close'].shift(1).to_numpy().flatten() < df['BB_UPPER'].shift(1).to_numpy().flatten()), 'reason'] += "price crosses above the upper Bollinger Band,"
 	return df
 
 
