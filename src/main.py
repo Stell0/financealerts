@@ -74,7 +74,7 @@ def main():
             if ".L" in ticker:
                 url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=LSE%3A{ticker}"
             elif ".AX" in ticker:
-                url = f"https://www.tradingview.com/chart/gtgkesnl/ASX-{ticker.replace('.AX',''}"
+                url = f"https://www.tradingview.com/chart/gtgkesnl/ASX-{ticker.replace('.AX','')}"
             elif ".VI" in ticker:
                 url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=GETTEX%3A{ticker}"
             else:
