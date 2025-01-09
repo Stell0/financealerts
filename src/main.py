@@ -77,6 +77,8 @@ def main():
                 url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=ASX%3A{ticker.replace('.AX','')}"
             elif ".VI" in ticker:
                 url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=GETTEX%3A{ticker}"
+            elif ".PA" in ticker:
+                url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=EURONEXT%3A{ticker.replace('.PA','')}"
             else:
                 url = "https://www.tradingview.com/chart/gtgkesnl/?symbol=" + re.sub(r"-","",ticker)
             msg = f"{ticker} [{report[signal][ticker]['strength']}] {report[signal][ticker]['reason']} {url}\n"
