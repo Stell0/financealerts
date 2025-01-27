@@ -69,7 +69,7 @@ def main():
     # create the final report
     report_text = ""
     for signal in report:
-        report_text += f"{signal}:\n"
+        report_text += f"*{signal}:*\n"
         for ticker in report[signal]:
             if ".L" in ticker:
                 url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=LSE%3A{ticker}"
@@ -81,9 +81,9 @@ def main():
                 url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=EURONEXT%3A{ticker.replace('.PA','')}"
             else:
                 url = "https://www.tradingview.com/chart/gtgkesnl/?symbol=" + re.sub(r"-","",ticker)
-            msg = f"{ticker} [{report[signal][ticker]['strength']}] {report[signal][ticker]['reason']} {url}\n"
+            msg = f"[{ticker}]({url}) [{report[signal][ticker]['strength']}] {report[signal][ticker]['reason']}\n"
             report_text += msg
-        report_text += "\n"
+        report_text += "\n\n"
 
     if report_text != "":
         telegram_alert.send_alert(report_text)

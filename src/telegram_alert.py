@@ -13,4 +13,4 @@ async def send(message):
     print(message)
     if bot_token is not None and chat_id is not None:
         bot = telegram.Bot(token=bot_token)
-        await bot.sendMessage(chat_id=chat_id, text=message)
+        await bot.sendMessage(chat_id=chat_id, text=message,parse_mode="MarkdownV2")
