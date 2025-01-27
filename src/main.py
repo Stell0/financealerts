@@ -11,6 +11,14 @@ def load_tickers(file_path):
         tickers = [line.strip() for line in file if line.strip()]
     return tickers
 
+def escape_markdown_v2(text):
+    # List of MarkdownV2 special characters that need escaping
+    special_chars = r"_*[]()~`>#+-=|{}.!"
+
+    # Use a regular expression to escape each special character with a backslash
+    escaped_text = re.sub(rf"([{re.escape(special_chars)}])", r"\\\1", str(text))
+    return escaped_text
+
 def main():
     # load ticker from argv if available
     if len(sys.argv) > 1:
@@ -81,7 +89,7 @@ def main():
                 url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=EURONEXT%3A{ticker.replace('.PA','')}"
             else:
                 url = "https://www.tradingview.com/chart/gtgkesnl/?symbol=" + re.sub(r"-","",ticker)
-            msg = f"[{ticker}]({url}) [{report[signal][ticker]['strength']}] {report[signal][ticker]['reason']}\n"
+            msg = f"[{escape_markdown_v2(ticker)}]({escape_markdown_v2(url)}) \[{escape_markdown_v2(report[signal][ticker]['strength'])}\] {escape_markdown_v2(report[signal][ticker]['reason'])}\n"
             report_text += msg
         report_text += "\n\n"
 
