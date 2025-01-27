@@ -27,7 +27,9 @@ jobs:
         tags: stell0/financealerts:latest
     - name: Run the Docker container
       env:
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TICKER_LIST: ${{ vars.TICKER_LIST }}
         INDICATORS: ${{ vars.INDICATORS }}
-      run: docker run -e TICKER_LIST -e INDICATORS stell0/financealerts:latest
+      run: docker run -e TELEGRAM_CHAT_ID -e TELEGRAM_BOT_TOKEN -e TICKER_LIST -e INDICATORS stell0/financealerts:latest
 
