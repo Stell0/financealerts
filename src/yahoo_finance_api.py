@@ -33,3 +33,7 @@ def retrieve_hourly_prices(ticker, period = None, start=None, end=None):
 
     df = yf.download(ticker, start, end, interval='1h',progress=False)
     return df
+
+def get_next_earnings_date(ticker):
+	stock = yf.Ticker(ticker)
+	return stock.earnings_dates
