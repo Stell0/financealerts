@@ -14,7 +14,7 @@ def retrieve_daily_prices(ticker, period = None, start=None, end=None):
     if end is None:
         end = datetime.today()
 
-    df = yf.download(ticker, start, end, progress=False)
+    df = yf.download(ticker, start, end, progress=False, auto_adjust=True)
 
     return df
 

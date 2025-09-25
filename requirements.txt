@@ -30,4 +30,4 @@ threadpoolctl==3.5.0
 tzdata==2024.2
 urllib3==2.2.3
 webencodings==0.5.1
-yfinance==0.2.49
+yfinance

@@ -6,6 +6,9 @@ import os, sys
 import datetime
 import re
 import yfinance as yf
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(filename)s:%(lineno)d - %(message)s")
 
 def load_tickers(file_path):
 	with open(file_path, 'r') as file:
@@ -55,43 +58,22 @@ def main():
 			if os.environ.get("INDICATORS") != None and "BB" in os.environ.get("INDICATORS"):
 				df = signals.bb(df)
 
-			# earnings
-			try:
-				stock = yf.Ticker(ticker)
-				for date in stock.calendar['Earnings Date']:
-					if date.strftime('%Y-%m-%d') == (datetime.datetime.now(datetime.UTC)+datetime.timedelta(days=1)).strftime('%Y-%m-%d'):
-						if not "Earnings" in report:
-							report["Earnings"] = {}
-						report["Earnings"][ticker] = {"signal":"Earnings","strength":0,"reason":"Earnings date is tomorrow"}
-					elif date.strftime('%Y-%m-%d') == datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d'):
-						if not "Earnings" in report:
-							report["Earnings"] = {}
-						report["Earnings"][ticker] = {"signal":"Earnings","strength":0,"reason":"Earnings date is today"}
-					elif date.strftime('%Y-%m-%d') == (datetime.datetime.now(datetime.UTC)-datetime.timedelta(days=3)).strftime('%Y-%m-%d') and (datetime.datetime.now(datetime.UTC)-datetime.timedelta(days=2)).isoweekday() == 5:
-						if not "Earnings" in report:
-							report["Earnings"] = {}
-						report["Earnings"][ticker] = {"signal":"Earnings","strength":0,"reason":"Earnings on Monday"}
-			except Exception as e:
-				print(e)
-
 			# don't send aler if signal date is not today
-			if df.index[-1].strftime('%Y-%m-%d') != datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d'):
-				continue
-
-			# send telegram alert if last signal is not 0
-			if df.iloc[-1]['signal'].iloc[0] != 0:
-				if df.iloc[-1]['signal'].iloc[0] > 0:
-					signal = "BUY"
-				if df.iloc[-1]['signal'].iloc[0] < 0:
-					signal = "SELL"
-				if not signal in report:
-					report[signal] = {}
-				#remove trailing comma from reason
-				reason = re.sub (r",$", "", df.iloc[-1]['reason'].iloc[0])
-				report[signal][ticker] = {"signal":signal,"strength":df.iloc[-1]['signal'].iloc[0],"reason":reason}
+			if df.index[-1].strftime('%Y-%m-%d') == datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d'):
+				# send telegram alert if last signal is not 0
+				if df.iloc[-1]['signal'].iloc[0] != 0:
+					if df.iloc[-1]['signal'].iloc[0] > 0:
+						signal = "BUY"
+					if df.iloc[-1]['signal'].iloc[0] < 0:
+						signal = "SELL"
+					if not signal in report:
+						report[signal] = {}
+					#remove trailing comma from reason
+					reason = re.sub (r",$", "", df.iloc[-1]['reason'].iloc[0])
+					report[signal][ticker] = {"signal":signal,"strength":df.iloc[-1]['signal'].iloc[0],"reason":reason}
 		except Exception as e:
-				print(e)
-				continue
+			logging.exception(f"Error processing ticker {ticker}")
+			continue
 
 	# create the final report
 	report_text = ""
@@ -102,10 +84,14 @@ def main():
 				url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=LSE%3A{ticker}"
 			elif ".AX" in ticker:
 				url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=ASX%3A{ticker.replace('.AX','')}"
+			elif "SSUN.VI" in ticker: # special case for SSUN.VI
+				url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=GETTEX%3ASSU"
 			elif ".VI" in ticker:
 				url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=GETTEX%3A{ticker}"
 			elif ".PA" in ticker:
 				url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=EURONEXT%3A{ticker.replace('.PA','')}"
+			elif ".HK" in ticker:
+				url = f"https://www.tradingview.com/chart/gtgkesnl/?symbol=HKEX%3A{ticker.replace('.HK','')}"
 			else:
 				url = "https://www.tradingview.com/chart/gtgkesnl/?symbol=" + re.sub(r"-","",ticker)
 			msg = f"[{escape_markdown_v2(ticker)}]({escape_markdown_v2(url)}) {escape_markdown_v2(report[signal][ticker]['reason'])}\n"
