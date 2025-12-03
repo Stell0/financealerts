@@ -59,3 +59,4 @@ AAPL
 **_NOTE:_** you can add ticker from London stock exchange adding a .L to the ticker, and .AX for Australian stock exchange e.g. ANIC.L, PLS.AX. 
 
 then wait ⏱️  (cron is launched once a day)
+
