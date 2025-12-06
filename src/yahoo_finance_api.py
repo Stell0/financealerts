@@ -26,7 +26,6 @@ def retrieve_daily_prices(ticker, period = None, start=None, end=None):
                 if not isinstance(cached_df.index, pd.DatetimeIndex):
                     # Attempt to handle bad format or just discard
                     print(f"Warning: Cache for {ticker} seems corrupted or in old format. Ignoring.")
-                    cached_df = pd.DataFrame() 
                 else:
                     # remove the last value (row)
                     cached_df = cached_df.iloc[:-1]
