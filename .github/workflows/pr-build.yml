@@ -1,4 +1,4 @@
-name: Docker Image Build and run
+name: Docker Image Build and run on PR
 
 on:
   pull_request:
