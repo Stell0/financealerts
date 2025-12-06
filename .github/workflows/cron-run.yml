@@ -10,10 +10,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Run the Docker container
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TICKER_LIST: ${{ vars.TICKER_LIST }}
         INDICATORS: ${{ vars.INDICATORS }}
-      run: docker run -e TELEGRAM_CHAT_ID -e TELEGRAM_BOT_TOKEN -e TICKER_LIST -e INDICATORS stell0/financealerts:latest
+      run: docker run -v ${{ github.workspace }}:/workspace -w /workspace -e TELEGRAM_CHAT_ID -e TELEGRAM_BOT_TOKEN -e TICKER_LIST -e INDICATORS stell0/financealerts:latest
+
+    - name: Configure Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    - name: Commit and push data changes
+      run: |
+        if [ -d "data" ] && git status --porcelain data/; then
+          git add data/
+          git commit -m "Update cached price data [automated]"
+          git push
+        else
+          echo "No changes to data directory"
+        fi
