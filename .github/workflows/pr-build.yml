@@ -22,10 +22,10 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         push: true
-        tags: stell0/financealerts:S(date +%s)
+        tags: stell0/financealerts:${{ github.sha }}
     - name: Run the Docker container
       env:
         TICKER_LIST: ${{ vars.TICKER_LIST }}
         INDICATORS: ${{ vars.INDICATORS }}
-      run: docker run -e TICKER_LIST -e INDICATORS stell0/financealerts:latest
+      run: docker run -e TICKER_LIST -e INDICATORS stell0/financealerts:${{ github.sha }}
       
