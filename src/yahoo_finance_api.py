@@ -42,7 +42,7 @@ def retrieve_daily_prices(ticker, period = None, start=None, end=None):
                             fetch_start = last_date
                             fetch_end = today + timedelta(days=1) # end is exclusive usually in yfinance, or just use today()
                             
-                            new_df = yf.download(ticker, start=fetch_start, end=fetch_end, progress=False, auto_adjust=True)
+                            new_df = yf.download(ticker, start=fetch_start, end=fetch_end, progress=False, auto_adjust=True, timeout=30)
                             
                             # Flatten columns if MultiIndex
                             if isinstance(new_df.columns, pd.MultiIndex):
@@ -78,16 +78,11 @@ def retrieve_daily_prices(ticker, period = None, start=None, end=None):
         end = datetime.today()
 
     # Download
-    df = yf.download(ticker, start=start, end=end, period=period, progress=False, auto_adjust=True)
+    df = yf.download(ticker, start=start, end=end, period=period, progress=False, auto_adjust=True, timeout=30)
 
     # Flatten columns if MultiIndex
     if isinstance(df.columns, pd.MultiIndex):
         df.columns = df.columns.get_level_values(0)
-
-    # Save to cache
-    if not df.empty:
-        df.to_csv(cache_file)
-
 
     # Save to cache
     if not df.empty:
