@@ -61,16 +61,16 @@ def main():
 			# don't send aler if signal date is not today
 			if df.index[-1].strftime('%Y-%m-%d') == datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d'):
 				# send telegram alert if last signal is not 0
-				if df.iloc[-1]['signal'].iloc[0] != 0:
-					if df.iloc[-1]['signal'].iloc[0] > 0:
+				if df.iloc[-1]['signal'] != 0:
+					if df.iloc[-1]['signal'] > 0:
 						signal = "BUY"
-					if df.iloc[-1]['signal'].iloc[0] < 0:
+					if df.iloc[-1]['signal'] < 0:
 						signal = "SELL"
 					if not signal in report:
 						report[signal] = {}
 					#remove trailing comma from reason
-					reason = re.sub (r",$", "", df.iloc[-1]['reason'].iloc[0])
-					report[signal][ticker] = {"signal":signal,"strength":df.iloc[-1]['signal'].iloc[0],"reason":reason}
+					reason = re.sub (r",$", "", df.iloc[-1]['reason'])
+					report[signal][ticker] = {"signal":signal,"strength":df.iloc[-1]['signal'],"reason":reason}
 		except Exception as e:
 			logging.exception(f"Error processing ticker {ticker}")
 			continue
