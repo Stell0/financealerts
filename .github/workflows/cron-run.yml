@@ -2,8 +2,8 @@ name: Daily RSI alerts
 
 on:
   schedule:
-    - cron: '15 23 * * *'
-      timezone: Europe/Rome
+    - cron: '0 15 * * *'
+      timezone: America/New_York
   workflow_dispatch:
     inputs:
       dry_run:
