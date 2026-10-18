@@ -73,11 +73,10 @@ class RatingTests(unittest.TestCase):
         self.assertGreater(low_risk["Buy"], high_risk["Buy"])
         self.assertLess(low_risk["Sell"], high_risk["Sell"])
 
-    def test_neutral_expired_invalid_missing_and_partial_components(self):
+    def test_neutral_invalid_missing_and_partial_components(self):
         neutral = dict.fromkeys(FUNDAMENTALS, 5.0)
         for invalid in (
             None,
-            assessment(expires_at="2026-10-18T00:00:00Z"),
             assessment(assessed_at="2026-11-01T00:00:00Z"),
             assessment(expires_at="invalid"),
             assessment(expires_at=None),
@@ -94,6 +93,63 @@ class RatingTests(unittest.TestCase):
         self.assertEqual(read_assessments("wrong\nheader\n"), {})
         with self.assertRaises(ValueError):
             rate(frame(float("nan")), now=NOW)
+
+    def test_expired_assessments_penalize_both_directions_without_changing_triggers(
+        self,
+    ):
+        expired = assessment(expires_at="2026-10-18T00:00:00Z")
+        with patch(
+            "ratings.technical_scores",
+            return_value=dict.fromkeys(["bollinger", "macd", "moving_averages"], 5.0),
+        ):
+            for rsi, direction in ((20, "Buy"), (80, "Sell")):
+                candidate, scores = rate(frame(rsi), expired, NOW)
+                self.assertEqual(candidate, direction)
+                self.assertEqual(scores[direction], 6.0)
+                neutral = rate(frame(rsi), None, NOW)[1]
+                for side in ("Buy", "Sell"):
+                    self.assertAlmostEqual(neutral[side] - scores[side], 1.5)
+            self.assertIsNone(rate(frame(50), expired, NOW)[0])
+
+    def test_expiry_boundary_and_timezone(self):
+        for timestamp in (
+            "2026-10-17T23:59:59Z",
+            "2026-10-18T00:00:00Z",
+            "2026-10-18T02:00:00+02:00",
+        ):
+            self.assertIsNone(fundamental_scores(assessment(expires_at=timestamp), NOW))
+        fresh = assessment(expires_at="2026-10-18T00:00:01Z")
+        self.assertEqual(fundamental_scores(fresh, NOW)["valuation_score"], 8.0)
+
+    def test_expired_fundamentals_cannot_become_a_sell_reward(self):
+        expired = assessment(expires_at="2026-10-17T00:00:00Z")
+        with patch(
+            "ratings.technical_scores",
+            return_value=dict.fromkeys(["bollinger", "macd", "moving_averages"], 10.0),
+        ):
+            for rsi, direction in ((0, "Buy"), (100, "Sell")):
+                scores = rate(frame(rsi), expired, NOW)[1]
+                self.assertEqual(scores[direction], 7.0)
+                self.assertTrue(all(0 <= value <= 7 for value in scores.values()))
+
+    def test_pls_last_alert_drops_to_three_stars(self):
+        data = frame(22.6594959723)
+        data["Close"] = 2.980000019
+        data["BB_UPPER"] = 4.3928122107
+        data["BB_LOWER"] = 2.9391877826
+        data["MACD"] = -0.3691902662
+        data["MACD_SIGNAL"] = -0.3136730841
+        data["MACD_HIST"] = [-0.06, -0.0555171821]
+        data["SMA50"] = 4.3915101957
+        data["SMA200"] = 4.9247889006
+        expired = assessment(
+            assessed_at="2026-08-31T21:53:45Z", expires_at="2026-09-30T21:53:45Z"
+        )
+        direction, scores = rate(data, expired, NOW)
+        self.assertEqual(direction, "Buy")
+        self.assertEqual(scores["Buy"], 5.5)
+        self.assertEqual(stars(scores["Buy"]), "⭐⭐⭐")
+        self.assertEqual(rate(data, None, NOW)[1]["Buy"], 7.0)
 
     def test_missing_warmups_are_neutral_without_veto(self):
         data = frame(20)

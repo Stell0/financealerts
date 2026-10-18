@@ -1,5 +1,9 @@
 # FinanceAlerts / PaperTrader integration
 
+Current policy update (2026-10-18): expired assessments contribute 0/10 to every
+fundamental factor for both Buy and Sell. This supersedes the original neutral
+expiry fallback described in the milestone history below.
+
 Implement the user-approved four milestones sequentially. Each repository owns
 its own data; PaperTrader supplies identity and assessments only. No trading,
 research refresh, portfolio filtering, cooldown, or historical backtesting.
@@ -70,3 +74,16 @@ Node tests pass, with schema/advice/wiki/portfolio/site checks passing. Strict
 PaperTrader integrity still has 83 chart errors identical to its baseline; no
 research data is rewritten to conceal them. Both branches need merging for daily
 production synchronization. No live Telegram message or trade was made.
+
+### Expired-assessment penalty — 2026-10-18
+
+User correction: expired fundamentals must strongly lower both Buy and Sell
+ratings. Each expired fundamental factor now receives 0/10 directional
+favorability, including risk, for a zero contribution from the full 30% weight.
+The penalty applies at expires_at, is never inverted into a Sell reward, and
+leaves RSI triggers, weights, missing/invalid fallback and delivery state intact.
+The last PLS.AX example drops from 7.0/four stars to 5.5/three stars. Added
+regressions for both directions, exact expiry/timezones and this concrete alert;
+all 36 offline tests pass locally and in the rebuilt Python 3.12 container.
+Lint, formatting and whitespace checks pass. No live scan or Telegram delivery
+was requested here.

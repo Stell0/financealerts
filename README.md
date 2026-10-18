@@ -84,8 +84,14 @@ price/50 position. Unavailable technical warm-ups remain neutral; insufficient
 RSI history is reported per ticker.
 
 PaperTrader components join by immutable `security_id`, scale from 0–100 to 0–10,
-and favor value/quality for Buy and weakness/risk for Sell. Missing, expired or
-invalid components become 5/10 without changing weights or blocking an alert.
+and favor value/quality for Buy and weakness/risk for Sell. Expired assessments
+receive 0/10 for every fundamental factor in both directions, including risk.
+Their entire 30% fundamental contribution is zero, removing the 1.5-point neutral
+contribution. Expiry starts exactly at `expires_at`; it never boosts Sell scores.
+`EXPIRED_FUNDAMENTAL_SCORE` is defined alongside the weights in
+`src/rating_config.py`. Missing or invalid assessments/components remain neutral
+at 5/10. Weights and RSI triggers stay unchanged; expiry does not block a
+qualifying alert or refresh research.
 FinanceAlerts never reads PaperTrader prices, technical series, `timing_score`
 or `reference_price`, and never refreshes research. Scores round to one decimal.
 Stars use 0–2: one, over 2–4: two, over 4–6: three, over 6–8: four, over 8–10: five.

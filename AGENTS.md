@@ -70,7 +70,10 @@ the Docker example). They are integration checks, not offline tests.
   `INDICATORS` no longer selects independent triggers. Ratings use defaults in
   `rating_config.py`; `ratings.py` calculates independent Buy/Sell scores.
 - Indicator definitions: RSI14, Bollinger20/2, MACD12/26/9, SMA50 and SMA200.
-  Unavailable warmups and missing/expired fundamental components are neutral.
+  Unavailable warmups and missing/invalid fundamental components are neutral.
+  Expired assessments give every directional fundamental factor 0/10 for both
+  Buy and Sell, including risk. Do not mirror this penalty into a Sell reward.
+  Keep the existing weights and triggers.
 - Scan only completed exchange sessions, including the last session on holidays
   and weekends. Bitcoin sessions close at UTC midnight.
 - Telegram transport reads `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` at send time.

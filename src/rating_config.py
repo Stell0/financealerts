@@ -14,6 +14,9 @@ WEIGHTS = {
     "risk_penalty": 0.05,
 }
 
+# Directional favorability for every expired fundamental component, including risk.
+EXPIRED_FUNDAMENTAL_SCORE = 0.0
+
 
 def thresholds():
     lower = float(os.environ.get("RSI_lower", "30"))

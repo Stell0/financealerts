@@ -6,7 +6,7 @@ import math
 from datetime import datetime, timezone
 from io import StringIO
 
-from rating_config import WEIGHTS, thresholds
+from rating_config import EXPIRED_FUNDAMENTAL_SCORE, WEIGHTS, thresholds
 
 FUNDAMENTALS = (
     "valuation_score",
@@ -61,6 +61,7 @@ def read_assessments(text):
 
 
 def fundamental_scores(assessment, now=None):
+    """Return raw 0–10 components, or None for a structurally valid expired assessment."""
     now = now or datetime.now(timezone.utc)
     neutral = dict.fromkeys(FUNDAMENTALS, 5.0)
     if not assessment:
@@ -76,15 +77,22 @@ def fundamental_scores(assessment, now=None):
         if (
             assessed.tzinfo is None
             or expires.tzinfo is None
-            or not assessed <= now < expires
+            or assessed > now
+            or expires <= assessed
         ):
-            raise ValueError("assessment outside validity interval")
+            raise ValueError("invalid assessment validity interval")
     except (KeyError, ValueError, TypeError) as error:
         logging.warning(
-            "Invalid/expired PaperTrader assessment: %s; using neutral fundamentals",
+            "Invalid PaperTrader assessment: %s; using neutral fundamentals",
             error,
         )
         return neutral
+    if now >= expires:
+        logging.warning(
+            "Expired PaperTrader assessment for %s; penalizing both Buy and Sell fundamentals",
+            assessment.get("security_id", "unknown security"),
+        )
+        return None
     for field in FUNDAMENTALS:
         value = finite(assessment.get(field))
         if value is None or not 0 <= value <= 100:
@@ -139,11 +147,16 @@ def rate(frame, assessment=None, now=None, lower=None, upper=None):
         components["rsi"] = clamp(
             5 + ((lower - rsi) if direction == "Buy" else (rsi - upper)) / 2
         )
-        for field, value in fundamental.items():
-            if direction == "Buy":
-                components[field] = 10 - value if field == "risk_penalty" else value
-            else:
-                components[field] = value if field == "risk_penalty" else 10 - value
+        if fundamental is None:
+            # Apply expiry after choosing direction: mirroring zero raw values would
+            # incorrectly reward Sell alerts instead of penalizing stale research.
+            components.update(dict.fromkeys(FUNDAMENTALS, EXPIRED_FUNDAMENTAL_SCORE))
+        else:
+            for field, value in fundamental.items():
+                if direction == "Buy":
+                    components[field] = 10 - value if field == "risk_penalty" else value
+                else:
+                    components[field] = value if field == "risk_penalty" else 10 - value
         output[direction] = round(
             clamp(sum(WEIGHTS[field] * value for field, value in components.items())), 1
         )
