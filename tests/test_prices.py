@@ -153,3 +153,17 @@ class PriceTests(unittest.TestCase):
                     cache_dir=directory,
                 )
             self.assertEqual(before, Path(directory, "TSLA.csv").read_bytes())
+
+    @patch("yahoo_finance_api.yf.download")
+    def test_larger_history_request_reconciles_short_cache_in_same_session(
+        self, download
+    ):
+        with tempfile.TemporaryDirectory() as directory:
+            download.return_value = bars(["2026-10-16"])
+            retrieve_daily_prices("TSLA", period=20, now=NOW, cache_dir=directory)
+            download.return_value = bars(["2026-01-05", "2026-10-16"], [50.0, 100.0])
+            result = retrieve_daily_prices(
+                "TSLA", period=550, now=NOW, cache_dir=directory
+            )
+            self.assertLess(download.call_args.kwargs["start"], date(2026, 1, 1))
+            self.assertEqual(len(result), 2)

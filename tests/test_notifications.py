@@ -72,7 +72,7 @@ class NotificationTests(unittest.TestCase):
         self.assertLess(message.index("Buy:"), message.index("Sell:"))
         self.assertIn("| ⭐⭐⭐⭐⭐ |", message)
         self.assertNotIn("<A&B>", message)
-        self.assertIn('Example &lt;A&amp;B&gt; &quot;Inc.&quot;', message)
+        self.assertIn("Example &lt;A&amp;B&gt; &quot;Inc.&quot;", message)
         parser = Links()
         parser.feed(message)
         self.assertEqual(len(parser.links), 6)
@@ -203,3 +203,60 @@ class NotificationTests(unittest.TestCase):
             client.send_message.side_effect = RuntimeError("retry")
             with self.assertRaises(RuntimeError):
                 telegram_alert.send_alert("message")
+
+    def test_http_request_logs_do_not_expose_bot_token(self):
+        import io
+        import logging
+
+        import httpx
+        import telegram
+        from telegram.request import HTTPXRequest
+
+        token = "12345:private-token-for-offline-test"
+        requests = []
+
+        def response(request):
+            requests.append(request)
+            result = (
+                {
+                    "id": 12345,
+                    "is_bot": True,
+                    "first_name": "Test",
+                    "username": "test_bot",
+                }
+                if request.url.path.endswith("/getMe")
+                else {
+                    "message_id": 1,
+                    "date": 1,
+                    "chat": {"id": 123, "type": "private"},
+                    "text": "sample",
+                }
+            )
+            return httpx.Response(200, json={"ok": True, "result": result})
+
+        transport = httpx.MockTransport(response)
+        bot = telegram.Bot(
+            token=token,
+            request=HTTPXRequest(httpx_kwargs={"transport": transport}),
+            get_updates_request=HTTPXRequest(httpx_kwargs={"transport": transport}),
+        )
+        stream = io.StringIO()
+        root = logging.getLogger()
+        handler = logging.StreamHandler(stream)
+        old_level = root.level
+        root.setLevel(logging.INFO)
+        root.addHandler(handler)
+        try:
+            with (
+                patch.dict(
+                    os.environ, {"TELEGRAM_BOT_TOKEN": token, "TELEGRAM_CHAT_ID": "123"}
+                ),
+                patch("telegram_alert.telegram.Bot", return_value=bot),
+                patch("builtins.print"),
+            ):
+                self.assertTrue(telegram_alert.send_alert("sample"))
+        finally:
+            root.removeHandler(handler)
+            root.setLevel(old_level)
+        self.assertEqual(len(requests), 2)
+        self.assertNotIn(token, stream.getvalue())

@@ -1,42 +1,65 @@
-name: Cron run workflow
+name: Daily RSI alerts
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: '19 19 * * *'
-jobs:
+    - cron: '15 23 * * *'
+      timezone: Europe/Rome
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Print alerts without Telegram delivery or commits
+        type: boolean
+        default: true
 
-  build:
+permissions:
+  contents: read
+
+concurrency:
+  group: financealerts-write
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
     permissions:
       contents: write
-    runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        token: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Run the Docker container
-      env:
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        TICKER_LIST: ${{ vars.TICKER_LIST }}
-        INDICATORS: ${{ vars.INDICATORS }}
-      run: docker run -v ${{ github.workspace }}:/workspace -w /workspace -e TELEGRAM_CHAT_ID -e TELEGRAM_BOT_TOKEN -e TICKER_LIST -e INDICATORS stell0/financealerts:latest
-
-    - name: Configure Git
-      run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-
-    - name: Commit and push data changes
-      run: |
-        if [ -d "data" ] && git status --porcelain data/; then
-          git add data/
-          git commit -m "Update cached price data [automated]"
-          git push
-        else
-          echo "No changes to data directory"
-        fi
+      - name: Check out FinanceAlerts
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Build this checkout
+        run: docker build -t financealerts:daily .
+      - name: Validate offline behavior
+        run: >-
+          docker run --rm -e PYTHONPATH=/app/src
+          -v "$GITHUB_WORKSPACE/tests:/app/tests:ro"
+          -v "$GITHUB_WORKSPACE/scripts:/app/scripts:ro"
+          financealerts:daily python -m unittest discover -s tests -v
+      - name: Scan independent daily prices and deliver new alerts
+        id: scan
+        continue-on-error: true
+        env:
+          TICKER_LIST: ${{ vars.TICKER_LIST }}
+          RSI_lower: ${{ vars.RSI_LOWER || '30' }}
+          RSI_upper: ${{ vars.RSI_UPPER || '70' }}
+          TELEGRAM_CHAT_ID: ${{ (github.event_name == 'schedule' || !inputs.dry_run) && secrets.TELEGRAM_CHAT_ID || '' }}
+          TELEGRAM_BOT_TOKEN: ${{ (github.event_name == 'schedule' || !inputs.dry_run) && secrets.TELEGRAM_BOT_TOKEN || '' }}
+        run: >-
+          docker run --rm -v "$GITHUB_WORKSPACE:/app" -w /app
+          -e TICKER_LIST -e RSI_lower -e RSI_upper
+          -e TELEGRAM_CHAT_ID -e TELEGRAM_BOT_TOKEN
+          financealerts:daily
+      - name: Commit successful deliveries and changed local caches
+        if: ${{ always() && (steps.scan.outcome == 'success' || steps.scan.outcome == 'failure') && (github.event_name == 'schedule' || !inputs.dry_run) }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          bash scripts/commit_runtime.sh
+          git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push origin "HEAD:$TARGET_BRANCH"
+      - name: Report scan or delivery failures after saving partial progress
+        if: ${{ always() && steps.scan.outcome == 'failure' }}
+        run: exit 1

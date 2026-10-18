@@ -33,9 +33,13 @@ def read_assessments(text):
     if not text:
         return {}
     reader = csv.DictReader(StringIO(text.lstrip("\ufeff")))
-    if not {"security_id", "assessed_at", "expires_at", *FUNDAMENTALS}.issubset(
-        reader.fieldnames or []
-    ):
+    fields = reader.fieldnames or []
+    if len(fields) != len(set(fields)) or not {
+        "security_id",
+        "assessed_at",
+        "expires_at",
+        *FUNDAMENTALS,
+    }.issubset(fields):
         logging.warning(
             "PaperTrader assessments lack required fields; using neutral fundamentals"
         )

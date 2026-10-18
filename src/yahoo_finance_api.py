@@ -171,6 +171,7 @@ def retrieve_daily_prices(
         not isinstance(previous, dict)
         or previous.get("sha256") != cache_hash
         or previous.get("full_session") != completed.isoformat()
+        or previous.get("start") != first_date.isoformat()
         or cached.empty
     )
     # Reconcile the retained adjusted history once per completed session. This also
@@ -226,6 +227,7 @@ def retrieve_daily_prices(
     )
     metadata[ticker] = {
         "sha256": hashlib.sha256(content.encode()).hexdigest(),
+        "start": first_date.isoformat(),
         "full_session": completed.isoformat()
         if full_refresh
         else previous["full_session"],

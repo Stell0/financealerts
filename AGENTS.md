@@ -23,8 +23,8 @@ delivery is optional. There is no web service or packaged Python application.
 
 Local environments (`.venv/`, `fin/`), bytecode, scratch scripts, and debug CSVs
 may exist outside tracked source. Check `git status --short` before editing and
-preserve unrelated local work. The tracked implementation of `load_tickers` is
-inside `src/main.py`; the local `src/load_tickers.py` is currently empty.
+preserve unrelated local work. Ticker management lives in `src/registry.py`;
+the local untracked `src/load_tickers.py` is empty.
 
 ## Setup and execution
 
@@ -36,8 +36,8 @@ python3.12 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
 
-Use an existing environment if appropriate. Installing the pinned `TA-Lib`
-Python binding now uses a pinned wheel with its native library included. The
+Use an existing environment if appropriate. The pinned TA-Lib Python binding
+uses a wheel with its native library included on supported platforms. The
 Dockerfile installs the small pinned runtime set on Python 3.12-slim.
 
 ```sh
@@ -121,9 +121,12 @@ test gate: it copies the sanitization implementation, mixes root-relative
 status when checks fail. `verify_fix.py` is currently empty. Do not report these
 as a passing regression suite.
 
-CI primarily builds and runs Docker images; it does not run a separate unit
-suite. Both image-build workflows publish images, and the scheduled workflow
-runs daily at `19:19` UTC, mounts the checkout, and commits cache changes. Inspect
-these effects before using workflow dispatch as validation. For documentation
-changes, checking content, paths, and the diff is sufficient. Report what was
-actually checked and any checks that could not run.
+CI builds the pinned Python 3.12 image and runs the offline suite without
+credentials. The serialized daily workflow runs at 23:15 Europe/Rome, builds the
+checkout and commits only changed config/tickers.txt, data/*.csv and the two
+runtime JSON state files. `scripts/commit_runtime.sh` skips empty commits and
+refuses unrelated staged files. A scan failure still saves successful partial
+progress, then fails the job. Manual dispatch defaults to a console-only dry run
+without commits. Only the main image-build workflow publishes to Docker Hub.
+For documentation changes, checking content, paths and the diff is sufficient.
+Report what was actually checked and any checks that could not run.

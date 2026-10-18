@@ -1,132 +1,161 @@
 # FinanceAlerts
 
-For each ticker in environment var TICKER_LIST, the software checks RSI and bollinger bands and output a BUY/SELL signal. 
+Daily RSI Buy/Sell notifications enriched with PaperTrader fundamental
+assessments. FinanceAlerts independently downloads Yahoo Finance prices,
+calculates TA-Lib indicators, rates both directions, and optionally sends one
+compact Telegram report. It never trades or modifies PaperTrader's portfolio.
 
-If a Telegram TELEGRAM_CHAT_ID and TELEGRAM_BOT_TOKEN environment variables are provided, alerts are also sent to the Telegram chat. 
+## Run locally
 
-INDICATORS env is the list of indicators that can be used. Possible values: RSI, BB, SMA, MACD
+Use Python 3.12+ and the pinned runtime packages. TA-Lib wheels include the native
+library on supported platforms.
 
-## Telegram (optional):
-```
-TELEGRAM_CHAT_ID=-123456789
-TELEGRAM_BOT_TOKEN=1234567890:XXX-XxXxXxXxXxXxXxXxXxXxXxXxXxXxXxX
-```
+```sh
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
 
-## Launch:
+# Scan the merged monitored universe, printing messages only.
+env -u TELEGRAM_BOT_TOKEN -u TELEGRAM_CHAT_ID .venv/bin/python src/main.py
 
-```
-export TICKER_LIST="TSLA INTC"
-python3 src/main.py
-```
-
-or
-
-```
-python3 src/main.py INTC
+# Explicit single-ticker scan override.
+env -u TELEGRAM_BOT_TOKEN -u TELEGRAM_CHAT_ID .venv/bin/python src/main.py GOOG
 ```
 
-## How to setup your github action bot:
+Run from the repository root. `.env` is not loaded automatically. Both commands
+retrieve live market data and may update local caches and the ticker registry.
+Console-only execution never advances Telegram delivery state. A ticker/provider
+failure is reported, other tickers continue, and the final exit status is nonzero.
 
-- fork this repository
-
-- add into your https://github.com/YOUR_USERNAME/financealerts/settings/secrets/actions the following variables:
-`DOCKERHUB_USERNAME`: your [dockerhub](https://hub.docker.com/) username
-`DOCKERHUB_TOKEN`: dockerhub read/write access token https://hub.docker.com/settings/security
-`TELEGRAM_CHAT_ID`: the [ID of the telegram chat](https://stackoverflow.com/questions/32423837/telegram-bot-how-to-get-a-group-chat-id) you whant your message to be sent
-`TELEGRAM_BOT_TOKEN`: a telegram bot [token](https://core.telegram.org/bots/features#botfather)
-`TICKER_LIST`
-- change all "stell0" occurrence in .github/workflows/*.yml with your username
-
-
-> **_NOTE:_**  go to the Actions tab and enable the scheduled workflows because they are disabled for the forked repositories.
-
-- add into your [action secrets](https://github.com/YOUR_USERNAME/financealerts/settings/secrets/actions)
- the following variables:
-
-`TELEGRAM_CHAT_ID`: the [ID of the telegram chat](https://stackoverflow.com/questions/32423837/telegram-bot-how-to-get-a-group-chat-id) you whant your message to be sent
-
-`TELEGRAM_BOT_TOKEN`: a telegram bot [token](https://core.telegram.org/bots/features#botfather)
-
-- Then add in your [action variables](https://github.com/YOUR_USERNAME/financealerts/settings/variables/actions)the variable with the list of tickers to analyze
-
-`TICKER_LIST`: list of tickers
-```
-TSLA
-INTC
-AAPL
+```sh
+docker build -t financealerts:local .
+docker run --rm -v "$PWD/config:/app/config" -v "$PWD/data:/app/data" \
+  -e TICKER_LIST="TSLA INTC" financealerts:local
 ```
 
-**_NOTE:_** you can add ticker from London stock exchange adding a .L to the ticker, and .AX for Australian stock exchange e.g. ANIC.L, PLS.AX. 
+Mount both directories to preserve ticker, price and delivery state between runs.
+Pass Telegram credentials with `-e TELEGRAM_BOT_TOKEN -e TELEGRAM_CHAT_ID` when
+actual delivery is wanted.
 
-then wait ⏱️  (cron is launched once a day)
+## Tickers and PaperTrader synchronization
 
+`config/tickers.txt` contains one symbol per line. The scan merges this file,
+whitespace-separated `TICKER_LIST`, and every registered PaperTrader security,
+then saves the normalized, deduplicated list in stable order. Synchronization is
+additive; no security is deleted automatically. The initial file includes all
+92 PaperTrader securities plus the supplied user symbols and deployed environment
+list, resulting in 93 monitored identities including Bitcoin.
 
-## PaperTrader ticker registry
+GOOG and GOOGL share the existing Alphabet `security_id` and assessment. Explicit
+GOOG wins in the monitored file and uses **GOOG prices**, never GOOGL prices.
+BTCUSD/BTC-USD use one monitored identity with Yahoo symbol `BTC-USD`. Other
+registry tickers use provider-qualified symbols such as `108490.KQ` and `AKE.PA`.
 
-The monitored universe is the additive union of `config/tickers.txt`, whitespace-
-separated `TICKER_LIST`, and PaperTrader's registered securities. A positional
-symbol remains an explicit one-ticker scan override. The registry is sorted and
-written only when its contents change. GOOG/GOOGL use one PaperTrader identity;
-explicit GOOG retains its own Yahoo Finance prices. BTCUSD uses BTC-USD prices.
+FinanceAlerts resolves PaperTrader's public `main` commit once and reads only
+`data/tables/securities.csv` and `security_assessments.csv` at that SHA. Set
+`PAPERTRADER_REVISION` to a full commit SHA, or `PAPERTRADER_DIR` to a local
+checkout. Local reads are useful for testing; use committed snapshots in daily
+production. A missing assessment table produces neutral fundamentals; a failed
+identity snapshot read is an explicit error.
 
-By default FinanceAlerts reads PaperTrader's public identity and assessment tables
-at one resolved commit SHA. Set `PAPERTRADER_REVISION` to pin a full SHA, or
-`PAPERTRADER_DIR` to read a local checkout (use committed data for production).
-It never reads PaperTrader market caches or technical indicators. Missing symbols
-converge when PaperTrader pulls the committed FinanceAlerts file through its
-validated watchlist importer; each repository writes only its own data.
+PaperTrader's existing daily preparation pulls the committed FinanceAlerts file
+and imports genuinely missing securities through `papertrader watchlist import`
+validation. Failed identities are reported as operational issues. Each repository
+writes and commits only its own files, with no foreign write token. Changes can
+converge over the next daily cycle. Merge both implementation branches before
+expecting production synchronization.
 
-Offline registry checks: `PYTHONPATH=src python3 -m unittest discover -s tests -v`.
+Bitcoin is a watch-only `cryptocurrency`, with off-exchange MIC `XOFF`, unknown
+country `ZZ` and a 24/7 monitoring calendar. PaperTrader's allowed trading
+instruments and venues remain unchanged: cryptocurrency orders are prohibited.
 
-## RSI ratings and independent prices
+## Indicators and ratings
 
-FinanceAlerts downloads its own adjusted daily OHLCV series from yfinance. It
-never uses PaperTrader market prices, technical indicators, timing scores or
-historical reference prices. Indicators are RSI(14), Bollinger(20,2),
-MACD(12,26,9), SMA50 and SMA200. Signals from the older `INDICATORS` selector are
-replaced by RSI-only triggers: Buy at RSI <= `RSI_lower` (30), Sell at RSI >=
-`RSI_upper` (70). Both directions apply to every monitored security.
+Only RSI(14) triggers alerts: Buy at RSI <= `RSI_lower` (default 30), Sell at
+RSI >= `RSI_upper` (default 70). Both directions apply to the entire universe.
+The former `INDICATORS` selector no longer triggers independent signals.
 
-The independent Buy/Sell scores use defaults in `src/rating_config.py`: RSI 50%,
-Bollinger 8%, MACD 7%, moving averages 5%, valuation 12%, business quality 6%,
-thesis 4%, balance sheet 3%, risk penalty 5%. RSI scores start at 5 on the trigger
-and increase by 0.5 per RSI point beyond it, capped at 10. Bollinger scores measure
-position within the bands; MACD combines line/signal position and histogram
-movement; moving averages combine 50/200 trend and price/50 position. Missing
-technical warm-up values are neutral. There are no additional signal vetoes.
+The independent Buy/Sell ratings are weighted sums of 0–10 subscores. Defaults
+live in `src/rating_config.py`: RSI 50%, Bollinger 8%, MACD 7%, SMA50/SMA200 5%,
+valuation 12%, business quality 6%, thesis 4%, balance sheet 3%, risk penalty 5%.
+RSI starts at 5 on its threshold and increases by 0.5 per point beyond it, capped
+at 10. Bollinger(20,2) measures band position, MACD(12,26,9) combines line/signal
+position and histogram movement, and moving averages combine 50/200 trend with
+price/50 position. Unavailable technical warm-ups remain neutral; insufficient
+RSI history is reported per ticker.
 
-Fundamentals join on immutable security_id, scale from 0–100 to 0–10 and favor
-quality/value for Buy and weakness/risk for Sell. Missing, expired or invalid
-components become 5/10 without changing weights or refreshing research. Scores
-are rounded to one decimal. Stars use (0–2], (2–4], (4–6], (6–8], (8–10], with
-one star also at zero.
+PaperTrader components join by immutable `security_id`, scale from 0–100 to 0–10,
+and favor value/quality for Buy and weakness/risk for Sell. Missing, expired or
+invalid components become 5/10 without changing weights or blocking an alert.
+FinanceAlerts never reads PaperTrader prices, technical series, `timing_score`
+or `reference_price`, and never refreshes research. Scores round to one decimal.
+Stars use 0–2: one, over 2–4: two, over 4–6: three, over 6–8: four, over 8–10: five.
+
+## Completed sessions and caches
 
 Exchange calendars select the most recent completed daily session, including
-holidays, half days and daylight-saving changes. Bitcoin days close at UTC
-midnight. Valid caches are merged without dropping their last row. The retained
-550-day adjusted history is reconciled once per new completed session, including
-corporate-action adjustments; reruns fetch a 14-day overlap for corrections.
-Cache metadata binds the last full reconciliation to the CSV checksum. Mixed
-adjustment revisions with missing historical rows fail per ticker and preserve
-the cache for retry. A failed provider may use a cache only when it already
-contains the latest completed session. Other tickers continue independently.
+holidays, half days and DST. Bitcoin days close at UTC midnight. Daily caches
+contain normalized adjusted OHLCV; SMA50 uses 50 trading sessions.
 
-## Telegram delivery
+Cache updates preserve valid rows and deduplicate by date. Once per new completed
+session, the retained 550-calendar-day adjusted history is reconciled, including
+historical corrections and corporate-action adjustments. Reruns fetch a 14-day
+overlap to detect corrected recent bars. `data/price_cache_state.json` binds the
+last full reconciliation to the CSV checksum. Incomplete historical revisions
+that could mix adjustment bases fail per ticker and preserve the previous cache
+for retry. Provider failures may use a valid cache only when it already contains
+the latest completed session. No run requires the candle date to equal today.
 
-Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` to enable delivery. Without both,
-messages print to the console and are not marked delivered. Messages use Telegram
-HTML, with Buy before Sell, descending score within each section, and one linked
-line per ticker: `TICKER | stars | COMPANY NAME`. TradingView uses the analyzed
-share class and exchange (Bitcoin: BITSTAMP:BTCUSD). Company links use existing
-PaperTrader research pages or the security's stable catalog anchor. Newly added
-symbols without a PaperTrader entry link to the catalog until synchronization.
-No assessment is created or refreshed by FinanceAlerts.
+## Telegram output and retries
 
-Messages split at complete ticker lines, repeating a section heading as needed.
-`data/alert_state.json` records successful sends only, one latest-bar fingerprint
-per Yahoo symbol and direction. The fingerprint includes date and normalized
-OHLCV, so a new session or corrected bar can alert again; unchanged data cannot.
-Scores, research changes and elapsed time do not independently trigger repeats.
-Failed messages remain eligible for retry; successfully sent earlier chunks are
-persisted immediately. No message is produced without new qualifying alerts.
-Corrupt state fails explicitly rather than silently resending the universe.
+Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` to enable HTML delivery. Buy comes
+before Sell, each sorted by descending rating. Each complete ticker line contains
+linked ticker, stars and linked company name. TradingView uses the analyzed
+market symbol and exchange; Bitcoin uses `BITSTAMP:BTCUSD`. Company links use
+existing PaperTrader research pages, otherwise the security's catalog anchor.
+Symbols awaiting registry import link to the catalog until their entry exists.
+
+Messages split at complete ticker lines within Telegram's limit. No message is
+created without new qualifying candidates. `data/alert_state.json` stores only
+successful deliveries, keyed by Yahoo symbol/direction and a fingerprint of the
+latest completed bar's date and normalized OHLCV. A new session or corrected bar
+can notify again; unchanged data cannot. Scores, research changes and elapsed
+time do not independently cause repeats. No cooldown, transition gate or
+portfolio filter exists.
+
+State persists after each successful chunk. Failed chunks remain retryable;
+console-only output never marks delivery. Corrupt state fails explicitly. If a
+process is interrupted after Telegram accepts a message but before state is saved,
+its delivery cannot be proven; retain the committed state and inspect the run
+before manual replay.
+
+## Daily automation
+
+The serialized daily workflow runs at **23:15 Europe/Rome**, after US regular
+close. It builds the checked-out source, runs offline tests, pulls a consistent
+PaperTrader snapshot, merges tickers, scans, delivers and commits changed ticker,
+price-cache and delivery-state files. No-change runs skip commits. Partial
+successful deliveries and caches are committed even if another ticker/send fails;
+the run still reports failure. GitHub schedules may start later than requested.
+
+Manual dispatch defaults to `dry_run=true`: live provider reads and console
+output, with no Telegram delivery or commits. Set it false for normal execution.
+The PR/branch workflow builds and tests without credentials or publication. The
+separate image workflow publishes `stell0/financealerts:latest` on main, using
+`DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`; daily scans build their own image.
+Configure `TICKER_LIST`, `RSI_LOWER` and `RSI_UPPER` as optional Actions variables,
+and Telegram credentials as Actions secrets. Scheduled workflows must be enabled
+on forks.
+
+## Offline verification
+
+```sh
+PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -v
+```
+
+Tests use realistic PaperTrader CSV fixtures, synthetic prices and mocked network
+and Telegram boundaries. They cover identity/alias convergence, score and session
+boundaries, cache corrections, full-universe Buy/Sell scans, HTML links/splitting,
+retry state and repeated/new-session end-to-end runs. Runtime commit tests create
+isolated Git repositories and prove no-change runs avoid empty commits and
+unrelated files remain unstaged. No test sends a real message or changes tracked
+price caches.

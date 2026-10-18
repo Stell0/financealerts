@@ -1,6 +1,7 @@
 """Telegram HTML transport; console output remains useful without credentials."""
 
 import asyncio
+import logging
 import os
 
 import telegram
@@ -21,6 +22,9 @@ def send_alert(message):
 
 
 async def send(message):
+    # Telegram embeds its bot token in request paths; HTTP client INFO logs expose it.
+    for name in ("httpx", "httpcore"):
+        logging.getLogger(name).setLevel(logging.WARNING)
     async with telegram.Bot(token=os.environ["TELEGRAM_BOT_TOKEN"]) as bot:
         await bot.send_message(
             chat_id=os.environ["TELEGRAM_CHAT_ID"],

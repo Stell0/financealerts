@@ -80,6 +80,7 @@ class RatingTests(unittest.TestCase):
             assessment(expires_at="2026-10-18T00:00:00Z"),
             assessment(assessed_at="2026-11-01T00:00:00Z"),
             assessment(expires_at="invalid"),
+            assessment(expires_at=None),
             assessment(expires_at="2026-11-01"),
         ):
             self.assertEqual(fundamental_scores(invalid, NOW), neutral)

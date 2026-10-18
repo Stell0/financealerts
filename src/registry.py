@@ -34,7 +34,8 @@ def read_securities(text):
         "instrument_type",
         "research_page",
     }
-    if not required.issubset(reader.fieldnames or []):
+    fields = reader.fieldnames or []
+    if len(fields) != len(set(fields)) or not required.issubset(fields):
         raise ValueError("PaperTrader securities CSV lacks required identity columns")
     rows, ids, providers = [], set(), set()
     for row in reader:

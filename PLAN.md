@@ -48,3 +48,25 @@ chunk; console-only and failed sends do not mark delivery. Offline tests include
 new-session/corrected-bar repeats, unchanged data, direction/share-class keys,
 partial failures, HTML escaping and actual mocked transport. Python 3.12 Docker
 build succeeded with pinned dependencies. No real Telegram message was sent.
+
+### M4 — 2026-10-18
+
+Integrated serialized daily execution at 23:15 Europe/Rome with public
+single-revision PaperTrader pulls, offline validation, explicit partial-failure
+reporting and commits limited to FinanceAlerts-owned runtime paths. Fixed empty
+commit detection with real-Git regression tests. PR/branch builds no longer
+publish images or scan with production credentials. Added realistic CSV
+end-to-end coverage across 93 identities: identical reruns have no file changes
+or repeated messages; a new trading session can alert again. README now documents
+configuration, monitoring identities, cache and delivery behavior and deployment.
+
+Final M4 evidence: 32 FinanceAlerts tests pass on Python 3.12 locally and in the
+rebuilt container. Actionlint and runtime shell syntax pass. Live committed
+PaperTrader read returned 92 securities and 83 assessments; GOOG and BTC-USD
+price smoke checks returned the expected completed sessions without delivery.
+An actual HTTPX mock-transport regression reproduces and prevents Telegram token
+exposure in request logs. Full PaperTrader regression: 622 Python tests and four
+Node tests pass, with schema/advice/wiki/portfolio/site checks passing. Strict
+PaperTrader integrity still has 83 chart errors identical to its baseline; no
+research data is rewritten to conceal them. Both branches need merging for daily
+production synchronization. No live Telegram message or trade was made.

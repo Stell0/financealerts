@@ -56,6 +56,12 @@ class RegistryTests(unittest.TestCase):
             read_securities("ticker\nTSLA\n")
         with self.assertRaises(ValueError):
             read_securities(
+                FIXTURE.read_text().replace(
+                    "security_id,", "security_id,security_id,", 1
+                )
+            )
+        with self.assertRaises(ValueError):
+            read_securities(
                 FIXTURE.read_text() + FIXTURE.read_text().splitlines()[1] + "\n"
             )
         with self.assertRaises(ValueError):
