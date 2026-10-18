@@ -3,8 +3,8 @@
 import json
 import logging
 import os
-from pathlib import Path
 import re
+from pathlib import Path
 from urllib.request import Request, urlopen
 
 from registry import read_securities
@@ -13,7 +13,13 @@ REPOSITORY = "Kabutojira/PaperTrader"
 
 
 def fetch_text(url):
-    request = Request(url, headers={"User-Agent": "FinanceAlerts", "Accept": "application/vnd.github+json"})
+    request = Request(
+        url,
+        headers={
+            "User-Agent": "FinanceAlerts",
+            "Accept": "application/vnd.github+json",
+        },
+    )
     with urlopen(request, timeout=30) as response:
         data = response.read(5_000_001)
     if len(data) > 5_000_000:
@@ -26,11 +32,17 @@ def load_snapshot(directory=None, revision=None):
     if directory:
         tables = Path(directory) / "data" / "tables"
         securities = (tables / "securities.csv").read_text()
-        assessments = (tables / "security_assessments.csv").read_text() if (tables / "security_assessments.csv").exists() else ""
+        assessments = (
+            (tables / "security_assessments.csv").read_text()
+            if (tables / "security_assessments.csv").exists()
+            else ""
+        )
         return read_securities(securities), assessments
     revision = revision or os.environ.get("PAPERTRADER_REVISION")
     if not revision:
-        revision = json.loads(fetch_text(f"https://api.github.com/repos/{REPOSITORY}/commits/main"))["sha"]
+        revision = json.loads(
+            fetch_text(f"https://api.github.com/repos/{REPOSITORY}/commits/main")
+        )["sha"]
     if not re.fullmatch(r"[0-9a-f]{40}", revision):
         raise ValueError("PAPERTRADER_REVISION must be a full commit SHA")
     base = f"https://raw.githubusercontent.com/{REPOSITORY}/{revision}/data/tables"

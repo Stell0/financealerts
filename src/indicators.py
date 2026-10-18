@@ -36,3 +36,12 @@ def bb(df,timeperiod=20,nbdevup=2,nbdevdn=2,matype=0):
 	df['BB_MIDDLE'] = middleband
 	df['BB_LOWER'] = lowerband
 	return df
+
+def calculate(df):
+    """Calculate standard indicators from FinanceAlerts' adjusted closing series."""
+    df = df.copy()
+    df = rsi(df, timeperiod=14)
+    df = sma(df, timeperiod=50, label="SMA50")
+    df = sma(df, timeperiod=200, label="SMA200")
+    df = macd(df, fastperiod=12, slowperiod=26, signalperiod=9)
+    return bb(df, timeperiod=20, nbdevup=2, nbdevdn=2)

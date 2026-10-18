@@ -77,3 +77,36 @@ converge when PaperTrader pulls the committed FinanceAlerts file through its
 validated watchlist importer; each repository writes only its own data.
 
 Offline registry checks: `PYTHONPATH=src python3 -m unittest discover -s tests -v`.
+
+## RSI ratings and independent prices
+
+FinanceAlerts downloads its own adjusted daily OHLCV series from yfinance. It
+never uses PaperTrader market prices, technical indicators, timing scores or
+historical reference prices. Indicators are RSI(14), Bollinger(20,2),
+MACD(12,26,9), SMA50 and SMA200. Signals from the older `INDICATORS` selector are
+replaced by RSI-only triggers: Buy at RSI <= `RSI_lower` (30), Sell at RSI >=
+`RSI_upper` (70). Both directions apply to every monitored security.
+
+The independent Buy/Sell scores use defaults in `src/rating_config.py`: RSI 50%,
+Bollinger 8%, MACD 7%, moving averages 5%, valuation 12%, business quality 6%,
+thesis 4%, balance sheet 3%, risk penalty 5%. RSI scores start at 5 on the trigger
+and increase by 0.5 per RSI point beyond it, capped at 10. Bollinger scores measure
+position within the bands; MACD combines line/signal position and histogram
+movement; moving averages combine 50/200 trend and price/50 position. Missing
+technical warm-up values are neutral. There are no additional signal vetoes.
+
+Fundamentals join on immutable security_id, scale from 0–100 to 0–10 and favor
+quality/value for Buy and weakness/risk for Sell. Missing, expired or invalid
+components become 5/10 without changing weights or refreshing research. Scores
+are rounded to one decimal. Stars use (0–2], (2–4], (4–6], (6–8], (8–10], with
+one star also at zero.
+
+Exchange calendars select the most recent completed daily session, including
+holidays, half days and daylight-saving changes. Bitcoin days close at UTC
+midnight. Valid caches are merged without dropping their last row. The retained
+550-day adjusted history is reconciled once per new completed session, including
+corporate-action adjustments; reruns fetch a 14-day overlap for corrections.
+Cache metadata binds the last full reconciliation to the CSV checksum. Mixed
+adjustment revisions with missing historical rows fail per ticker and preserve
+the cache for retry. A failed provider may use a cache only when it already
+contains the latest completed session. Other tickers continue independently.

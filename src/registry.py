@@ -1,10 +1,10 @@
 """Additive ticker registry and immutable PaperTrader identity joins."""
 
 import csv
+import re
 from dataclasses import dataclass
 from io import StringIO
 from pathlib import Path
-import re
 
 SYMBOL = re.compile(r"^[A-Z0-9][A-Z0-9.^=+-]{0,39}$")
 SECURITY_ID = re.compile(r"^[A-Za-z0-9_-]{1,128}$")
@@ -23,8 +23,17 @@ def identity_symbol(symbol):
 
 
 def read_securities(text):
-    reader = csv.DictReader(StringIO(text.lstrip('\ufeff')))
-    required = {"security_id", "ticker", "provider_symbol", "company_name", "venue_mic", "currency", "instrument_type", "research_page"}
+    reader = csv.DictReader(StringIO(text.lstrip("\ufeff")))
+    required = {
+        "security_id",
+        "ticker",
+        "provider_symbol",
+        "company_name",
+        "venue_mic",
+        "currency",
+        "instrument_type",
+        "research_page",
+    }
     if not required.issubset(reader.fieldnames or []):
         raise ValueError("PaperTrader securities CSV lacks required identity columns")
     rows, ids, providers = [], set(), set()
@@ -49,7 +58,9 @@ def read_securities(text):
 def read_tickers(path):
     if not Path(path).exists():
         return []
-    return [normalize(line) for line in Path(path).read_text().splitlines() if line.strip()]
+    return [
+        normalize(line) for line in Path(path).read_text().splitlines() if line.strip()
+    ]
 
 
 @dataclass(frozen=True)
@@ -60,19 +71,30 @@ class MonitoredTicker:
 
     @property
     def identity(self):
-        return self.security["security_id"] if self.security else identity_symbol(self.ticker)
+        return (
+            self.security["security_id"]
+            if self.security
+            else identity_symbol(self.ticker)
+        )
 
 
 def resolve(symbol, securities):
     symbol = normalize(symbol)
     canonical = identity_symbol(symbol)
-    matches = [row for row in securities if canonical in {
-        identity_symbol(row["ticker"]), identity_symbol(row["provider_symbol"])
-    }]
+    matches = [
+        row
+        for row in securities
+        if canonical
+        in {identity_symbol(row["ticker"]), identity_symbol(row["provider_symbol"])}
+    ]
     if len(matches) > 1:
         raise ValueError(f"Ambiguous PaperTrader identity for {symbol}")
     security = matches[0] if matches else None
-    yahoo = ("GOOG" if symbol == "GOOG" else security["provider_symbol"]) if security else symbol
+    yahoo = (
+        ("GOOG" if symbol == "GOOG" else security["provider_symbol"])
+        if security
+        else symbol
+    )
     if canonical == "BTCUSD":
         yahoo = "BTC-USD"
     # Use provider-qualified symbols for exchanges where registry tickers omit suffixes.
@@ -84,7 +106,9 @@ def merge_universe(file_tickers, environment, securities):
     explicit = [*file_tickers, *environment.split()]
     merged = {}
     # User-configured GOOG wins over registry GOOGL, without sharing their prices.
-    for symbol in sorted([row["provider_symbol"] for row in securities]) + sorted(explicit):
+    for symbol in sorted([row["provider_symbol"] for row in securities]) + sorted(
+        explicit
+    ):
         item = resolve(symbol, securities)
         previous = merged.get(item.identity)
         if previous is None or item.ticker == "GOOG" or previous.ticker != "GOOG":

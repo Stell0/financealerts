@@ -28,3 +28,13 @@ MyPy, schema, wiki lint and portfolio reconciliation passed. Broad PaperTrader
 runs exceeded local temporary disk quota; final regression will run in bounded
 batches. Existing PaperTrader disabled-chart integrity findings are outside this
 integration's scope; no research or portfolio records are rewritten.
+
+### M2 — 2026-10-18
+
+Repaired completed-session normalization and adjusted-price caching, corrected
+SMA50 to 50 sessions, and replaced legacy signal selection with inclusive RSI
+triggers. Added independent weighted ratings and neutral assessment fallback.
+Pinned the small runtime dependency set and use TA-Lib wheels in the Python 3.12
+container rather than building the obsolete native library. Offline tests cover
+calendars, cache preservation/corrections, thresholds, indicator definitions and
+fundamental validity; no tracked market cache is changed during validation.

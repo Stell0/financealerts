@@ -37,9 +37,8 @@ python3.12 -m venv .venv
 ```
 
 Use an existing environment if appropriate. Installing the pinned `TA-Lib`
-Python binding requires native TA-Lib; the Dockerfile builds version 0.4.0 under
-`/usr` before installing Python dependencies. Consult that recipe when local
-installation fails.
+Python binding now uses a pinned wheel with its native library included. The
+Dockerfile installs the small pinned runtime set on Python 3.12-slim.
 
 ```sh
 # One ticker; the first positional argument overrides TICKER_LIST.
@@ -63,18 +62,13 @@ the Docker example). They are integration checks, not offline tests.
   securities. A positional ticker overrides the scan only. Identity and assessment
   ingestion lives in `registry.py` and `papertrader_data.py`; never use PaperTrader
   prices or indicators. Preserve the GOOG/GOOGL and BTCUSD alias rules.
-- `INDICATORS` is checked using substring membership for `RSI`, `SMA`, `MACD`,
-  and `BB`. With it unset, RSI rules run by default. Moving-average crossover
-  rules always run, and all indicator columns are calculated regardless of
-  selected signal rules.
-- The column named `SMA50` is currently computed with a 40-period window.
-  Treat this as existing behavior; change it only when relevant to the task.
-- `RSI_upper`, `RSI_lower`, `RSI_upper2`, and `RSI_lower2` configure RSI signal
-  thresholds (defaults: 70, 30, 80, 20). Period environment variables declared
-  in `indicators.py` are not wired into its function defaults or main's calls.
-- Reports use only the last row when its date equals today's UTC date. Positive
-  scores mean BUY; negative scores mean SELL. Preserve MarkdownV2 escaping and
-  ticker-specific TradingView links when changing report formatting.
+- RSI alone triggers candidates, inclusively at RSI_lower (30) and RSI_upper (70).
+  `INDICATORS` no longer selects independent triggers. Ratings use defaults in
+  `rating_config.py`; `ratings.py` calculates independent Buy/Sell scores.
+- Indicator definitions: RSI14, Bollinger20/2, MACD12/26/9, SMA50 and SMA200.
+  Unavailable warmups and missing/expired fundamental components are neutral.
+- Scan only completed exchange sessions, including the last session on holidays
+  and weekends. Bitcoin sessions close at UTC midnight.
 - Telegram credentials are read at module import. Reports are always printed;
   delivery occurs when both `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` are set.
 - The application does not automatically load `.env`. Keep credentials out of
@@ -88,12 +82,14 @@ message delivery in their existing modules. Follow nearby formatting; the
 repository currently mixes tabs and spaces across functions, so avoid broad
 formatting changes.
 
-Daily caches use a date index and flat OHLCV columns. Yahoo Finance can return
-MultiIndex columns, which the downloader flattens before saving. Existing cache
-updates drop the last cached row, fetch overlapping dates, and deduplicate dates
-keeping the newest values. Preserve these contracts when changing retrieval.
-Use temporary directories and mocked downloads for cache tests so tracked price
-history stays untouched. Review any `data/` diff separately from code changes.
+Daily caches use a date index and flat adjusted OHLCV columns. The downloader
+normalizes Yahoo MultiIndex data, filters incomplete/non-session rows, merges
+without dropping existing valid rows and atomically saves changed content only.
+It reconciles 550 calendar days once per completed session and fetches a 14-day
+overlap on reruns. `data/price_cache_state.json` binds reconciliation to cache
+checksums. Reject mixed adjustment bases when provider history is incomplete.
+Use temporary directories and mocked downloads for tests; review data diffs
+separately from code changes.
 
 ## Verification
 
