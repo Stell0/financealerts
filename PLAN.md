@@ -38,3 +38,13 @@ Pinned the small runtime dependency set and use TA-Lib wheels in the Python 3.12
 container rather than building the obsolete native library. Offline tests cover
 calendars, cache preservation/corrections, thresholds, indicator definitions and
 fundamental validity; no tracked market cache is changed during validation.
+
+### M3 — 2026-10-18
+
+Added linked, sorted Telegram HTML reports, canonical research/catalog links,
+exchange-qualified TradingView symbols and complete-line splitting. Delivery
+state fingerprints only completed-bar date/OHLCV and advances per successful
+chunk; console-only and failed sends do not mark delivery. Offline tests include
+new-session/corrected-bar repeats, unchanged data, direction/share-class keys,
+partial failures, HTML escaping and actual mocked transport. Python 3.12 Docker
+build succeeded with pinned dependencies. No real Telegram message was sent.

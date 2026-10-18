@@ -69,8 +69,11 @@ the Docker example). They are integration checks, not offline tests.
   Unavailable warmups and missing/expired fundamental components are neutral.
 - Scan only completed exchange sessions, including the last session on holidays
   and weekends. Bitcoin sessions close at UTC midnight.
-- Telegram credentials are read at module import. Reports are always printed;
-  delivery occurs when both `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` are set.
+- Telegram transport reads `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` at send time.
+  Reports use HTML links and split only at complete ticker lines. Console-only
+  runs print messages without advancing delivery state. `notifications.py` stores
+  only successful sends in `data/alert_state.json`, keyed by symbol/direction and
+  completed-bar date plus normalized OHLCV. No cooldown or transition gate exists.
 - The application does not automatically load `.env`. Keep credentials out of
   source, logs, documentation, and commits. Unset Telegram variables for local
   checks that should only print reports.

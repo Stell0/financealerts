@@ -110,3 +110,23 @@ Cache metadata binds the last full reconciliation to the CSV checksum. Mixed
 adjustment revisions with missing historical rows fail per ticker and preserve
 the cache for retry. A failed provider may use a cache only when it already
 contains the latest completed session. Other tickers continue independently.
+
+## Telegram delivery
+
+Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` to enable delivery. Without both,
+messages print to the console and are not marked delivered. Messages use Telegram
+HTML, with Buy before Sell, descending score within each section, and one linked
+line per ticker: `TICKER | stars | COMPANY NAME`. TradingView uses the analyzed
+share class and exchange (Bitcoin: BITSTAMP:BTCUSD). Company links use existing
+PaperTrader research pages or the security's stable catalog anchor. Newly added
+symbols without a PaperTrader entry link to the catalog until synchronization.
+No assessment is created or refreshed by FinanceAlerts.
+
+Messages split at complete ticker lines, repeating a section heading as needed.
+`data/alert_state.json` records successful sends only, one latest-bar fingerprint
+per Yahoo symbol and direction. The fingerprint includes date and normalized
+OHLCV, so a new session or corrected bar can alert again; unchanged data cannot.
+Scores, research changes and elapsed time do not independently trigger repeats.
+Failed messages remain eligible for retry; successfully sent earlier chunks are
+persisted immediately. No message is produced without new qualifying alerts.
+Corrupt state fails explicitly rather than silently resending the universe.

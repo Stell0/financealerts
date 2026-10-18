@@ -3,13 +3,16 @@
 import logging
 import os
 import sys
+from dataclasses import replace
 from datetime import datetime, timezone
 
+import yfinance as yf
+
 import indicators
-import telegram_alert
 import yahoo_finance_api
+from notifications import YAHOO_EXCHANGES, deliver
 from papertrader_data import load_snapshot
-from ratings import rate, read_assessments, stars
+from ratings import rate, read_assessments
 from registry import synchronize
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -20,6 +23,25 @@ def scan(universe, assessments, now=None, cache_dir="data"):
     candidates, failures = [], []
     for item in universe:
         try:
+            if item.security is None and item.yahoo_symbol != "BTC-USD":
+                info = yf.Ticker(item.yahoo_symbol).get_info()
+                venue = YAHOO_EXCHANGES.get(info.get("exchange"))
+                if (
+                    info.get("symbol") != item.yahoo_symbol
+                    or not venue
+                    or not info.get("longName")
+                ):
+                    raise ValueError(
+                        "Unverified company/venue metadata; retry after registry import"
+                    )
+                item = replace(
+                    item,
+                    security={"company_name": info["longName"], "venue_mic": venue},
+                )
+            if item.yahoo_symbol == "BTC-USD" and item.security is None:
+                item = replace(
+                    item, security={"company_name": "Bitcoin", "venue_mic": "XOFF"}
+                )
             security = item.security or {}
             prices = yahoo_finance_api.retrieve_daily_prices(
                 item.yahoo_symbol,
@@ -58,20 +80,13 @@ def main(argv=None):
         argv[0] if argv else None,
     )
     candidates, failures = scan(universe, read_assessments(text))
-    # M3 replaces this compact interim report with linked HTML and delivery state.
-    lines = []
-    for direction in ("Buy", "Sell"):
-        selected = sorted(
-            (row for row in candidates if row["direction"] == direction),
-            key=lambda row: (-row["score"], row["item"].ticker),
+    try:
+        deliver(candidates)
+    except Exception:
+        logging.exception(
+            "Telegram delivery failed; undelivered alerts remain eligible for retry"
         )
-        if selected:
-            lines.append(direction + ":")
-            lines.extend(
-                f"{row['item'].ticker} | {stars(row['score'])}" for row in selected
-            )
-    if lines:
-        telegram_alert.send_alert("\n".join(lines))
+        return 1
     return 1 if failures else 0
 
 
