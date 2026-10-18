@@ -3,15 +3,16 @@
 import os
 
 WEIGHTS = {
-    "rsi": 0.50,
-    "bollinger": 0.08,
-    "macd": 0.07,
-    "moving_averages": 0.05,
-    "valuation_score": 0.12,
-    "business_quality_score": 0.06,
-    "thesis_score": 0.04,
-    "balance_sheet_score": 0.03,
-    "risk_penalty": 0.05,
+    # RSI selects notifications; stars balance technicals with fundamentals.
+    "rsi": 0.25,
+    "bollinger": 0.10,
+    "macd": 0.09,
+    "moving_averages": 0.06,
+    "valuation_score": 0.20,
+    "business_quality_score": 0.10,
+    "thesis_score": 0.07,
+    "balance_sheet_score": 0.05,
+    "risk_penalty": 0.08,
 }
 
 # Directional favorability for every expired fundamental component, including risk.

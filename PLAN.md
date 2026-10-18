@@ -3,6 +3,9 @@
 Current policy update (2026-10-18): expired assessments contribute 0/10 to every
 fundamental factor for both Buy and Sell. This supersedes the original neutral
 expiry fallback described in the milestone history below.
+The latest user-approved rating weights are 25% RSI, 25% other technicals and
+50% fundamentals, superseding the original 50% RSI weighting. RSI still alone
+determines eligibility at the inclusive 30/70 thresholds.
 
 Implement the user-approved four milestones sequentially. Each repository owns
 its own data; PaperTrader supplies identity and assessments only. No trading,
@@ -87,3 +90,20 @@ regressions for both directions, exact expiry/timezones and this concrete alert;
 all 36 offline tests pass locally and in the rebuilt Python 3.12 container.
 Lint, formatting and whitespace checks pass. No live scan or Telegram delivery
 was requested here.
+
+### Alert eligibility and star weighting — 2026-10-18
+
+User selected 25% RSI, 25% other technicals and 50% fundamentals. RSI remains
+the sole inclusive 30/70 notification trigger. Stars give stronger influence
+to fundamental support: valuation 20%, business quality 10%, thesis 7%, balance
+sheet 5% and risk 8%; other technicals are Bollinger 10%, MACD 9% and trend 6%.
+Expired research still contributes zero to both directions, now limiting either
+rating to 5/10 (three stars). The previous PLS.AX bar now rates 3.7/two stars.
+Missing/invalid research remains neutral; delivery state and repeat rules remain
+unchanged. README recaps eligibility, directional support, expiry and stars.
+
+Validation: all 37 offline tests pass locally and in the rebuilt Python 3.12
+container. Added regressions show fundamentals change stars without changing
+RSI eligibility, for both Buy and Sell. Lint, formatting and whitespace checks
+pass. No price cache, delivery state or PaperTrader data changed; no Telegram
+message was sent.

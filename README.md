@@ -72,29 +72,55 @@ instruments and venues remain unchanged: cryptocurrency orders are prohibited.
 
 Only RSI(14) triggers alerts: Buy at RSI <= `RSI_lower` (default 30), Sell at
 RSI >= `RSI_upper` (default 70). Both directions apply to the entire universe.
-The former `INDICATORS` selector no longer triggers independent signals.
+Buy flags an oversold candidate for review; Sell flags an overbought candidate.
+These conditions identify price extremes, not a fundamental recommendation or
+an instruction to trade. Between the thresholds there is no alert, even if a
+direction has a high rating. The former `INDICATORS` selector no longer triggers
+independent signals.
 
-The independent Buy/Sell ratings are weighted sums of 0–10 subscores. Defaults
-live in `src/rating_config.py`: RSI 50%, Bollinger 8%, MACD 7%, SMA50/SMA200 5%,
-valuation 12%, business quality 6%, thesis 4%, balance sheet 3%, risk penalty 5%.
+Stars express weighted support for the selected direction. Ratings give 25% to
+RSI, 25% to other technicals and 50% to fundamentals, so a more extreme RSI has
+less influence than it had under the original 50% RSI weighting. The independent
+Buy/Sell ratings sum 0–10 subscores using defaults in `src/rating_config.py`:
+
+| Factor | Weight | Rationale |
+| --- | ---: | --- |
+| RSI(14) | 25% | Strength of the oversold/overbought extreme |
+| Bollinger Bands | 10% | Position near the lower/upper band |
+| MACD | 9% | Momentum reversal or deterioration |
+| SMA50/SMA200 | 6% | Trend confirmation |
+| PaperTrader valuation | 20% | Fundamental value or overvaluation |
+| PaperTrader business quality | 10% | Business strength or weakness |
+| PaperTrader thesis | 7% | Investment thesis strength or weakness |
+| PaperTrader balance sheet | 5% | Financial strength or weakness |
+| PaperTrader risk penalty | 8% | Lower risk favors Buy; higher risk favors Sell |
+
 RSI starts at 5 on its threshold and increases by 0.5 per point beyond it, capped
-at 10. Bollinger(20,2) measures band position, MACD(12,26,9) combines line/signal
-position and histogram movement, and moving averages combine 50/200 trend with
-price/50 position. Unavailable technical warm-ups remain neutral; insufficient
-RSI history is reported per ticker.
+at 10. Its maximum contribution is 2.5 rating points; going from RSI 30 to 20
+adds 1.25 Buy points before rounding. Bollinger(20,2) measures band position,
+MACD(12,26,9) combines line/signal position and histogram movement, and moving
+averages combine 50/200 trend with price/50 position. Unavailable technical
+warm-ups remain neutral; insufficient RSI history is reported per ticker.
 
 PaperTrader components join by immutable `security_id`, scale from 0–100 to 0–10,
 and favor value/quality for Buy and weakness/risk for Sell. Expired assessments
 receive 0/10 for every fundamental factor in both directions, including risk.
-Their entire 30% fundamental contribution is zero, removing the 1.5-point neutral
-contribution. Expiry starts exactly at `expires_at`; it never boosts Sell scores.
+Their entire 50% fundamental contribution is zero, removing the 2.5-point neutral
+contribution. Consequently, expired research limits either rating to 5/10
+(three stars), even with maximum technical support. Expiry starts exactly at
+`expires_at`; it never boosts Sell scores.
 `EXPIRED_FUNDAMENTAL_SCORE` is defined alongside the weights in
 `src/rating_config.py`. Missing or invalid assessments/components remain neutral
-at 5/10. Weights and RSI triggers stay unchanged; expiry does not block a
+at 5/10. Expiry does not change the weighting or RSI triggers, block a
 qualifying alert or refresh research.
 FinanceAlerts never reads PaperTrader prices, technical series, `timing_score`
 or `reference_price`, and never refreshes research. Scores round to one decimal.
 Stars use 0–2: one, over 2–4: two, over 4–6: three, over 6–8: four, over 8–10: five.
+More stars mean stronger support within this model, not a probability of profit.
+Sell is calculated independently, not as 10 minus Buy. PaperTrader's categorical
+Sell/Avoid label is not an alert veto; its component scores and validity affect
+stars. For the previous PLS.AX alert's same market bar and expired assessment,
+the current model gives 3.7/10 (two stars), versus the original 7.0/four stars.
 
 ## Completed sessions and caches
 

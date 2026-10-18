@@ -45,12 +45,12 @@ class RatingTests(unittest.TestCase):
             return_value=dict.fromkeys(["bollinger", "macd", "moving_averages"], 5.0),
         ):
             for rsi, direction, expected in [
-                (20, "Buy", 7.5),
-                (25, "Buy", 6.2),
+                (22, "Buy", 6.0),
+                (26, "Buy", 5.5),
                 (30, "Buy", 5.0),
                 (70, "Sell", 5.0),
-                (75, "Sell", 6.2),
-                (80, "Sell", 7.5),
+                (74, "Sell", 5.5),
+                (78, "Sell", 6.0),
             ]:
                 actual, scores = rate(frame(rsi), now=NOW)
                 self.assertEqual(actual, direction)
@@ -60,7 +60,12 @@ class RatingTests(unittest.TestCase):
 
     def test_weights_boundaries_and_independence(self):
         self.assertAlmostEqual(sum(WEIGHTS.values()), 1)
-        self.assertEqual(WEIGHTS["rsi"], 0.5)
+        self.assertEqual(WEIGHTS["rsi"], 0.25)
+        self.assertAlmostEqual(
+            sum(WEIGHTS[key] for key in ("bollinger", "macd", "moving_averages")),
+            0.25,
+        )
+        self.assertAlmostEqual(sum(WEIGHTS[key] for key in FUNDAMENTALS), 0.50)
         for rsi in (0, 20, 30, 50, 70, 80, 100):
             _, scores = rate(frame(rsi), assessment(), NOW)
             self.assertTrue(all(0 <= value <= 10 for value in scores.values()))
@@ -72,6 +77,33 @@ class RatingTests(unittest.TestCase):
         high_risk = rate(frame(20), assessment(risk_penalty="100"), NOW)[1]
         self.assertGreater(low_risk["Buy"], high_risk["Buy"])
         self.assertLess(low_risk["Sell"], high_risk["Sell"])
+
+    def test_fundamentals_drive_stars_while_rsi_selects_alerts(self):
+        buy_support = assessment(**dict.fromkeys(FUNDAMENTALS, "100"))
+        buy_support["risk_penalty"] = "0"
+        sell_support = assessment(**dict.fromkeys(FUNDAMENTALS, "0"))
+        sell_support["risk_penalty"] = "100"
+        with patch(
+            "ratings.technical_scores",
+            return_value=dict.fromkeys(["bollinger", "macd", "moving_averages"], 5.0),
+        ):
+            for direction, threshold, extreme, strong, weak in (
+                ("Buy", 30, 22, buy_support, sell_support),
+                ("Sell", 70, 78, sell_support, buy_support),
+            ):
+                with self.subTest(direction=direction):
+                    candidate, strong_scores = rate(frame(threshold), strong, NOW)
+                    weak_candidate, weak_scores = rate(frame(threshold), weak, NOW)
+                    self.assertEqual(candidate, direction)
+                    self.assertEqual(weak_candidate, direction)
+                    self.assertEqual(strong_scores[direction], 7.5)
+                    self.assertEqual(weak_scores[direction], 2.5)
+                    self.assertEqual(stars(strong_scores[direction]), "⭐⭐⭐⭐")
+                    self.assertEqual(stars(weak_scores[direction]), "⭐⭐")
+                    self.assertEqual(
+                        rate(frame(extreme), strong, NOW)[1][direction], 8.5
+                    )
+                    self.assertIsNone(rate(frame(50), strong, NOW)[0])
 
     def test_neutral_invalid_missing_and_partial_components(self):
         neutral = dict.fromkeys(FUNDAMENTALS, 5.0)
@@ -102,13 +134,12 @@ class RatingTests(unittest.TestCase):
             "ratings.technical_scores",
             return_value=dict.fromkeys(["bollinger", "macd", "moving_averages"], 5.0),
         ):
-            for rsi, direction in ((20, "Buy"), (80, "Sell")):
+            for rsi, direction in ((22, "Buy"), (78, "Sell")):
                 candidate, scores = rate(frame(rsi), expired, NOW)
                 self.assertEqual(candidate, direction)
-                self.assertEqual(scores[direction], 6.0)
+                self.assertEqual(scores[direction], 3.5)
                 neutral = rate(frame(rsi), None, NOW)[1]
-                for side in ("Buy", "Sell"):
-                    self.assertAlmostEqual(neutral[side] - scores[side], 1.5)
+                self.assertEqual(neutral[direction] - scores[direction], 2.5)
             self.assertIsNone(rate(frame(50), expired, NOW)[0])
 
     def test_expiry_boundary_and_timezone(self):
@@ -129,10 +160,11 @@ class RatingTests(unittest.TestCase):
         ):
             for rsi, direction in ((0, "Buy"), (100, "Sell")):
                 scores = rate(frame(rsi), expired, NOW)[1]
-                self.assertEqual(scores[direction], 7.0)
-                self.assertTrue(all(0 <= value <= 7 for value in scores.values()))
+                self.assertEqual(scores[direction], 5.0)
+                self.assertTrue(all(0 <= value <= 5 for value in scores.values()))
+                self.assertEqual(stars(scores[direction]), "⭐⭐⭐")
 
-    def test_pls_last_alert_drops_to_three_stars(self):
+    def test_pls_last_alert_drops_to_two_stars(self):
         data = frame(22.6594959723)
         data["Close"] = 2.980000019
         data["BB_UPPER"] = 4.3928122107
@@ -147,9 +179,9 @@ class RatingTests(unittest.TestCase):
         )
         direction, scores = rate(data, expired, NOW)
         self.assertEqual(direction, "Buy")
-        self.assertEqual(scores["Buy"], 5.5)
-        self.assertEqual(stars(scores["Buy"]), "⭐⭐⭐")
-        self.assertEqual(rate(data, None, NOW)[1]["Buy"], 7.0)
+        self.assertEqual(scores["Buy"], 3.7)
+        self.assertEqual(stars(scores["Buy"]), "⭐⭐")
+        self.assertEqual(rate(data, None, NOW)[1]["Buy"], 6.2)
 
     def test_missing_warmups_are_neutral_without_veto(self):
         data = frame(20)
@@ -166,7 +198,7 @@ class RatingTests(unittest.TestCase):
         ] = np.nan
         direction, scores = rate(data, now=NOW)
         self.assertEqual(direction, "Buy")
-        self.assertEqual(scores["Buy"], 7.5)
+        self.assertEqual(scores["Buy"], 6.2)
 
     def test_threshold_configuration_and_stars(self):
         with patch.dict("os.environ", {"RSI_lower": "25", "RSI_upper": "75"}):
