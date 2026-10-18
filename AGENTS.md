@@ -6,18 +6,22 @@ FinanceAlerts is a Python command-line application that downloads Yahoo Finance
 prices, calculates technical indicators, and reports BUY/SELL signals. Telegram
 delivery is optional. There is no web service or packaged Python application.
 
-- `src/main.py`: CLI entry point, ticker selection, indicator orchestration,
-  current-day signal filtering, and Telegram MarkdownV2 report formatting.
+- `src/main.py`: CLI entry point, full-universe scan orchestration, and per-ticker
+  failure isolation.
+- `src/registry.py`: additive ticker persistence, alias resolution and identity joins.
+- `src/papertrader_data.py`: read-only identity/assessment snapshots at one revision.
 - `src/yahoo_finance_api.py`: Yahoo Finance downloads and daily CSV cache handling;
   also contains hourly-price and earnings-date helpers.
 - `src/indicators.py`: TA-Lib calculations that add columns to pandas DataFrames.
-- `src/signals.py`: rules that accumulate numeric `signal` values and comma-ended
-  `reason` strings on those DataFrames.
-- `src/telegram_alert.py`: prints reports and optionally sends them using the
-  asynchronous Telegram API.
+- `src/ratings.py` and `src/rating_config.py`: RSI candidate triggers and independent
+  weighted ratings. `src/signals.py` retains legacy helpers outside the current scan.
+- `src/notifications.py`: linked HTML, sorting, splitting and bar-based delivery state.
+- `src/telegram_alert.py`: console output and asynchronous HTML transport; HTTP
+  client request logging is suppressed to keep bot tokens out of logs.
 - `data/*.csv`: tracked price caches, not disposable build output.
-- `requirements.txt`: runtime dependencies; most are pinned, but `yfinance` is not.
-- `Dockerfile`: Python 3.12 image, native TA-Lib build, and application startup.
+- `data/price_cache_state.json` and `data/alert_state.json`: persistent runtime state.
+- `requirements.txt`: pinned direct runtime dependencies, including yfinance.
+- `Dockerfile`: pinned Python 3.12 image, TA-Lib wheel installation and startup.
 - `.github/workflows/`: image builds, PR image builds, and scheduled execution
   with cache commits.
 
