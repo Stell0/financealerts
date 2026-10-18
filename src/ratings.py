@@ -1,4 +1,4 @@
-"""Deterministic independent Buy/Sell ratings; only RSI triggers candidates."""
+"""Independent ratings and RSI eligibility with directional non-RSI support."""
 
 import csv
 import logging
@@ -6,7 +6,13 @@ import math
 from datetime import datetime, timezone
 from io import StringIO
 
-from rating_config import EXPIRED_FUNDAMENTAL_SCORE, WEIGHTS, thresholds
+from rating_config import (
+    EXPIRED_FUNDAMENTAL_SCORE,
+    NON_RSI_SUPPORT_MIN,
+    RSI_SUPPORT_BAND,
+    WEIGHTS,
+    thresholds,
+)
 
 FUNDAMENTALS = (
     "valuation_score",
@@ -142,6 +148,10 @@ def rate(frame, assessment=None, now=None, lower=None, upper=None):
     rsi = float(frame.iloc[-1]["RSI"])
     fundamental = fundamental_scores(assessment, now)
     output = {}
+    support = {}
+    support_weight = math.fsum(
+        weight for field, weight in WEIGHTS.items() if field != "rsi"
+    )
     for direction in ("Buy", "Sell"):
         components = technical_scores(frame, direction)
         components["rsi"] = clamp(
@@ -160,7 +170,31 @@ def rate(frame, assessment=None, now=None, lower=None, upper=None):
         output[direction] = round(
             clamp(sum(WEIGHTS[field] * value for field, value in components.items())), 1
         )
-    candidate = "Buy" if rsi <= lower else "Sell" if rsi >= upper else None
+        # Reuse the same directional subscores, including the expiry penalty.
+        # Eligibility uses unrounded support; star rounding must not admit < 7.
+        support[direction] = clamp(
+            math.fsum(
+                WEIGHTS[field] * value
+                for field, value in components.items()
+                if field != "rsi"
+            )
+            / support_weight
+        )
+    if rsi <= lower:
+        candidate = "Buy"
+    elif rsi >= upper:
+        candidate = "Sell"
+    elif (
+        lower < rsi < lower + RSI_SUPPORT_BAND and support["Buy"] >= NON_RSI_SUPPORT_MIN
+    ):
+        candidate = "Buy"
+    elif (
+        upper - RSI_SUPPORT_BAND < rsi < upper
+        and support["Sell"] >= NON_RSI_SUPPORT_MIN
+    ):
+        candidate = "Sell"
+    else:
+        candidate = None
     return candidate, output
 
 

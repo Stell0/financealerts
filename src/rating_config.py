@@ -18,6 +18,10 @@ WEIGHTS = {
 # Directional favorability for every expired fundamental component, including risk.
 EXPIRED_FUNDAMENTAL_SCORE = 0.0
 
+# Open RSI bands next to the unconditional thresholds require this support.
+RSI_SUPPORT_BAND = 5.0
+NON_RSI_SUPPORT_MIN = 7.0
+
 
 def thresholds():
     lower = float(os.environ.get("RSI_lower", "30"))

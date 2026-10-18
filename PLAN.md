@@ -4,8 +4,9 @@ Current policy update (2026-10-18): expired assessments contribute 0/10 to every
 fundamental factor for both Buy and Sell. This supersedes the original neutral
 expiry fallback described in the milestone history below.
 The latest user-approved rating weights are 25% RSI, 25% other technicals and
-50% fundamentals, superseding the original 50% RSI weighting. RSI still alone
-determines eligibility at the inclusive 30/70 thresholds.
+50% fundamentals, superseding the original 50% RSI weighting. Inclusive 30/70
+RSI thresholds remain unconditional; the open (30, 35) Buy and (65, 70) Sell
+bands additionally qualify with >= 7/10 normalized directional non-RSI support.
 
 Implement the user-approved four milestones sequentially. Each repository owns
 its own data; PaperTrader supplies identity and assessments only. No trading,
@@ -107,3 +108,18 @@ container. Added regressions show fundamentals change stars without changing
 RSI eligibility, for both Buy and Sell. Lint, formatting and whitespace checks
 pass. No price cache, delivery state or PaperTrader data changed; no Telegram
 message was sent.
+
+### Support-qualified RSI bands — 2026-10-18
+
+Inclusive RSI <= 30 Buy and RSI >= 70 Sell candidates remain unconditional.
+The open (30, 35) Buy and (65, 70) Sell bands now qualify when the corresponding
+non-RSI support reaches 7/10. Reuse the same directional technical/fundamental
+subscores, exclude RSI and normalize the remaining 75% weight before comparing
+the unrounded support. No rating weights, expiry/missing-data policy or delivery
+state rules change. README and AGENTS document the exact boundaries and formula.
+
+Validation: 42 offline tests pass locally and in the rebuilt Python 3.12 image,
+including strict 35/65 limits, unconditional inclusive 30/70 limits, exactly 7
+versus just-below-7 support, weighted normalization, bearish Sell support and
+existing market-data delivery suppression. Lint, formatting and diff checks
+pass. No live Telegram delivery or market download was used for validation.

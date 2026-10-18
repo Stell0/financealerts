@@ -66,17 +66,25 @@ the Docker example). They are integration checks, not offline tests.
   securities. A positional ticker overrides the scan only. Identity and assessment
   ingestion lives in `registry.py` and `papertrader_data.py`; never use PaperTrader
   prices or indicators. Preserve the GOOG/GOOGL and BTCUSD alias rules.
-- RSI alone triggers candidates, inclusively at RSI_lower (30) and RSI_upper (70).
+- RSI <= RSI_lower (30) triggers Buy and RSI >= RSI_upper (70) triggers Sell
+  regardless of other factors. The additional open bands (30, 35) for Buy and
+  (65, 70) for Sell require >= 7/10 directional non-RSI support. Exactly 35/65
+  do not qualify. Bands extend five points inward from the configured thresholds.
+  Reuse the existing directional technical/fundamental subscores, exclude RSI,
+  and divide their weighted sum by the combined 75% weight. Compare unrounded
+  support against the inclusive cutoff; bearish technicals and unfavorable
+  fundamentals support Sell. Keep band/cutoff defaults in `rating_config.py`.
   `INDICATORS` no longer selects independent triggers. Ratings use defaults in
   `rating_config.py`: 25% RSI, 25% other technicals and 50% fundamentals.
   `ratings.py` calculates independent Buy/Sell scores; stars describe support
-  for the direction, while RSI thresholds alone determine alert eligibility.
+  for the direction independently of the notification eligibility check.
 - Indicator definitions: RSI14, Bollinger20/2, MACD12/26/9, SMA50 and SMA200.
   Unavailable warmups and missing/invalid fundamental components are neutral.
   Expired assessments give every directional fundamental factor 0/10 for both
   Buy and Sell, including risk. Do not mirror this penalty into a Sell reward.
   With the current weights, expired assessments cap either rating at 5/10
-  (three stars). Keep the configured weights and triggers unless requested.
+  (three stars) and cannot qualify the additional RSI bands. Extreme-RSI alerts
+  remain eligible. Keep the configured weights and triggers unless requested.
 - Scan only completed exchange sessions, including the last session on holidays
   and weekends. Bitcoin sessions close at UTC midnight.
 - Telegram transport reads `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` at send time.

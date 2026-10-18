@@ -38,7 +38,124 @@ def assessment(**changes):
     }
 
 
+def supporting_assessment(direction, score):
+    raw = score if direction == "Buy" else 10 - score
+    return assessment(
+        **{
+            **dict.fromkeys(FUNDAMENTALS, str(raw * 10)),
+            "risk_penalty": str((10 - raw) * 10),
+        }
+    )
+
+
 class RatingTests(unittest.TestCase):
+    def test_near_rsi_bands_and_inclusive_unrounded_support_cutoff(self):
+        for direction, values in (
+            ("Buy", (30.000001, 32, 34.999999)),
+            ("Sell", (65.000001, 68, 69.999999)),
+        ):
+            for support in (0, 6.999999, 7.0, 7.000001, 10):
+                with patch(
+                    "ratings.technical_scores",
+                    return_value=dict.fromkeys(
+                        ["bollinger", "macd", "moving_averages"], support
+                    ),
+                ):
+                    for rsi in values:
+                        with self.subTest(
+                            direction=direction, rsi=rsi, support=support
+                        ):
+                            candidate, _ = rate(
+                                frame(rsi),
+                                supporting_assessment(direction, support),
+                                NOW,
+                            )
+                            self.assertEqual(
+                                candidate, direction if support >= 7 else None
+                            )
+
+    def test_outer_rsi_boundaries_are_strict_even_with_maximum_support(self):
+        with patch(
+            "ratings.technical_scores",
+            return_value=dict.fromkeys(["bollinger", "macd", "moving_averages"], 10),
+        ):
+            for direction in ("Buy", "Sell"):
+                for rsi in (35, 35.000001, 50, 64.999999, 65):
+                    with self.subTest(direction=direction, rsi=rsi):
+                        self.assertIsNone(
+                            rate(frame(rsi), supporting_assessment(direction, 10), NOW)[
+                                0
+                            ]
+                        )
+
+    def test_extreme_rsi_is_unconditional_including_exact_thresholds(self):
+        with patch(
+            "ratings.technical_scores",
+            return_value=dict.fromkeys(["bollinger", "macd", "moving_averages"], 0),
+        ):
+            for direction, values in (("Buy", (0, 20, 30)), ("Sell", (70, 80, 100))):
+                for research in (
+                    supporting_assessment(direction, 0),
+                    assessment(expires_at="2026-10-17T00:00:00Z"),
+                    None,
+                    assessment(expires_at="invalid"),
+                ):
+                    for rsi in values:
+                        with self.subTest(
+                            direction=direction, rsi=rsi, research=research
+                        ):
+                            self.assertEqual(
+                                rate(frame(rsi), research, NOW)[0], direction
+                            )
+
+    def test_non_rsi_support_normalizes_weights_and_preserves_star_scores(self):
+        for direction, rsi in (("Buy", 32), ("Sell", 68)):
+            with (
+                self.subTest(direction=direction),
+                patch(
+                    "ratings.technical_scores",
+                    return_value=dict.fromkeys(
+                        ["bollinger", "macd", "moving_averages"], 9
+                    ),
+                ),
+            ):
+                # 9 * 25% + 6 * 50% = 5.25, normalized by 75% = exactly 7.
+                candidate, scores = rate(
+                    frame(rsi), supporting_assessment(direction, 6), NOW
+                )
+                self.assertEqual(candidate, direction)
+                self.assertEqual(scores[direction], 6.2)
+                # Opposing fundamentals must not qualify this direction.
+                opposite = "Sell" if direction == "Buy" else "Buy"
+                self.assertIsNone(
+                    rate(frame(rsi), supporting_assessment(opposite, 6), NOW)[0]
+                )
+                for research in (
+                    assessment(expires_at="2026-10-17T00:00:00Z"),
+                    None,
+                    assessment(expires_at="invalid"),
+                ):
+                    self.assertIsNone(rate(frame(rsi), research, NOW)[0])
+
+    def test_actual_bullish_and_bearish_subscores_qualify_the_correct_direction(self):
+        bullish = frame(32)
+        bullish["Close"] = 91
+        bearish = frame(68)
+        bearish["Close"] = 109
+        bearish["MACD"] = -2
+        bearish["MACD_SIGNAL"] = -1
+        bearish["MACD_HIST"] = [1, -0.5]
+        bearish["SMA200"] = 110
+        for direction, data in (("Buy", bullish), ("Sell", bearish)):
+            with self.subTest(direction=direction):
+                self.assertEqual(
+                    rate(data, supporting_assessment(direction, 9), NOW)[0], direction
+                )
+                opposite = "Sell" if direction == "Buy" else "Buy"
+                self.assertIsNone(
+                    rate(data, supporting_assessment(opposite, 9), NOW)[0]
+                )
+
     def test_rsi_inclusive_thresholds_and_scaling(self):
         with patch(
             "ratings.technical_scores",

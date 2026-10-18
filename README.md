@@ -70,13 +70,29 @@ instruments and venues remain unchanged: cryptocurrency orders are prohibited.
 
 ## Indicators and ratings
 
-Only RSI(14) triggers alerts: Buy at RSI <= `RSI_lower` (default 30), Sell at
-RSI >= `RSI_upper` (default 70). Both directions apply to the entire universe.
+RSI(14) determines the eligible direction across the entire universe. With
+default thresholds, notification eligibility is:
+
+| Direction | RSI condition | Required non-RSI directional support |
+| --- | --- | --- |
+| Buy | RSI <= 30 | None |
+| Buy | 30 < RSI < 35 | >= 7/10 Buy support |
+| Sell | RSI >= 70 | None |
+| Sell | 65 < RSI < 70 | >= 7/10 Sell support |
+
+Otherwise there is no notification. Exactly 35 and 65 are excluded; exactly 30
+and 70 qualify regardless of other factors. Non-RSI support reuses the same
+directional Bollinger, MACD, moving-average and fundamental subscores as stars:
+`support = sum(weight * subscore for non-RSI factors) / 0.75`.
+RSI is excluded, and support is compared with the inclusive 7/10 cutoff before
+rounding. Strong Sell support means bearish technicals and unfavorable
+fundamentals. The open five-point bands sit above `RSI_lower` (default 30) and
+below `RSI_upper` (default 70); defaults live in `src/rating_config.py`.
+
 Buy flags an oversold candidate for review; Sell flags an overbought candidate.
 These conditions identify price extremes, not a fundamental recommendation or
-an instruction to trade. Between the thresholds there is no alert, even if a
-direction has a high rating. The former `INDICATORS` selector no longer triggers
-independent signals.
+an instruction to trade. A high star rating alone does not create a notification.
+The former `INDICATORS` selector no longer triggers independent signals.
 
 Stars express weighted support for the selected direction. Ratings give 25% to
 RSI, 25% to other technicals and 50% to fundamentals, so a more extreme RSI has
@@ -111,8 +127,10 @@ contribution. Consequently, expired research limits either rating to 5/10
 `expires_at`; it never boosts Sell scores.
 `EXPIRED_FUNDAMENTAL_SCORE` is defined alongside the weights in
 `src/rating_config.py`. Missing or invalid assessments/components remain neutral
-at 5/10. Expiry does not change the weighting or RSI triggers, block a
-qualifying alert or refresh research.
+at 5/10. Expiry does not change the weighting or unconditional RSI triggers,
+or refresh research. With zero fundamental support, even maximum other technicals
+give only 3.33/10 non-RSI support, so expired assessments cannot qualify the
+additional Buy/Sell bands. Extreme-RSI alerts remain eligible.
 FinanceAlerts never reads PaperTrader prices, technical series, `timing_score`
 or `reference_price`, and never refreshes research. Scores round to one decimal.
 Stars use 0–2: one, over 2–4: two, over 4–6: three, over 6–8: four, over 8–10: five.
