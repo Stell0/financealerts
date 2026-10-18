@@ -60,3 +60,20 @@ AAPL
 
 then wait ⏱️  (cron is launched once a day)
 
+
+## PaperTrader ticker registry
+
+The monitored universe is the additive union of `config/tickers.txt`, whitespace-
+separated `TICKER_LIST`, and PaperTrader's registered securities. A positional
+symbol remains an explicit one-ticker scan override. The registry is sorted and
+written only when its contents change. GOOG/GOOGL use one PaperTrader identity;
+explicit GOOG retains its own Yahoo Finance prices. BTCUSD uses BTC-USD prices.
+
+By default FinanceAlerts reads PaperTrader's public identity and assessment tables
+at one resolved commit SHA. Set `PAPERTRADER_REVISION` to pin a full SHA, or
+`PAPERTRADER_DIR` to read a local checkout (use committed data for production).
+It never reads PaperTrader market caches or technical indicators. Missing symbols
+converge when PaperTrader pulls the committed FinanceAlerts file through its
+validated watchlist importer; each repository writes only its own data.
+
+Offline registry checks: `PYTHONPATH=src python3 -m unittest discover -s tests -v`.

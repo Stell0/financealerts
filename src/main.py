@@ -7,6 +7,8 @@ import datetime
 import re
 import yfinance as yf
 import logging
+from papertrader_data import load_snapshot
+from registry import synchronize
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(filename)s:%(lineno)d - %(message)s")
 
@@ -24,13 +26,10 @@ def escape_markdown_v2(text):
 	return escaped_text
 
 def main():
-	# load ticker from argv if available
-	if len(sys.argv) > 1:
-		tickers = [sys.argv[1]]
-	# load tickers from environment
-	else:
-		ticker_list = os.environ.get("TICKER_LIST")
-		tickers = ticker_list.split()
+	securities, _ = load_snapshot()
+	universe = synchronize("config/tickers.txt", os.environ.get("TICKER_LIST", ""), securities,
+	                       sys.argv[1] if len(sys.argv) > 1 else None)
+	tickers = [item.yahoo_symbol for item in universe]
 
 	report = {}
 	# initialize signal column with 0
