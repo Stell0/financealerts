@@ -106,12 +106,19 @@ def fundamental_scores(assessment, now=None):
             assessment.get("security_id", "unknown security"),
         )
         return None
+    unavailable = []
     for field in FUNDAMENTALS:
         value = finite(assessment.get(field))
         if value is None or not 0 <= value <= 100:
-            logging.warning("Unavailable PaperTrader %s; using neutral value", field)
+            unavailable.append(field)
         else:
             neutral[field] = value / 10.0
+    if unavailable:
+        logging.warning(
+            "PaperTrader assessment for %s has unavailable scores: %s; using neutral values",
+            assessment.get("security_id", "unknown security"),
+            ", ".join(unavailable),
+        )
     return neutral
 
 

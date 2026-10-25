@@ -31,7 +31,9 @@ class ScanTests(unittest.TestCase):
         item = MonitoredTicker(
             "ATKR", "ATKR", {"security_id": "atkr", "status": "acquired"}
         )
-        self.assertEqual(scan([item], {}), ([], []))
+        with self.assertLogs(level="INFO") as logs:
+            self.assertEqual(scan([item], {}), ([], []))
+        self.assertIn("0 processed, 1 acquired skipped, 0 candidates, 0 failed", logs.output[-1])
         retrieve.assert_not_called()
 
     @patch("main.yahoo_finance_api.retrieve_daily_prices")

@@ -30,6 +30,50 @@ def bars(dates, closes=None):
 
 
 class PriceTests(unittest.TestCase):
+    @patch("yahoo_finance_api.yf.download")
+    def test_nonpositive_adjusted_prices_retry_full_repaired_history(self, download):
+        with tempfile.TemporaryDirectory() as directory:
+            initial = bars(["2026-10-14", "2026-10-15", "2026-10-16"])
+            download.return_value = initial
+            retrieve_daily_prices("TSLA", now=NOW, cache_dir=directory)
+            corrupt = bars(["2026-10-14", "2026-10-15", "2026-10-16"], [-50, -51, 102])
+            corrupt.columns = pd.MultiIndex.from_product([corrupt.columns, ["TSLA"]])
+            repaired = bars(["2026-10-14", "2026-10-15", "2026-10-16"], [50, 51, 52])
+            download.reset_mock()
+            download.side_effect = [corrupt, repaired]
+            result = retrieve_daily_prices("TSLA", now=NOW, cache_dir=directory)
+            self.assertEqual(download.call_count, 2)
+            self.assertEqual(download.call_args_list[0].kwargs["start"], date(2026, 10, 2))
+            self.assertEqual(download.call_args.kwargs["start"], date(2025, 4, 14))
+            self.assertTrue(download.call_args.kwargs["repair"])
+            pd.testing.assert_frame_equal(
+                result, repaired.astype(float).rename_axis("Date"), check_freq=False
+            )
+
+    @patch("yahoo_finance_api.yf.download")
+    def test_repair_cannot_replace_cache_with_incomplete_changed_adjustment_basis(self, download):
+        with tempfile.TemporaryDirectory() as directory:
+            download.return_value = bars(["2026-10-14", "2026-10-15", "2026-10-16"])
+            retrieve_daily_prices("TSLA", now=NOW, cache_dir=directory)
+            cache = Path(directory, "TSLA.csv")
+            state = Path(directory, "price_cache_state.json")
+            before = cache.read_bytes(), state.read_bytes()
+            corrupt = bars(["2026-10-15", "2026-10-16", "2026-10-19"], [-51, 51, 52])
+            for repaired in (
+                corrupt,
+                bars(["2026-10-16", "2026-10-19"], [51, 52]),
+                bars(["2026-10-19"], [52]),
+                pd.DataFrame(),
+            ):
+                with self.subTest(repaired_rows=len(repaired)):
+                    download.side_effect = [corrupt, repaired]
+                    with self.assertRaises(ValueError):
+                        retrieve_daily_prices(
+                            "TSLA", now=datetime(2026, 10, 19, 21, tzinfo=timezone.utc),
+                            cache_dir=directory,
+                        )
+                    self.assertEqual((cache.read_bytes(), state.read_bytes()), before)
+
     def test_completed_session_weekend_holiday_intraday_early_close_and_crypto(self):
         cases = [
             ((2026, 10, 18, 21), "TSLA", date(2026, 10, 16)),

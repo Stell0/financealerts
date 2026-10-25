@@ -28,6 +28,7 @@ jobs:
       - name: Check out FinanceAlerts
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
           persist-credentials: false
       - name: Build this checkout
@@ -53,13 +54,25 @@ jobs:
           -e TELEGRAM_CHAT_ID -e TELEGRAM_BOT_TOKEN
           financealerts:daily
       - name: Commit successful deliveries and changed local caches
+        id: persist
         if: ${{ always() && (steps.scan.outcome == 'success' || steps.scan.outcome == 'failure') && (github.event_name == 'schedule' || !inputs.dry_run) }}
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_BRANCH: ${{ github.ref_name }}
         run: |
           bash scripts/commit_runtime.sh
-          git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push origin "HEAD:$TARGET_BRANCH"
+          bash scripts/push_runtime.sh
+      - name: Preserve runtime state if persistence fails
+        if: ${{ always() && steps.persist.outcome == 'failure' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: runtime-state-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 7
+          path: |
+            config/tickers.txt
+            data/*.csv
+            data/alert_state.json
+            data/price_cache_state.json
       - name: Report scan or delivery failures after saving partial progress
         if: ${{ always() && steps.scan.outcome == 'failure' }}
         run: exit 1

@@ -21,10 +21,13 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 def scan(universe, assessments, now=None, cache_dir="data"):
     now = now or datetime.now(timezone.utc)
     candidates, failures = [], []
+    processed, skipped = 0, 0
     for item in universe:
         if (item.security or {}).get("status") == "acquired":
             logging.info("Skipping acquired security %s", item.ticker)
+            skipped += 1
             continue
+        processed += 1
         try:
             if item.security is None and item.yahoo_symbol != "BTC-USD":
                 info = yf.Ticker(item.yahoo_symbol).get_info()
@@ -70,6 +73,10 @@ def scan(universe, assessments, now=None, cache_dir="data"):
         except Exception:
             logging.exception("Error processing ticker %s", item.ticker)
             failures.append(item.ticker)
+    logging.info(
+        "Scan complete: %d processed, %d acquired skipped, %d candidates, %d failed; failed tickers: %s",
+        processed, skipped, len(candidates), len(failures), ", ".join(failures) or "none",
+    )
     return candidates, failures
 
 

@@ -192,8 +192,13 @@ historical corrections and corporate-action adjustments. Reruns fetch a 14-day
 overlap to detect corrected recent bars. `data/price_cache_state.json` binds the
 last full reconciliation to the CSV checksum. Incomplete historical revisions
 that could mix adjustment bases fail per ticker and preserve the previous cache
-for retry. Provider failures may use a valid cache only when it already contains
-the latest completed session. No run requires the candle date to equal today.
+for retry, reporting the number of missing valid sessions. Nonpositive adjusted
+prices trigger one full-history retry with yfinance's price repair, supported by
+the pinned SciPy dependency. Repaired history must pass the same normalization,
+completed-session and adjustment-basis checks; incomplete changed histories still
+fail without modifying the cache. Provider failures may use a valid cache only when
+it already contains the latest completed session. No run requires the candle date
+to equal today.
 
 ## Telegram output and retries
 
@@ -220,13 +225,23 @@ before manual replay.
 
 ## Daily automation
 
-The serialized daily workflow runs at **15:00 ET (America/New_York)**, one hour
+The serialized daily workflow runs at **14:00 ET (America/New_York)**, two hours
 before the regular 16:00 ET US market close, with daylight saving handled automatically.
 It builds the checked-out source, runs offline tests, pulls a consistent
 PaperTrader snapshot, merges tickers, scans, delivers and commits changed ticker,
 price-cache and delivery-state files. No-change runs skip commits. Partial
 successful deliveries and caches are committed even if another ticker/send fails;
 the run still reports failure. GitHub schedules may start later than requested.
+
+Daily jobs check out the current branch tip, including on reruns, so an earlier
+attempt's committed delivery state is loaded. Runtime pushes fetch and rebase
+onto upstream before pushing, retrying up to three times without force. Conflicts
+fail explicitly and preserve local runtime changes in a seven-day
+`runtime-state-<run>-<attempt>` artifact. Reconcile its delivery state with the
+branch before replaying a failed send-capable run; do not overwrite newer state.
+The final scan log summarizes processed, acquired, candidate and failed counts.
+Unavailable fundamental scores are grouped in one warning per assessment,
+identified by security ID; neutral values and expiry penalties are unchanged.
 
 Manual dispatch defaults to `dry_run=true`: live provider reads and console
 output, with no Telegram delivery or commits. Set it false for normal execution.

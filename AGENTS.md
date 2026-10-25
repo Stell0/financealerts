@@ -109,6 +109,8 @@ without dropping existing valid rows and atomically saves changed content only.
 It reconciles 550 calendar days once per completed session and fetches a 14-day
 overlap on reruns. `data/price_cache_state.json` binds reconciliation to cache
 checksums. Reject mixed adjustment bases when provider history is incomplete.
+Nonpositive adjusted prices trigger one full-history yfinance repair retry;
+repaired data must pass the same cache integrity checks. SciPy supports repair.
 Use temporary directories and mocked downloads for tests; review data diffs
 separately from code changes.
 
@@ -140,11 +142,14 @@ status when checks fail. `verify_fix.py` is currently empty. Do not report these
 as a passing regression suite.
 
 CI builds the pinned Python 3.12 image and runs the offline suite without
-credentials. The serialized daily workflow runs at 15:00 America/New_York (ET), builds the
+credentials. The serialized daily workflow runs at 14:00 America/New_York (ET), builds the
 checkout and commits only changed config/tickers.txt, data/*.csv and the two
 runtime JSON state files. `scripts/commit_runtime.sh` skips empty commits and
 refuses unrelated staged files. A scan failure still saves successful partial
-progress, then fails the job. Manual dispatch defaults to a console-only dry run
+progress, then fails the job. Jobs check out the current branch tip on reruns.
+`scripts/push_runtime.sh` rebases and retries pushes without force; conflicts
+preserve runtime files in a recovery artifact instead of overwriting upstream.
+Manual dispatch defaults to a console-only dry run
 without commits. Only the main image-build workflow publishes to Docker Hub.
 For documentation changes, checking content, paths and the diff is sufficient.
 Report what was actually checked and any checks that could not run.

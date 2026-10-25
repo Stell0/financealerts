@@ -52,6 +52,17 @@ def supporting_assessment(direction, score):
 
 
 class RatingTests(unittest.TestCase):
+    def test_unavailable_score_warning_identifies_security_and_all_components(self):
+        row = assessment(**dict.fromkeys(FUNDAMENTALS, ""))
+        row["security_id"] = "partial-research"
+        with self.assertLogs(level="WARNING") as logs:
+            scores = fundamental_scores(row, NOW)
+        self.assertEqual(scores, dict.fromkeys(FUNDAMENTALS, 5.0))
+        self.assertEqual(len(logs.output), 1)
+        self.assertIn("partial-research", logs.output[0])
+        for field in FUNDAMENTALS:
+            self.assertIn(field, logs.output[0])
+
     def test_sourced_current_export_uses_all_five_scores_and_risk_direction(self):
         row = assessment(**dict.fromkeys(FUNDAMENTALS, "75"))
         row.update(

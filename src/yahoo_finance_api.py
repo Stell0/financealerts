@@ -120,6 +120,12 @@ def _atomic_text(path, content):
     temporary.replace(path)
 
 
+def _has_nonpositive_prices(frame):
+    columns = frame.columns.get_level_values(0)
+    prices = frame.loc[:, columns.isin(COLUMNS[:-1])].apply(pd.to_numeric, errors="coerce")
+    return prices.le(0).any(axis=None)
+
+
 def retrieve_daily_prices(
     ticker,
     period=None,
@@ -179,16 +185,20 @@ def retrieve_daily_prices(
     fetch_start = (
         first_date if full_refresh else max(first_date, completed - timedelta(days=14))
     )
+    download_options = dict(
+        end=end_date, progress=False, auto_adjust=True, timeout=30, threads=False
+    )
     try:
-        fresh = yf.download(
-            ticker,
-            start=fetch_start,
-            end=end_date,
-            progress=False,
-            auto_adjust=True,
-            timeout=30,
-            threads=False,
-        )
+        fresh = yf.download(ticker, start=fetch_start, **download_options)
+        if _has_nonpositive_prices(fresh):
+            logging.warning(
+                "%s: nonpositive adjusted prices; retrying full history with Yahoo repair",
+                ticker,
+            )
+            fresh = yf.download(ticker, start=first_date, repair=True, **download_options)
+            full_refresh = True
+            if _has_nonpositive_prices(fresh):
+                raise ValueError("Yahoo repair still contains nonpositive adjusted prices")
         fresh = normalize_prices(fresh, ticker, completed, venue_mic)
         if fresh.empty:
             raise ValueError("Yahoo Finance returned no valid completed bars")
@@ -205,12 +215,14 @@ def retrieve_daily_prices(
         retained = cached.loc[cached.index.date >= first_date]
         shared = retained.index.intersection(fresh.index)
         missing = retained.index.difference(fresh.index)
-        if len(missing) and len(shared):
+        if len(missing):
             old = retained.loc[shared, ["Open", "High", "Low", "Close"]].to_numpy()
             new = fresh.loc[shared, ["Open", "High", "Low", "Close"]].to_numpy()
-            if not np.allclose(old, new, rtol=1e-8, atol=1e-8):
+            if not len(shared) or not np.allclose(old, new, rtol=1e-8, atol=1e-8):
                 raise ValueError(
-                    f"{ticker}: incomplete adjusted-history reconciliation; retry required"
+                    f"{ticker}: incomplete adjusted-history reconciliation: "
+                    f"{len(missing)} cached sessions absent from valid provider history "
+                    f"and overlapping prices changed or unavailable; cache preserved, retry required"
                 )
     combined = fresh if cached.empty else pd.concat([cached, fresh])
     combined = combined.loc[~combined.index.duplicated(keep="last")].sort_index()
