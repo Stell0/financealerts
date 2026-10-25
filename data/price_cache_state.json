@@ -468,5 +468,10 @@
     "full_session": "2026-10-23",
     "sha256": "382060c2021a6a304fc881418976da91ec82951b664dcc06b5034d0ad367ecd4",
     "start": "2025-04-21"
+  },
+  "YEC.F": {
+    "full_session": "2026-10-23",
+    "sha256": "36cf295a2238228e4fd233f3cde9bc91f958a96d9336ea3e37ffeb5461bbe971",
+    "start": "2025-04-21"
   }
 }
