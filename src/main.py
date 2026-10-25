@@ -22,6 +22,9 @@ def scan(universe, assessments, now=None, cache_dir="data"):
     now = now or datetime.now(timezone.utc)
     candidates, failures = [], []
     for item in universe:
+        if (item.security or {}).get("status") == "acquired":
+            logging.info("Skipping acquired security %s", item.ticker)
+            continue
         try:
             if item.security is None and item.yahoo_symbol != "BTC-USD":
                 info = yf.Ticker(item.yahoo_symbol).get_info()

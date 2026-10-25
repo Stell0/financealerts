@@ -27,6 +27,14 @@ def prices(rising):
 
 class ScanTests(unittest.TestCase):
     @patch("main.yahoo_finance_api.retrieve_daily_prices")
+    def test_acquired_security_remains_registered_without_requesting_new_bars(self, retrieve):
+        item = MonitoredTicker(
+            "ATKR", "ATKR", {"security_id": "atkr", "status": "acquired"}
+        )
+        self.assertEqual(scan([item], {}), ([], []))
+        retrieve.assert_not_called()
+
+    @patch("main.yahoo_finance_api.retrieve_daily_prices")
     def test_full_universe_both_directions_and_per_ticker_failure_isolation(
         self, retrieve
     ):

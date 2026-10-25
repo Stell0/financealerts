@@ -1,5 +1,8 @@
+import csv
+import json
 import unittest
 from datetime import datetime, timezone
+from io import StringIO
 from unittest.mock import patch
 
 import numpy as np
@@ -49,6 +52,65 @@ def supporting_assessment(direction, score):
 
 
 class RatingTests(unittest.TestCase):
+    def test_sourced_current_export_uses_all_five_scores_and_risk_direction(self):
+        row = assessment(**dict.fromkeys(FUNDAMENTALS, "75"))
+        row.update(
+            security_id="example", valid_until=row.pop("expires_at"),
+            risk_penalty="25", scoring_rubric_version="1",
+            source_ids="example_source",
+            score_details=json.dumps({
+                field: {"rationale": "Example rubric support", "source_ids": ["example_source"]}
+                for field in FUNDAMENTALS
+            }),
+        )
+        stream = StringIO()
+        writer = csv.DictWriter(stream, fieldnames=list(row))
+        writer.writeheader()
+        writer.writerow(row)
+        imported = read_assessments(stream.getvalue())["example"]
+        self.assertEqual(
+            fundamental_scores(imported, NOW),
+            {**dict.fromkeys(FUNDAMENTALS, 7.5), "risk_penalty": 2.5},
+        )
+        with patch(
+            "ratings.technical_scores",
+            return_value=dict.fromkeys(["bollinger", "macd", "moving_averages"], 5),
+        ):
+            self.assertEqual(rate(frame(30), imported, NOW)[1]["Buy"], 6.2)
+            self.assertEqual(rate(frame(70), imported, NOW)[1]["Sell"], 3.8)
+
+    def test_current_papertrader_schema_preserves_expiry_without_component_scores(self):
+        text = (
+            "security_id,assessed_at,valid_until,research_status\n"
+            "fresh,2026-10-01T00:00:00Z,2026-11-01T00:00:00Z,supported\n"
+            "expired,2026-09-01T00:00:00Z,2026-10-18T00:00:00Z,supported\n"
+        )
+        with self.assertLogs(level="WARNING") as logs:
+            rows = read_assessments(text)
+        for field in FUNDAMENTALS:
+            self.assertIn(field, "\n".join(logs.output))
+        self.assertEqual(
+            fundamental_scores(rows["fresh"], NOW), dict.fromkeys(FUNDAMENTALS, 5.0)
+        )
+        self.assertIsNone(fundamental_scores(rows["expired"], NOW))
+        for rsi, direction in ((20, "Buy"), (80, "Sell")):
+            candidate, scores = rate(frame(rsi), rows["expired"], NOW)
+            self.assertEqual(candidate, direction)
+            self.assertLessEqual(max(scores.values()), 5)
+        for rsi in (32, 68):
+            self.assertIsNone(rate(frame(rsi), rows["expired"], NOW)[0])
+
+    def test_assessment_export_keeps_available_scores_and_legacy_expiry(self):
+        for expiry in ("expires_at", "valid_until"):
+            with self.subTest(expiry=expiry):
+                rows = read_assessments(
+                    f"security_id,assessed_at,{expiry},business_quality_score\n"
+                    "partial,2026-10-01T00:00:00Z,2026-11-01T00:00:00Z,80\n"
+                )
+                scores = fundamental_scores(rows["partial"], NOW)
+                self.assertEqual(scores["business_quality_score"], 8)
+                self.assertEqual(scores["valuation_score"], 5)
+
     def test_near_rsi_bands_and_inclusive_unrounded_support_cutoff(self):
         for direction, values in (
             ("Buy", (30.000001, 32, 34.999999)),

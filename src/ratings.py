@@ -40,16 +40,22 @@ def read_assessments(text):
         return {}
     reader = csv.DictReader(StringIO(text.lstrip("\ufeff")))
     fields = reader.fieldnames or []
+    expiry_field = "expires_at" if "expires_at" in fields else "valid_until"
     if len(fields) != len(set(fields)) or not {
         "security_id",
         "assessed_at",
-        "expires_at",
-        *FUNDAMENTALS,
+        expiry_field,
     }.issubset(fields):
         logging.warning(
             "PaperTrader assessments lack required fields; using neutral fundamentals"
         )
         return {}
+    missing = sorted(set(FUNDAMENTALS) - set(fields))
+    if missing:
+        logging.warning(
+            "PaperTrader assessments lack scoring fields: %s; unavailable components remain neutral",
+            ", ".join(missing),
+        )
     output = {}
     for row in reader:
         sid = row.get("security_id")
@@ -62,6 +68,7 @@ def read_assessments(text):
             )
             output[sid] = None
         else:
+            row["expires_at"] = row[expiry_field]
             output[sid] = row
     return output
 

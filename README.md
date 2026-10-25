@@ -50,12 +50,52 @@ GOOG wins in the monitored file and uses **GOOG prices**, never GOOGL prices.
 BTCUSD/BTC-USD use one monitored identity with Yahoo symbol `BTC-USD`. Other
 registry tickers use provider-qualified symbols such as `108490.KQ` and `AKE.PA`.
 
+The translation table is PaperTrader's `securities.csv`: `ticker` resolves to
+`provider_symbol`, joined by `security_id` in `src/registry.py`. Verified mappings
+for the price failures in the October 24, 2026 run are:
+
+| Saved or registry symbol | Yahoo Finance symbol |
+| --- | --- |
+| AD / AD.AS | AD.AS |
+| AKE / AKE.PA | AKE.PA |
+| ANIC.L | ANIC.L |
+| ATKR | ATKR |
+| BAS / BAS.DE | BAS.DE |
+| BTCUSD / BTC-USD | BTC-USD |
+| EVK / EVK.DE | EVK.DE |
+| FUC.F | FUC.F |
+| NIB.F | NIB.F |
+| PARRO.PA | PARRO.PA |
+| PRX / PRX.AS | PRX.AS |
+| SSU.VI | SSU.VI |
+| SSUN.VI | SSUN.VI |
+| SU / SU.PA | SU.PA |
+| YEC.F | YEC.F |
+
+Yahoo recognized all these symbols during verification; that run's errors were
+missing completed bars or incomplete adjusted-history reconciliation. A different
+exchange, ADR or share class requires its own verified identity, currency and
+calendar. In particular, Samsung's common and preferred GDRs remain separate.
+Securities explicitly marked `acquired` by PaperTrader stay in the saved universe
+and retain their caches, but the scan skips requests for post-acquisition candles.
+
 FinanceAlerts resolves PaperTrader's public `main` commit once and reads only
 `data/tables/securities.csv` and `security_assessments.csv` at that SHA. Set
 `PAPERTRADER_REVISION` to a full commit SHA, or `PAPERTRADER_DIR` to a local
 checkout. Local reads are useful for testing; use committed snapshots in daily
 production. A missing assessment table produces neutral fundamentals; a failed
 identity snapshot read is an explicit error.
+
+Assessment imports accept both legacy `expires_at` and current `valid_until`
+(legacy `expires_at` takes precedence if both columns exist). Missing component
+columns are logged by name and remain neutral individually. Valid expired rows
+still receive the expiry penalty even when component columns are absent. The
+PaperTrader score contract supplies optional `valuation_score`,
+`business_quality_score`, `thesis_score`, `balance_sheet_score` and `risk_penalty`.
+FinanceAlerts uses these fields directly with the existing weights and directional
+risk inversion. Rubric version, source details and valuation reference metadata
+remain provenance rather than additional rating factors. Historical scores stay
+empty until sourced research supplies them; headers alone do not create support.
 
 PaperTrader's existing daily preparation pulls the committed FinanceAlerts file
 and imports genuinely missing securities through `papertrader watchlist import`

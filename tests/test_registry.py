@@ -51,6 +51,36 @@ class RegistryTests(unittest.TestCase):
         self.assertEqual(resolve("108490", self.rows).yahoo_symbol, "108490.KQ")
         self.assertEqual(resolve("AKE", self.rows).yahoo_symbol, "AKE.PA")
 
+    def test_failed_run_symbols_keep_their_registered_market_and_identity(self):
+        translations = {
+            "AD": "AD.AS",
+            "AKE": "AKE.PA",
+            "ANIC.L": "ANIC.L",
+            "ATKR": "ATKR",
+            "BAS": "BAS.DE",
+            "EVK": "EVK.DE",
+            "FUC.F": "FUC.F",
+            "NIB.F": "NIB.F",
+            "PARRO.PA": "PARRO.PA",
+            "PRX": "PRX.AS",
+            "SSU.VI": "SSU.VI",
+            "SSUN.VI": "SSUN.VI",
+            "SU": "SU.PA",
+            "YEC.F": "YEC.F",
+        }
+        for symbol, yahoo in translations.items():
+            with self.subTest(symbol=symbol):
+                row = next(row for row in self.rows if row["ticker"] == symbol)
+                for alias in (symbol, yahoo):
+                    item = resolve(alias, self.rows)
+                    self.assertEqual(item.yahoo_symbol, yahoo)
+                    self.assertEqual(item.identity, row["security_id"])
+                    self.assertEqual(item.security["venue_mic"], row["venue_mic"])
+                    self.assertEqual(item.security["currency"], row["currency"])
+        self.assertNotEqual(
+            resolve("SSU.VI", self.rows).identity, resolve("SSUN.VI", self.rows).identity
+        )
+
     def test_reject_malformed_csv_and_ambiguous_identities(self):
         with self.assertRaises(ValueError):
             read_securities("ticker\nTSLA\n")
