@@ -2,7 +2,8 @@ name: Daily RSI alerts
 
 on:
   schedule:
-    - cron: '0 14 * * *'
+    # One hour before the regular 16:00 ET US market close.
+    - cron: '0 15 * * *'
       timezone: America/New_York
   workflow_dispatch:
     inputs:

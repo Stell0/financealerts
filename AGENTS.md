@@ -142,8 +142,9 @@ status when checks fail. `verify_fix.py` is currently empty. Do not report these
 as a passing regression suite.
 
 CI builds the pinned Python 3.12 image and runs the offline suite without
-credentials. The serialized daily workflow runs at 14:00 America/New_York (ET), builds the
-checkout and commits only changed config/tickers.txt, data/*.csv and the two
+credentials. The serialized daily workflow runs at 15:00 America/New_York (ET), one
+hour before the regular 16:00 ET US market close. It builds the checkout and
+commits only changed config/tickers.txt, data/*.csv and the two
 runtime JSON state files. `scripts/commit_runtime.sh` skips empty commits and
 refuses unrelated staged files. A scan failure still saves successful partial
 progress, then fails the job. Jobs check out the current branch tip on reruns.

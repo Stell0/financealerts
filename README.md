@@ -225,7 +225,7 @@ before manual replay.
 
 ## Daily automation
 
-The serialized daily workflow runs at **14:00 ET (America/New_York)**, two hours
+The serialized daily workflow runs at **15:00 ET (America/New_York)**, one hour
 before the regular 16:00 ET US market close, with daylight saving handled automatically.
 It builds the checked-out source, runs offline tests, pulls a consistent
 PaperTrader snapshot, merges tickers, scans, delivers and commits changed ticker,
