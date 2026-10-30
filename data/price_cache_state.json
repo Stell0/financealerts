@@ -25,14 +25,14 @@
     "start": "2025-04-27"
   },
   "AD.AS": {
-    "full_session": "2026-10-29",
-    "sha256": "77099ace971d8ae18bd244f0b31fc0ed1fe4a5b9144a44f5a1f15a8d7da15093",
-    "start": "2025-04-27"
+    "full_session": "2026-10-30",
+    "sha256": "3cd10a0c9c379440f076f128ffdaf9298e022153191b4bcd7dee7ffd0a269c0a",
+    "start": "2025-04-28"
   },
   "AKE.PA": {
-    "full_session": "2026-10-29",
-    "sha256": "c4d899155aee1f043d2ce1dfe9207f7c7db29afc713eb781cfcb56a8efec5513",
-    "start": "2025-04-27"
+    "full_session": "2026-10-30",
+    "sha256": "50f99f78c46379194b21f5ae4557ad7575adc329cc88e628418222e50ff98313",
+    "start": "2025-04-28"
   },
   "ALB": {
     "full_session": "2026-10-29",
@@ -55,9 +55,9 @@
     "start": "2025-04-27"
   },
   "ANIC.L": {
-    "full_session": "2026-10-29",
-    "sha256": "6e80d3a00524af71f1b3a118643b90c4398b7d3504d62fc69cfd88ec1daa9d7e",
-    "start": "2025-04-27"
+    "full_session": "2026-10-30",
+    "sha256": "de386031b4c18a5a0a7caa99b8fed18aa2fec2d7eb2ba86bf0471455b51be901",
+    "start": "2025-04-28"
   },
   "ASML": {
     "full_session": "2026-10-29",
@@ -70,9 +70,9 @@
     "start": "2025-04-14"
   },
   "BAS.DE": {
-    "full_session": "2026-10-29",
-    "sha256": "58a741825cec4eaf67fc13a2eb047a97ddf0352a9d2f4b8a42c841759aa438ad",
-    "start": "2025-04-27"
+    "full_session": "2026-10-30",
+    "sha256": "622981bb77ab2a66f9442a783a7a2f575ff37526170d4ae246d46b44e9a3f611",
+    "start": "2025-04-28"
   },
   "BE": {
     "full_session": "2026-10-29",
@@ -145,9 +145,9 @@
     "start": "2025-04-27"
   },
   "EVK.DE": {
-    "full_session": "2026-10-29",
-    "sha256": "b6112a7aa09a66ecebdfa8b9bd8c901b297f72bafe00a8b1f7cbdd48fb28b7d1",
-    "start": "2025-04-27"
+    "full_session": "2026-10-30",
+    "sha256": "f73c9152bd4ebd40b63c413d5a0087e2ce548a1f0a483c24107120d1a4d750d7",
+    "start": "2025-04-28"
   },
   "FCX": {
     "full_session": "2026-10-29",
@@ -165,9 +165,9 @@
     "start": "2025-04-27"
   },
   "FUC.F": {
-    "full_session": "2026-10-29",
-    "sha256": "1e9ed47f3cab452288fe337dd5862e87921f084dc6ad066c5fb417b4e267611a",
-    "start": "2025-04-27"
+    "full_session": "2026-10-30",
+    "sha256": "3b82dbb5c9b6e1e77e1687c322081f8fdeb4455ae21ce432f4686c9aa3346639",
+    "start": "2025-04-28"
   },
   "GEV": {
     "full_session": "2026-10-29",
@@ -255,9 +255,9 @@
     "start": "2025-04-27"
   },
   "NIB.F": {
-    "full_session": "2026-10-29",
-    "sha256": "a07204bf58a99f6720a53d2e7677ed4a3434eab855d22057743bcfd0c3e18930",
-    "start": "2025-04-27"
+    "full_session": "2026-10-30",
+    "sha256": "2560e25cb727f110cff37589f7c78772817059e0fada7896bd855fc3218d5c5b",
+    "start": "2025-04-28"
   },
   "NOMD": {
     "full_session": "2026-10-29",
@@ -270,9 +270,9 @@
     "start": "2025-04-27"
   },
   "PARRO.PA": {
-    "full_session": "2026-10-29",
-    "sha256": "ba12a504f9946eb4133d99e8e0594a7287de487e52813f8e114603309281b402",
-    "start": "2025-04-27"
+    "full_session": "2026-10-30",
+    "sha256": "da41081b143381dafb2078b230c2e98e24f10d58c64ab5a24690c28d3283b8a1",
+    "start": "2025-04-28"
   },
   "PATH": {
     "full_session": "2026-10-29",
@@ -305,9 +305,9 @@
     "start": "2025-04-27"
   },
   "PRX.AS": {
-    "full_session": "2026-10-29",
-    "sha256": "985ca26787086c774b5c1b71225db5dca3a40586ea936571bd53c7724e5bd50a",
-    "start": "2025-04-27"
+    "full_session": "2026-10-30",
+    "sha256": "96c530267396f347c1c0ada95831a009cc92c8076d8d4eb5f048d1389646dc16",
+    "start": "2025-04-28"
   },
   "PWR": {
     "full_session": "2026-10-29",
@@ -380,14 +380,14 @@
     "start": "2025-04-27"
   },
   "SSU.VI": {
-    "full_session": "2026-10-29",
-    "sha256": "276fa5e122db344c07d47760b9c6dac026ea220cbb8d5fc576b41b923bbd9c9a",
-    "start": "2025-04-27"
+    "full_session": "2026-10-30",
+    "sha256": "e09a215c610bfaf286747bf1cc788295978869bfa8d453e440f86b1213ba4db7",
+    "start": "2025-04-28"
   },
   "SSUN.VI": {
-    "full_session": "2026-10-29",
-    "sha256": "37ce61f860a6069aa069135690b8254fae6b92cd3cb8bac15a41928ce767f6b5",
-    "start": "2025-04-27"
+    "full_session": "2026-10-30",
+    "sha256": "087c9f615f3b1abb9d6d419cf6ed2857840f366137cc0178fb38e6635a8d7614",
+    "start": "2025-04-28"
   },
   "SSYS": {
     "full_session": "2026-10-29",
@@ -395,9 +395,9 @@
     "start": "2025-04-27"
   },
   "SU.PA": {
-    "full_session": "2026-10-29",
-    "sha256": "a2bca86891f2db13939269149e71e6b01877ae8598e29857608f0765e1b9274d",
-    "start": "2025-04-27"
+    "full_session": "2026-10-30",
+    "sha256": "55826a1501ddc17e5282f7114d80b90ceeeeac22ce98a62bd3c7b6ebdf0684de",
+    "start": "2025-04-28"
   },
   "TCEHY": {
     "full_session": "2026-10-29",
@@ -475,8 +475,8 @@
     "start": "2025-04-27"
   },
   "YEC.F": {
-    "full_session": "2026-10-29",
-    "sha256": "49a75c2cbc79bc2063405ac06dd5b187a3d315728ff9ba0c214d9ad8b36fe5a8",
-    "start": "2025-04-27"
+    "full_session": "2026-10-30",
+    "sha256": "35e23d8879f56136253f29561df6590921386147a89dca2386eb2f30418d0030",
+    "start": "2025-04-28"
   }
 }
