@@ -1,6 +1,6 @@
 # FinanceAlerts
 
-Daily RSI Buy/Sell notifications enriched with PaperTrader fundamental
+Daily RSI Buy/Sell and Short Watch notifications enriched with PaperTrader fundamental
 assessments. FinanceAlerts independently downloads Yahoo Finance prices,
 calculates TA-Lib indicators, rates both directions, and optionally sends one
 compact Telegram report. It never trades or modifies PaperTrader's portfolio.
@@ -38,10 +38,13 @@ actual delivery is wanted.
 
 ## Tickers and PaperTrader synchronization
 
-`config/tickers.txt` contains one symbol per line. The scan merges this file,
-whitespace-separated `TICKER_LIST`, and every registered PaperTrader security,
-then saves the normalized, deduplicated list in stable order. Synchronization is
-additive; no security is deleted automatically. The initial file includes all
+`config/tickers.txt` contains one long-universe symbol per line. The scan merges
+this file, whitespace-separated `TICKER_LIST`, PaperTrader securities and
+`config/short_watchlist.csv`, resolving canonical security identities before
+classification and deduplication. Only long securities are saved to
+`config/tickers.txt`, in stable order. Long synchronization is additive except
+that entries classified as bearish are removed from that saved long file.
+The initial long file includes all
 92 PaperTrader securities plus the supplied user symbols and deployed environment
 list, resulting in 93 monitored identities including Bitcoin.
 
@@ -104,13 +107,48 @@ writes and commits only its own files, with no foreign write token. Changes can
 converge over the next daily cycle. Merge both implementation branches before
 expecting production synchronization.
 
+### Separate bearish research universe
+
+`config/short_watchlist.csv` is version-controlled configuration with the exact
+header `ticker,mode,sector`. Its `active` entries belong to the `short` universe;
+`research_only` entries remain recorded but skip price scans and never alert,
+including positional ticker overrides. Invalid symbols, modes, missing sectors,
+malformed rows and duplicate identities fail explicitly. This file is required
+and is never regenerated from PaperTrader.
+
+The initial active list is **FCEL, AI, SPCE, CIFR, WULF, BBAI, APLD, ONDS, AEVA,
+PDYN**. The initial research-only list is **KSCP, MVIS, PSNY, PLUG, ARQQ, SPIR**.
+Research-only candidates may have limited options liquidity or other constraints.
+
+PaperTrader's optional `research_role` accepts `long`, `short_candidate` and
+`short_research_only`. An absent column preserves legacy long behavior.
+Either short role excludes a security from ordinary Buy/Sell alerts and the
+saved long file; neither enables Short Watch alerts by itself. Only a local
+`active` entry enables those alerts. Local short classification overrides all
+other sources, including `TICKER_LIST` and legacy PaperTrader entries. Resolution
+uses the existing security identity, provider symbol, exchange and alias rules;
+overlapping sources produce one monitored identity. Acquired-security handling
+and GOOG/GOOGL price selection remain unchanged.
+
+Active shorts alert only at **RSI(14) >= 70**, independently configurable with
+`SHORT_RSI_UPPER` (0–100). They never generate Buy or conventional Sell alerts,
+and do not use the long universe's 65–70 Sell support band. Stars reuse the
+ordinary Sell directional score and weights, including its RSI scoring scale;
+changing the short trigger does not change that scale. Current PaperTrader
+fundamentals enrich the score. Missing or invalid components remain neutral;
+stale assessments retain the existing zero fundamental contribution.
+
+Short Watch means the technical condition is satisfied. It does not establish
+that a put is attractively priced. FinanceAlerts does not fetch options chains,
+assess options liquidity, execute trades or manage a portfolio.
+
 Bitcoin is a watch-only `cryptocurrency`, with off-exchange MIC `XOFF`, unknown
 country `ZZ` and a 24/7 monitoring calendar. PaperTrader's allowed trading
 instruments and venues remain unchanged: cryptocurrency orders are prohibited.
 
 ## Indicators and ratings
 
-RSI(14) determines the eligible direction across the entire universe. With
+RSI(14) determines the eligible direction for the ordinary long universe. With
 default thresholds, notification eligibility is:
 
 | Direction | RSI condition | Required non-RSI directional support |
@@ -203,17 +241,27 @@ to equal today.
 ## Telegram output and retries
 
 Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` to enable HTML delivery. Buy comes
-before Sell, each sorted by descending rating. Each complete ticker line contains
+before Sell, each sorted by descending rating. Short Watch follows both under
+**Short Watch — Put Candidates**, sorted by descending bearish-support rating,
+then ticker. Each complete ticker line contains
 linked ticker, stars and linked company name. TradingView uses the analyzed
 market symbol and exchange; Bitcoin uses `BITSTAMP:BTCUSD`. Company links use
 existing PaperTrader research pages, otherwise the security's catalog anchor.
 Symbols awaiting registry import link to the catalog until their entry exists.
+Short Watch rows also include actual RSI and `Research: current`, `partial`,
+`pending`, `stale` or `unsupported`. Current means a valid assessment with every
+scoring component available; partial means some components are unavailable;
+pending means no usable assessment row; stale means its validity has expired;
+unsupported means invalid validity metadata or no usable scoring components.
+These statuses describe assessment availability, not confirmation of a bearish
+thesis. Canonical PaperTrader links appear once the security is registered.
 
 Messages split at complete ticker lines within Telegram's limit. No message is
 created without new qualifying candidates. `data/alert_state.json` stores only
 successful deliveries, keyed by Yahoo symbol/direction and a fingerprint of the
 latest completed bar's date and normalized OHLCV. A new session or corrected bar
-can notify again; unchanged data cannot. Scores, research changes and elapsed
+can notify again. `Short` and `Sell` use independent delivery keys. Unchanged data
+cannot notify again. Scores, research changes and elapsed
 time do not independently cause repeats. No cooldown, transition gate or
 portfolio filter exists.
 
@@ -261,7 +309,10 @@ PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -v
 Tests use realistic PaperTrader CSV fixtures, synthetic prices and mocked network
 and Telegram boundaries. They cover identity/alias convergence, score and session
 boundaries, cache corrections, full-universe Buy/Sell scans, HTML links/splitting,
-retry state and repeated/new-session end-to-end runs. Runtime commit tests create
+retry state and repeated/new-session end-to-end runs. Short-watchlist tests cover
+both PaperTrader schemas, all 16 imports, classification precedence, independent
+Short delivery keys and a console-only CLI integration with mocked Yahoo data
+and Telegram credentials disabled. Runtime commit tests create
 isolated Git repositories and prove no-change runs avoid empty commits and
 unrelated files remain unstaged. No test sends a real message or changes tracked
 price caches.

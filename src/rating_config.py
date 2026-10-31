@@ -21,6 +21,14 @@ EXPIRED_FUNDAMENTAL_SCORE = 0.0
 # Open RSI bands next to the unconditional thresholds require this support.
 RSI_SUPPORT_BAND = 5.0
 NON_RSI_SUPPORT_MIN = 7.0
+SHORT_RSI_UPPER = 70.0
+
+
+def short_threshold():
+    upper = float(os.environ.get("SHORT_RSI_UPPER", SHORT_RSI_UPPER))
+    if not 0 <= upper <= 100:
+        raise ValueError("Require 0 <= SHORT_RSI_UPPER <= 100")
+    return upper
 
 
 def thresholds():

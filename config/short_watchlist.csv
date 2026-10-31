@@ -1,0 +1,17 @@
+ticker,mode,sector
+FCEL,active,Hydrogen / power
+AI,active,Enterprise AI
+SPCE,active,Commercial space
+CIFR,active,AI data centers
+WULF,active,AI data centers
+BBAI,active,AI software
+APLD,active,AI infrastructure
+ONDS,active,Autonomous drones
+AEVA,active,LiDAR / robotics
+PDYN,active,Embodied AI
+KSCP,research_only,Security robotics
+MVIS,research_only,LiDAR
+PSNY,research_only,Electric vehicles
+PLUG,research_only,Hydrogen
+ARQQ,research_only,Quantum security
+SPIR,research_only,Satellite data
