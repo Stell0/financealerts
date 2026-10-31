@@ -7,6 +7,7 @@ security_0cf8075039299094d614,KTOS,KTOS,"Kratos Defense & Security Solutions, In
 security_18a3ab0ee6086ee85d0f,ETN,ETN,Eaton Corporation plc,XNYS,USD,equity,data/wiki/securities/security_18a3ab0ee6086ee85d0f.md,watching,long
 security_1b773169da5023ce4682,VLTO,VLTO,Veralto Corporation,XNYS,USD,equity,data/wiki/securities/security_1b773169da5023ce4682.md,watchlist,long
 security_1c055eb9b2bb1f5a8ff2,RIO,RIO,Rio Tinto plc,XNYS,USD,equity,data/wiki/securities/security_1c055eb9b2bb1f5a8ff2.md,watching,long
+security_1d114694d447e35497b0,PLUG,PLUG,Plug Power Inc.,XNAS,USD,equity,data/wiki/securities/security_1d114694d447e35497b0.md,watchlist,short_research_only
 security_1e8fbdb0f45f2b413e00,PYPL,PYPL,"PayPal Holdings, Inc.",XNAS,USD,equity,data/wiki/securities/security_1e8fbdb0f45f2b413e00.md,watching,long
 security_1f9cce545ede94cd6349,ISRG,ISRG,"Intuitive Surgical, Inc.",XNAS,USD,equity,data/wiki/securities/security_1f9cce545ede94cd6349.md,watching,long
 security_2010347f1a0a5ea60f47,SPOT,SPOT,Spotify Technology S.A.,XNYS,USD,equity,data/wiki/securities/security_2010347f1a0a5ea60f47.md,watching,long
@@ -15,6 +16,7 @@ security_22c2b9d782a62d7a9b86,ATKR,ATKR,Atkore Inc.,XNYS,USD,equity,data/wiki/se
 security_2433a056eb0c55961fcc,AMZN,AMZN,"Amazon.com, Inc.",XNAS,USD,equity,data/wiki/securities/security_2433a056eb0c55961fcc.md,watching,long
 security_2c779e81c27b78c556bb,TX,TX,Ternium S.A.,XNYS,USD,equity,data/wiki/securities/security_2c779e81c27b78c556bb.md,watching,long
 security_2dbe878dfc899d7ee867,FCX,FCX,Freeport-McMoRan Inc.,XNYS,USD,equity,data/wiki/securities/security_2dbe878dfc899d7ee867.md,watching,long
+security_2e9d3d6cb899976cc127,AEVA,AEVA,"Aeva Technologies, Inc.",XNAS,USD,equity,data/wiki/securities/security_2e9d3d6cb899976cc127.md,watchlist,short_candidate
 security_33d9c44facc75c726c7d,NVDA,NVDA,NVIDIA Corporation,XNAS,USD,equity,data/wiki/securities/security_33d9c44facc75c726c7d.md,watching,long
 security_37ddcbdaad296ad831f2,COIN,COIN,"Coinbase Global, Inc.",XNAS,USD,equity,data/wiki/securities/security_37ddcbdaad296ad831f2.md,watching,long
 security_3853e54c619d597dcaa1,NIB.F,NIB.F,Nidec Corporation,XFRA,EUR,equity,data/wiki/securities/security_3853e54c619d597dcaa1.md,watching,long
@@ -25,9 +27,12 @@ security_47a0b06f6c6c478d7c1e,NBIS,NBIS,Nebius Group N.V.,XNAS,USD,equity,data/w
 security_488a9d7f7a8573597724,PWR,PWR,"Quanta Services, Inc.",XNYS,USD,equity,data/wiki/securities/security_488a9d7f7a8573597724.md,watching,long
 security_4935c6e39e38273a1731,MELI,MELI,"MercadoLibre, Inc.",XNAS,USD,equity,data/wiki/securities/security_4935c6e39e38273a1731.md,watching,long
 security_4b61970aa8f574446819,GEV,GEV,GE Vernova Inc.,XNYS,USD,equity,data/wiki/securities/security_4b61970aa8f574446819.md,watching,long
+security_52702758461db03286f7,APLD,APLD,Applied Digital Corporation,XNAS,USD,equity,data/wiki/securities/security_52702758461db03286f7.md,watchlist,short_candidate
 security_55c9ce2fdcd32dad6b8c,CRSR,CRSR,"Corsair Gaming, Inc.",XNAS,USD,equity,data/wiki/securities/security_55c9ce2fdcd32dad6b8c.md,watching,long
 security_567d0d575bbd30aaa91d,SSU.VI,SSU.VI,"Samsung Electronics Co., Ltd.",XWBO,EUR,equity,data/wiki/securities/security_567d0d575bbd30aaa91d.md,watching,long
+security_5693568146922e796a14,KSCP,KSCP,"Knightscope, Inc.",XNAS,USD,equity,data/wiki/securities/security_5693568146922e796a14.md,watchlist,short_research_only
 security_59304f90c440def31dc5,RTX,RTX,RTX Corporation,XNYS,USD,equity,data/wiki/securities/security_59304f90c440def31dc5.md,watching,long
+security_5d8b1483732cb8151b3e,PDYN,PDYN,Palladyne AI Corp.,XNAS,USD,equity,data/wiki/securities/security_5d8b1483732cb8151b3e.md,watchlist,short_candidate
 security_61567714298b9563d1a9,WTI,WTI,"W&T Offshore, Inc.",XNYS,USD,equity,data/wiki/securities/security_61567714298b9563d1a9.md,watching,long
 security_664f93a7eaca72e76e9b,SPCX,SPCX,Space Exploration Technologies Corp.,XNAS,USD,equity,data/wiki/securities/security_664f93a7eaca72e76e9b.md,watching,long
 security_66cdcf90aac0d83e76f3,ALB,ALB,Albemarle Corporation,XNYS,USD,equity,data/wiki/securities/security_66cdcf90aac0d83e76f3.md,watching,long
@@ -46,6 +51,8 @@ security_89969b7dac39b7db5661,YEC.F,YEC.F,YASKAWA Electric Corporation,XFRA,EUR,
 security_8a5c43888d224de85c69,PLS.AX,PLS.AX,PLS Group Limited,XASX,AUD,equity,data/wiki/securities/security_8a5c43888d224de85c69.md,watching,long
 security_8b703a8adf5f864acaa4,PRX,PRX.AS,Prosus N.V.,XAMS,EUR,equity,data/wiki/securities/security_8b703a8adf5f864acaa4.md,watching,long
 security_8d11e65cd0de084ee461,LMND,LMND,"Lemonade, Inc.",XNYS,USD,equity,data/wiki/securities/security_8d11e65cd0de084ee461.md,watchlist,long
+security_93ae4d1c015392716cd1,WULF,WULF,TeraWulf Inc.,XNAS,USD,equity,data/wiki/securities/security_93ae4d1c015392716cd1.md,watchlist,short_candidate
+security_93d73f1a39279ecf6407,SPIR,SPIR,"Spire Global, Inc.",XNYS,USD,equity,data/wiki/securities/security_93d73f1a39279ecf6407.md,watchlist,short_research_only
 security_95351d928b674bbdf687,DNA,DNA,"Ginkgo Bioworks Holdings, Inc.",XNYS,USD,equity,data/wiki/securities/security_95351d928b674bbdf687.md,watching,long
 security_96ba305ee7cd586bc348,FUC.F,FUC.F,Fanuc Corporation,XFRA,EUR,equity,data/wiki/securities/security_96ba305ee7cd586bc348.md,watching,long
 security_97f38b2cb2d5ef127f5a,PL,PL,Planet Labs PBC,XNYS,USD,equity,data/wiki/securities/security_97f38b2cb2d5ef127f5a.md,watching,long
@@ -55,24 +62,30 @@ security_9b0db3bc77914b23a307,CSL,CSL,Carlisle Companies Incorporated,XNYS,USD,e
 security_9d4049ed6669a52815d6,SQM,SQM,Sociedad Quimica y Minera de Chile S.A.,XNYS,USD,equity,data/wiki/securities/security_9d4049ed6669a52815d6.md,watching,long
 security_a5dc16f3f4b245e6c168,LUNR,LUNR,"Intuitive Machines, Inc.",XNAS,USD,equity,data/wiki/securities/security_a5dc16f3f4b245e6c168.md,watching,long
 security_a9eb9838940ef5ceaa0c,FLNC,FLNC,"Fluence Energy, Inc.",XNAS,USD,equity,data/wiki/securities/security_a9eb9838940ef5ceaa0c.md,watching,long
+security_abadc86a2ed7b5a86e32,CIFR,CIFR,Cipher Digital Inc.,XNAS,USD,equity,data/wiki/securities/security_abadc86a2ed7b5a86e32.md,watchlist,short_candidate
 security_ad3b1f8f59fd599f079a,HOOD,HOOD,"Robinhood Markets, Inc.",XNAS,USD,equity,data/wiki/securities/security_ad3b1f8f59fd599f079a.md,watching,long
 security_ad5917642acbba28c1f2,TDY,TDY,Teledyne Technologies Incorporated,XNYS,USD,equity,data/wiki/securities/security_ad5917642acbba28c1f2.md,watching,long
 security_b19e8f0343b7da1f3c03,03388,3388.HK,"Shenzhen Creality 3D Technology Co., Ltd.",XHKG,HKD,equity,data/wiki/securities/security_b19e8f0343b7da1f3c03.md,watching,long
 security_b1f2c48e1a744f5ecf67,LH,LH,Labcorp Holdings Inc.,XNYS,USD,equity,data/wiki/securities/security_b1f2c48e1a744f5ecf67.md,watching,long
 security_b2116dcf976c96974d7b,VALE,VALE,Vale S.A.,XNYS,USD,equity,data/wiki/securities/security_b2116dcf976c96974d7b.md,watching,long
+security_b493b89a6ed6fee5905e,BBAI,BBAI,"BigBear.ai Holdings, Inc.",XNYS,USD,equity,data/wiki/securities/security_b493b89a6ed6fee5905e.md,watchlist,short_candidate
 security_b61c642d038d71be3821,MTLS,MTLS,Materialise NV,XNAS,USD,equity,data/wiki/securities/security_b61c642d038d71be3821.md,watchlist,long
+security_bb61343adcd613fd84e9,FCEL,FCEL,"FuelCell Energy, Inc.",XNAS,USD,equity,data/wiki/securities/security_bb61343adcd613fd84e9.md,watchlist,short_candidate
 security_bdc2f87dadf134760c3a,PLTR,PLTR,Palantir Technologies Inc.,XNAS,USD,equity,data/wiki/securities/security_bdc2f87dadf134760c3a.md,watching,long
 security_c120e9f26ebb6159adf9,ABBNY,ABBNY,ABB Ltd,XOTC,USD,equity,data/wiki/securities/security_c120e9f26ebb6159adf9.md,watching,long
 security_c150f31c30afdb4a85f9,CROX,CROX,"Crocs, Inc.",XNAS,USD,equity,data/wiki/securities/security_c150f31c30afdb4a85f9.md,watching,long
 security_c2e6db30cb59254de418,XMTR,XMTR,"Xometry, Inc.",XNAS,USD,equity,data/wiki/securities/security_c2e6db30cb59254de418.md,watching,long
 security_c5a9e460d3350284d157,VLO,VLO,Valero Energy Corporation,XNYS,USD,equity,data/wiki/securities/security_c5a9e460d3350284d157.md,watching,long
+security_c843b10b0d128d0fada8,SPCE,SPCE,"Virgin Galactic Holdings, Inc.",XNYS,USD,equity,data/wiki/securities/security_c843b10b0d128d0fada8.md,watchlist,short_candidate
 security_c86bb4e75658c07142cf,GOOGL,GOOGL,Alphabet Inc.,XNAS,USD,equity,data/wiki/securities/security_c86bb4e75658c07142cf.md,watching,long
 security_c9a37d277445869a8809,RBLX,RBLX,Roblox Corporation,XNYS,USD,equity,data/wiki/securities/security_c9a37d277445869a8809.md,watching,long
+security_c9b32b251703b0990793,ARQQ,ARQQ,Arqit Quantum Inc.,XNAS,USD,equity,data/wiki/securities/security_c9b32b251703b0990793.md,watchlist,short_research_only
 security_cb88f9154cfeaa15e878,VRT,VRT,Vertiv Holdings Co,XNYS,USD,equity,data/wiki/securities/security_cb88f9154cfeaa15e878.md,watching,long
 security_cc4dcb8f002b61dffe00,PARRO.PA,PARRO.PA,Parrot S.A.,XPAR,EUR,equity,data/wiki/securities/security_cc4dcb8f002b61dffe00.md,watching,long
 security_ccb25582c0392492fe9e,EVK,EVK.DE,Evonik Industries AG,XETR,EUR,equity,data/wiki/securities/security_ccb25582c0392492fe9e.md,watchlist,long
 security_cd492d97064d8574156e,MP,MP,MP Materials Corp.,XNYS,USD,equity,data/wiki/securities/security_cd492d97064d8574156e.md,watching,long
 security_ce9b78a4d0773c950765,TSM,TSM,Taiwan Semiconductor Manufacturing Company Limited,XNYS,USD,equity,data/wiki/securities/security_ce9b78a4d0773c950765.md,watching,long
+security_d051c308c3e15b025fb1,MVIS,MVIS,"MicroVision, Inc.",XNAS,USD,equity,data/wiki/securities/security_d051c308c3e15b025fb1.md,watchlist,short_research_only
 security_d08d763780400dfbffce,SSUN.VI,SSUN.VI,"Samsung Electronics Co., Ltd.",XWBO,EUR,equity,data/wiki/securities/security_d08d763780400dfbffce.md,watching,long
 security_d12e746b3c9d392183cc,META,META,"Meta Platforms, Inc.",XNAS,USD,equity,data/wiki/securities/security_d12e746b3c9d392183cc.md,watching,long
 security_d202772e4e62065cd17a,FISV,FISV,"Fiserv, Inc.",XNAS,USD,equity,data/wiki/securities/security_d202772e4e62065cd17a.md,watching,long
@@ -80,6 +93,7 @@ security_d2be67701e612ee6625d,XYL,XYL,Xylem Inc.,XNYS,USD,equity,data/wiki/secur
 security_dc7a111e297be528d96b,TSLA,TSLA,"Tesla, Inc.",XNAS,USD,equity,data/wiki/securities/security_dc7a111e297be528d96b.md,watching,long
 security_dc8486c1d61df62a22fd,SU,SU.PA,Schneider Electric SE,XPAR,EUR,equity,data/wiki/securities/security_dc8486c1d61df62a22fd.md,watching,long
 security_de0d83229b369a426b99,TCEHY,TCEHY,Tencent Holdings Limited,XOTC,USD,equity,data/wiki/securities/security_de0d83229b369a426b99.md,watching,long
+security_df72f58f926ed39b0675,ONDS,ONDS,Ondas Inc.,XNAS,USD,equity,data/wiki/securities/security_df72f58f926ed39b0675.md,watchlist,short_candidate
 security_dfa34d4b9050964b465e,INTC,INTC,Intel Corporation,XNAS,USD,equity,data/wiki/securities/security_dfa34d4b9050964b465e.md,watching,long
 security_e19c7fe27fbcc4cd923d,AD,AD.AS,Koninklijke Ahold Delhaize N.V.,XAMS,EUR,equity,data/wiki/securities/security_e19c7fe27fbcc4cd923d.md,watching,long
 security_e4822686f60a96824b6e,UBER,UBER,"Uber Technologies, Inc.",XNYS,USD,equity,data/wiki/securities/security_e4822686f60a96824b6e.md,watching,long
@@ -87,9 +101,11 @@ security_eca976f0076a425ea1bb,PATH,PATH,"UiPath, Inc.",XNYS,USD,equity,data/wiki
 security_ed7d5b616a196969c815,RXRX,RXRX,"Recursion Pharmaceuticals, Inc.",XNAS,USD,equity,data/wiki/securities/security_ed7d5b616a196969c815.md,watching,long
 security_ef35e41886220d51c22c,ASML,ASML,ASML Holding N.V.,XNAS,USD,equity,data/wiki/securities/security_ef35e41886220d51c22c.md,watching,long
 security_ef418f5ccc7dc5be8e65,BAS,BAS.DE,BASF SE,XETR,EUR,equity,data/wiki/securities/security_ef418f5ccc7dc5be8e65.md,watchlist,long
+security_f1238da5e465e051a47e,PSNY,PSNY,Polestar Automotive Holding UK PLC,XNAS,USD,equity,data/wiki/securities/security_f1238da5e465e051a47e.md,watchlist,short_research_only
 security_f18cd57a5e086583c861,PRLB,PRLB,"Proto Labs, Inc.",XNYS,USD,equity,data/wiki/securities/security_f18cd57a5e086583c861.md,watchlist,long
 security_f2b9760d847b2ba59324,ENPH,ENPH,"Enphase Energy, Inc.",XNAS,USD,equity,data/wiki/securities/security_f2b9760d847b2ba59324.md,watching,long
 security_f34181f3df32080a91d1,DPZ,DPZ,"Domino's Pizza, Inc.",XNAS,USD,equity,data/wiki/securities/security_f34181f3df32080a91d1.md,watching,long
+security_f9b4eb9ee3c847797e3b,AI,AI,"C3.ai, Inc.",XNYS,USD,equity,data/wiki/securities/security_f9b4eb9ee3c847797e3b.md,watchlist,short_candidate
 security_fb87fac302a5446a1ced,LAC,LAC,Lithium Americas Corp.,XNYS,USD,equity,data/wiki/securities/security_fb87fac302a5446a1ced.md,watching,long
 security_fe4648901e7675f157fd,ANIC.L,ANIC.L,Agronomics Limited,XLON,GBP,equity,data/wiki/securities/security_fe4648901e7675f157fd.md,watchlist,long
 security_fe5539a7d3fd9d553bce,MSTR,MSTR,Strategy Inc,XNAS,USD,equity,data/wiki/securities/security_fe5539a7d3fd9d553bce.md,watching,long
