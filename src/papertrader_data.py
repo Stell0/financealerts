@@ -1,4 +1,4 @@
-"""Read only identity and assessment tables from one committed revision."""
+"""Read identity (including optional research_role) and assessments at one revision."""
 
 import json
 import logging

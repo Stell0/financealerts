@@ -3,12 +3,15 @@
 ## Project and layout
 
 FinanceAlerts is a Python command-line application that downloads Yahoo Finance
-prices, calculates technical indicators, and reports BUY/SELL signals. Telegram
-delivery is optional. There is no web service or packaged Python application.
+prices, calculates technical indicators, and reports Buy/Sell and Short Watch
+signals. Telegram delivery is optional. There is no web service or packaged Python
+application.
 
 - `src/main.py`: CLI entry point, full-universe scan orchestration, and per-ticker
   failure isolation.
 - `src/registry.py`: additive ticker persistence, alias resolution and identity joins.
+- `config/short_watchlist.csv`: required, version-controlled `ticker,mode,sector`
+  contract; never regenerate it from PaperTrader or copy its entries into longs.
 - `src/papertrader_data.py`: read-only identity/assessment snapshots at one revision.
 - `src/yahoo_finance_api.py`: Yahoo Finance downloads and daily CSV cache handling;
   also contains hourly-price and earnings-date helpers.
@@ -63,7 +66,18 @@ the Docker example). They are integration checks, not offline tests.
 ## Configuration and behavior to preserve
 
 - The universe is merged from `config/tickers.txt`, `TICKER_LIST` and PaperTrader
-  securities. A positional ticker overrides the scan only. Identity and assessment
+  securities plus `config/short_watchlist.csv`. Extend `MonitoredTicker.universe`
+  (`long`, `short`, `research_only`) through the existing identity joins.
+  Only longs persist in `config/tickers.txt`; remove previously saved bearish
+  identities during synchronization. Local `active`/`research_only` classifications
+  take precedence across every source, including environment and positional
+  overrides. Validate CSV columns, symbols, modes, sectors and duplicate identities;
+  missing/malformed short configuration must fail before saving the long registry.
+  PaperTrader's optional `research_role` is legacy `long` when absent; either
+  `short_candidate` or `short_research_only` excludes ordinary Buy/Sell and long
+  persistence. Only local `active` enables short alerts; otherwise PaperTrader
+  short roles stay research-only. A positional ticker overrides the scan only.
+  Identity and assessment
   ingestion lives in `registry.py` and `papertrader_data.py`; never use PaperTrader
   prices or indicators. Preserve the GOOG/GOOGL and BTCUSD alias rules.
 - RSI <= RSI_lower (30) triggers Buy and RSI >= RSI_upper (70) triggers Sell
@@ -78,6 +92,14 @@ the Docker example). They are integration checks, not offline tests.
   `rating_config.py`: 25% RSI, 25% other technicals and 50% fundamentals.
   `ratings.py` calculates independent Buy/Sell scores; stars describe support
   for the direction independently of the notification eligibility check.
+- Active shorts emit only `Short` at RSI(14) >= `SHORT_RSI_UPPER` (default 70,
+  valid range 0–100). No Buy/Sell or near-threshold support bands apply. Reuse
+  the ordinary Sell rating without changing its weights or RSI scoring scale.
+  Research-only entries skip price scans entirely. Short rows show actual RSI
+  and research status (current, partial, pending, stale, unsupported). Missing
+  components stay neutral and stale fundamentals keep the existing expiry
+  penalty. Research availability never implies a confirmed bearish thesis or
+  an attractively priced put. Do not add options chains or trading execution.
 - Indicator definitions: RSI14, Bollinger20/2, MACD12/26/9, SMA50 and SMA200.
   Unavailable warmups and missing/invalid fundamental components are neutral.
   Expired assessments give every directional fundamental factor 0/10 for both
@@ -92,6 +114,9 @@ the Docker example). They are integration checks, not offline tests.
   runs print messages without advancing delivery state. `notifications.py` stores
   only successful sends in `data/alert_state.json`, keyed by symbol/direction and
   completed-bar date plus normalized OHLCV. No cooldown or transition gate exists.
+  Short Watch follows Buy/Sell under `Short Watch — Put Candidates`, sorted by
+  descending Sell-derived rating then ticker. `Short` delivery keys are separate
+  from `Sell`; preserve UTF-16 length checks and complete-line HTML splitting.
 - The application does not automatically load `.env`. Keep credentials out of
   source, logs, documentation, and commits. Unset Telegram variables for local
   checks that should only print reports.

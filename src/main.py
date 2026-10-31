@@ -12,8 +12,8 @@ import indicators
 import yahoo_finance_api
 from notifications import YAHOO_EXCHANGES, deliver
 from papertrader_data import load_snapshot
-from ratings import rate, read_assessments
-from registry import synchronize
+from ratings import rate, read_assessments, research_status
+from registry import read_short_watchlist, synchronize
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
@@ -23,6 +23,9 @@ def scan(universe, assessments, now=None, cache_dir="data"):
     candidates, failures = [], []
     processed, skipped = 0, 0
     for item in universe:
+        if item.universe == "research_only":
+            logging.info("Skipping research-only security %s", item.ticker)
+            continue
         if (item.security or {}).get("status") == "acquired":
             logging.info("Skipping acquired security %s", item.ticker)
             skipped += 1
@@ -57,15 +60,16 @@ def scan(universe, assessments, now=None, cache_dir="data"):
                 cache_dir=cache_dir,
             )
             frame = indicators.calculate(prices)
-            direction, scores = rate(
-                frame, assessments.get(security.get("security_id")), now
-            )
+            assessment = assessments.get(security.get("security_id"))
+            direction, scores = rate(frame, assessment, now, universe=item.universe)
             if direction:
                 candidates.append(
                     {
                         "item": item,
                         "direction": direction,
                         "score": scores[direction],
+                        "rsi": float(frame.iloc[-1]["RSI"]),
+                        "research_status": research_status(assessment, now),
                         "bar": prices.iloc[-1],
                         "date": prices.index[-1].date(),
                     }
@@ -88,6 +92,7 @@ def main(argv=None):
         os.environ.get("TICKER_LIST", ""),
         securities,
         argv[0] if argv else None,
+        short_watchlist=read_short_watchlist("config/short_watchlist.csv"),
     )
     candidates, failures = scan(universe, read_assessments(text))
     try:

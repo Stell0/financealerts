@@ -11,6 +11,7 @@ from rating_config import (
     NON_RSI_SUPPORT_MIN,
     RSI_SUPPORT_BAND,
     WEIGHTS,
+    short_threshold,
     thresholds,
 )
 
@@ -73,6 +74,42 @@ def read_assessments(text):
     return output
 
 
+def assessment_expiry(assessment, now):
+    assessed = datetime.fromisoformat(
+        str(assessment.get("assessed_at")).replace("Z", "+00:00")
+    )
+    expires = datetime.fromisoformat(
+        str(assessment.get("expires_at")).replace("Z", "+00:00")
+    )
+    if (
+        assessed.tzinfo is None
+        or expires.tzinfo is None
+        or assessed > now
+        or expires <= assessed
+    ):
+        raise ValueError("invalid assessment validity interval")
+    return expires
+
+
+def research_status(assessment, now=None):
+    now = now or datetime.now(timezone.utc)
+    if not assessment:
+        return "pending"
+    try:
+        expires = assessment_expiry(assessment, now)
+    except (KeyError, ValueError, TypeError):
+        return "unsupported"
+    if now >= expires:
+        return "stale"
+    available = sum(
+        (value := finite(assessment.get(field))) is not None and 0 <= value <= 100
+        for field in FUNDAMENTALS
+    )
+    if available == len(FUNDAMENTALS):
+        return "current"
+    return "partial" if available else "unsupported"
+
+
 def fundamental_scores(assessment, now=None):
     """Return raw 0–10 components, or None for a structurally valid expired assessment."""
     now = now or datetime.now(timezone.utc)
@@ -81,19 +118,7 @@ def fundamental_scores(assessment, now=None):
         logging.warning("Missing PaperTrader assessment; using neutral fundamentals")
         return neutral
     try:
-        assessed = datetime.fromisoformat(
-            str(assessment.get("assessed_at")).replace("Z", "+00:00")
-        )
-        expires = datetime.fromisoformat(
-            str(assessment.get("expires_at")).replace("Z", "+00:00")
-        )
-        if (
-            assessed.tzinfo is None
-            or expires.tzinfo is None
-            or assessed > now
-            or expires <= assessed
-        ):
-            raise ValueError("invalid assessment validity interval")
+        expires = assessment_expiry(assessment, now)
     except (KeyError, ValueError, TypeError) as error:
         logging.warning(
             "Invalid PaperTrader assessment: %s; using neutral fundamentals",
@@ -153,7 +178,11 @@ def technical_scores(frame, direction):
     return scores
 
 
-def rate(frame, assessment=None, now=None, lower=None, upper=None):
+def rate(frame, assessment=None, now=None, lower=None, upper=None, universe="long"):
+    if universe == "research_only":
+        return None, {}
+    if universe not in {"long", "short"}:
+        raise ValueError(f"Unknown ticker universe: {universe!r}")
     default_lower, default_upper = thresholds()
     lower = default_lower if lower is None else lower
     upper = default_upper if upper is None else upper
@@ -194,6 +223,8 @@ def rate(frame, assessment=None, now=None, lower=None, upper=None):
             )
             / support_weight
         )
+    if universe == "short":
+        return ("Short" if rsi >= short_threshold() else None), {"Short": output["Sell"]}
     if rsi <= lower:
         candidate = "Buy"
     elif rsi >= upper:

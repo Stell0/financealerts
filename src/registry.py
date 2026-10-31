@@ -2,13 +2,14 @@
 
 import csv
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from io import StringIO
 from pathlib import Path
 
 SYMBOL = re.compile(r"^[A-Z0-9][A-Z0-9.^=+-]{0,39}$")
 SECURITY_ID = re.compile(r"^[A-Za-z0-9_-]{1,128}$")
 ALIASES = {"GOOG": "GOOGL", "BTC-USD": "BTCUSD"}
+RESEARCH_ROLES = {"long", "short_candidate", "short_research_only"}
 
 
 def normalize(value):
@@ -42,6 +43,8 @@ def read_securities(text):
         if None in row or any(value is None for value in row.values()):
             raise ValueError("Malformed PaperTrader security row")
         row = {key: value.strip() for key, value in row.items()}
+        if row.get("research_role", "long") not in RESEARCH_ROLES:
+            raise ValueError(f"Invalid PaperTrader research_role: {row['research_role']!r}")
         sid = row["security_id"]
         if not SECURITY_ID.fullmatch(sid) or sid in ids:
             raise ValueError(f"Invalid or duplicate security_id: {sid!r}")
@@ -64,11 +67,34 @@ def read_tickers(path):
     ]
 
 
+def read_short_watchlist(path):
+    """Read the version-controlled authority for active bearish candidates."""
+    with Path(path).open(encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle, strict=True)
+        if reader.fieldnames != ["ticker", "mode", "sector"]:
+            raise ValueError("Short watchlist CSV requires ticker,mode,sector columns")
+        rows, seen = [], set()
+        for row in reader:
+            if None in row or any(value is None for value in row.values()):
+                raise ValueError(f"Malformed short watchlist row at line {reader.line_num}")
+            row = {key: value.strip() for key, value in row.items()}
+            row["ticker"] = normalize(row["ticker"])
+            identity = identity_symbol(row["ticker"])
+            if identity in seen:
+                raise ValueError(f"Duplicate short watchlist ticker: {row['ticker']}")
+            if row["mode"] not in {"active", "research_only"} or not row["sector"]:
+                raise ValueError(f"Invalid short watchlist mode/sector for {row['ticker']}")
+            seen.add(identity)
+            rows.append(row)
+        return rows
+
+
 @dataclass(frozen=True)
 class MonitoredTicker:
     ticker: str
     yahoo_symbol: str
     security: dict | None = None
+    universe: str = "long"
 
     @property
     def identity(self):
@@ -100,17 +126,32 @@ def resolve(symbol, securities):
         yahoo = "BTC-USD"
     # Use provider-qualified symbols for exchanges where registry tickers omit suffixes.
     display = "BTCUSD" if canonical == "BTCUSD" else yahoo
-    return MonitoredTicker(display, yahoo, security)
+    role = (security or {}).get("research_role", "long")
+    if role not in RESEARCH_ROLES:
+        raise ValueError(f"Invalid PaperTrader research_role: {role!r}")
+    # PaperTrader can exclude a long, but only local configuration enables shorts.
+    universe = "long" if role == "long" else "research_only"
+    return MonitoredTicker(display, yahoo, security, universe)
 
 
-def merge_universe(file_tickers, environment, securities):
+def merge_universe(file_tickers, environment, securities, short_watchlist=()):
     explicit = [*file_tickers, *environment.split()]
+    short_roles = {}
+    for row in short_watchlist:
+        item = resolve(row["ticker"], securities)
+        if item.identity in short_roles:
+            raise ValueError(f"Duplicate short watchlist identity: {item.identity}")
+        short_roles[item.identity] = (
+            "short" if row["mode"] == "active" else "research_only"
+        )
+        explicit.append(row["ticker"])
     merged = {}
     # User-configured GOOG wins over registry GOOGL, without sharing their prices.
     for symbol in sorted([row["provider_symbol"] for row in securities]) + sorted(
         explicit
     ):
         item = resolve(symbol, securities)
+        item = replace(item, universe=short_roles.get(item.identity, item.universe))
         previous = merged.get(item.identity)
         if previous is None or item.ticker == "GOOG" or previous.ticker != "GOOG":
             merged[item.identity] = item
@@ -119,7 +160,7 @@ def merge_universe(file_tickers, environment, securities):
 
 def save_tickers(path, universe):
     path = Path(path)
-    content = "".join(f"{item.ticker}\n" for item in universe)
+    content = "".join(f"{item.ticker}\n" for item in universe if item.universe == "long")
     if path.exists() and path.read_text() == content:
         return False
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -129,7 +170,15 @@ def save_tickers(path, universe):
     return True
 
 
-def synchronize(path, environment, securities, override=None):
-    universe = merge_universe(read_tickers(path), environment, securities)
+def synchronize(path, environment, securities, override=None, short_watchlist=()):
+    universe = merge_universe(read_tickers(path), environment, securities, short_watchlist)
+    selected = None
+    if override:
+        selected = resolve(override, securities)
+        classification = next(
+            (item.universe for item in universe if item.identity == selected.identity),
+            selected.universe,
+        )
+        selected = replace(selected, universe=classification)
     save_tickers(path, universe)
-    return [resolve(override, securities)] if override else universe
+    return [selected] if selected else universe
