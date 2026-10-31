@@ -29,6 +29,16 @@
     "sha256": "a784bdea8edd2b1de94e8082e539a7c2f684f92c11c6d00eb24dff9b4fb68fb0",
     "start": "2025-04-28"
   },
+  "AEVA": {
+    "full_session": "2026-10-30",
+    "sha256": "5cdf4e774b37a1b6afe4b7c9dc0bd1841190c30794a386d92c30dc43213ac85a",
+    "start": "2025-04-28"
+  },
+  "AI": {
+    "full_session": "2026-10-30",
+    "sha256": "4172b4ef070ba5ddb64dd3a70ec6bf074fca06dda0b1bfc054618bc6c1f0fbac",
+    "start": "2025-04-28"
+  },
   "AKE.PA": {
     "full_session": "2026-10-30",
     "sha256": "f1b3b567abcb91bf302e40363332b568f29fd399d78b6ccee2caa4914c25126c",
@@ -59,6 +69,11 @@
     "sha256": "def29e1953a68ba993ea5b1406fcee0f3f68155a4c0ed8ea64fdbb4ef03b9009",
     "start": "2025-04-28"
   },
+  "APLD": {
+    "full_session": "2026-10-30",
+    "sha256": "5b6ad1e3f068ed82b95d09925067f07ff66cf8b59cc86188db5bad6fc5d70739",
+    "start": "2025-04-28"
+  },
   "ASML": {
     "full_session": "2026-10-30",
     "sha256": "3e84649e36a947cf3a7aa8b2b3d942152bf028014a8f8e2235a9f810249956b6",
@@ -74,6 +89,11 @@
     "sha256": "248dff9ca9ec1a211a548a041ea627126b1daeef69b2feab923291133d5c8b9b",
     "start": "2025-04-28"
   },
+  "BBAI": {
+    "full_session": "2026-10-30",
+    "sha256": "44c371c15933f65f3b1f6387b4303b8e6881fc70ad2f1843c313e094e27c631a",
+    "start": "2025-04-28"
+  },
   "BE": {
     "full_session": "2026-10-30",
     "sha256": "248f573d0a5968f35a1655d3c4058de497b5e21c47fab6f5c2715b85e0be8afc",
@@ -82,6 +102,11 @@
   "BTC-USD": {
     "full_session": "2026-10-30",
     "sha256": "34c5fb06ef0d639b13f4ea6f98c56115c96815979eaecaa6f55534cec4c07d23",
+    "start": "2025-04-28"
+  },
+  "CIFR": {
+    "full_session": "2026-10-30",
+    "sha256": "52cfc7a4a98604dea51d56b47d627ecf77ac9d45dad558f3b9f6371bbe1c3033",
     "start": "2025-04-28"
   },
   "COIN": {
@@ -147,6 +172,11 @@
   "EVK.DE": {
     "full_session": "2026-10-30",
     "sha256": "6e2ce7e30a3bfd3772dac4cf2b5770d91382bc0a724d9d5b0d4304a8999f5eb2",
+    "start": "2025-04-28"
+  },
+  "FCEL": {
+    "full_session": "2026-10-30",
+    "sha256": "454a0a656e5d2c65d8cf818225729b0059ba8f46f6ec46b460d3b27d530fe489",
     "start": "2025-04-28"
   },
   "FCX": {
@@ -274,6 +304,11 @@
     "sha256": "cbb1a66600ead3292f5c9f6145b4f49b54cd1af2519220c3d2373bcdb813f152",
     "start": "2025-04-28"
   },
+  "ONDS": {
+    "full_session": "2026-10-30",
+    "sha256": "824c2ab8a24e1e1cf1bd0e224da59ada0ee2b366fe696dd82f3735a230488f02",
+    "start": "2025-04-28"
+  },
   "PARRO.PA": {
     "full_session": "2026-10-30",
     "sha256": "1fe23463f224295e0962b7ddcc1d9a16ad1ccfb1b2c52d837da0b7bff1a23089",
@@ -282,6 +317,11 @@
   "PATH": {
     "full_session": "2026-10-30",
     "sha256": "e6e412f768248ccd14f6e8de138b9f428bcc945f54addc712f11057327f8abda",
+    "start": "2025-04-28"
+  },
+  "PDYN": {
+    "full_session": "2026-10-30",
+    "sha256": "b0e4eeab0ce0e2596842346fdc48e7db166dfea471b9e63866a1ce67193c305b",
     "start": "2025-04-28"
   },
   "PL": {
@@ -367,6 +407,11 @@
   "SOFI": {
     "full_session": "2026-10-30",
     "sha256": "c3e0bd0c778d2c0e22c47fef9e4b195560b390f30fc70c09ad265882e9577896",
+    "start": "2025-04-28"
+  },
+  "SPCE": {
+    "full_session": "2026-10-30",
+    "sha256": "cfc2932f829be33865840f14d626d13610b321f8db3c68e00ab48db50dbeefe7",
     "start": "2025-04-28"
   },
   "SPCX": {
@@ -467,6 +512,11 @@
   "WTI": {
     "full_session": "2026-10-30",
     "sha256": "09a595ee99795c3e6d0fc4b8e49abc002eed02c80ade1737c3aab3293cb96af4",
+    "start": "2025-04-28"
+  },
+  "WULF": {
+    "full_session": "2026-10-30",
+    "sha256": "ac9f0cf34396964564d9d6b36e16873aafa1bcba0db4674962cbb3caddfb2c2b",
     "start": "2025-04-28"
   },
   "XMTR": {

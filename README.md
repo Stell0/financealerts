@@ -121,6 +121,9 @@ and is never regenerated from PaperTrader.
 The initial active list is **FCEL, AI, SPCE, CIFR, WULF, BBAI, APLD, ONDS, AEVA,
 PDYN**. The initial research-only list is **KSCP, MVIS, PSNY, PLUG, ARQQ, SPIR**.
 Research-only candidates may have limited options liquidity or other constraints.
+The current file also includes the 18 screened additions documented in
+[the October 31 expansion](docs/short_watchlist_screen_2026-10-31.md): eight active
+and ten research-only peers. The CSV remains authoritative for classification.
 
 PaperTrader's optional `research_role` accepts `long`, `short_candidate` and
 `short_research_only`. An absent column preserves legacy long behavior.
@@ -280,8 +283,8 @@ snapshot through an allowlist of public fields; it contains no assessments or
 credentials. The site manifest includes every resolved monitored identity,
 including short/research-only entries and missing or stale caches. Historical
 cache files outside the monitored universe are migrated but not added as new
-watchlist securities. The initial migrated repository has **101 price CSVs**;
-the initial dashboard lists **113 securities**, with **97 available histories**.
+watchlist securities. The migrated repository has **111 price CSVs**;
+the dashboard lists **131 securities**, with **107 available histories**.
 
 Search by ticker or company, sort by ticker or RSI, and filter by condition and
 universe. Selecting a row loads just that security's dataset. Price (line or
@@ -422,7 +425,7 @@ Tests use realistic PaperTrader CSV fixtures, synthetic prices and mocked networ
 and Telegram boundaries. They cover identity/alias convergence, score and session
 boundaries, cache corrections, full-universe Buy/Sell scans, HTML links/splitting,
 retry state and repeated/new-session end-to-end runs. Short-watchlist tests cover
-both PaperTrader schemas, all 16 imports, classification precedence, independent
+both PaperTrader schemas, all configured short imports, classification precedence, independent
 Short delivery keys and a console-only CLI integration with mocked Yahoo data
 and Telegram credentials disabled. Runtime commit tests create
 isolated Git repositories and prove no-change runs avoid empty commits and
