@@ -8,7 +8,7 @@ if ! git diff --cached --quiet; then
 fi
 
 git add -- config/tickers.txt data/*.csv
-for path in data/alert_state.json data/price_cache_state.json; do
+for path in config/securities.csv data/alert_state.json data/price_cache_state.json; do
   if [ -f "$path" ]; then git add -- "$path"; fi
 done
 

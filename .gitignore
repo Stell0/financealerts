@@ -6,3 +6,8 @@ fin/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+site/node_modules/
+site/public/
+site/test-results/
+site/playwright-report/
+.playwright-mcp/

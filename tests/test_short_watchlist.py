@@ -295,7 +295,7 @@ class ShortNotificationTests(unittest.TestCase):
             self.assertLessEqual(len(message.encode("utf-16-le")) // 2, 1000)
             links = Links()
             links.feed(message)
-            self.assertEqual(len(links.links), 2 * len(entries))
+            self.assertEqual(len(links.links), 3 * len(entries))
             if any(row["direction"] == "Short" for row in entries):
                 self.assertIn("<b>Short Watch — Put Candidates</b>", message)
                 self.assertIn("RSI 76.4 | Research: current", message)

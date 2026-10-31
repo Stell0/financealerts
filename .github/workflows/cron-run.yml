@@ -47,11 +47,12 @@ jobs:
           TICKER_LIST: ${{ vars.TICKER_LIST }}
           RSI_lower: ${{ vars.RSI_LOWER || '30' }}
           RSI_upper: ${{ vars.RSI_UPPER || '70' }}
+          SITE_BASE_URL: ${{ vars.SITE_BASE_URL || 'https://stell0.github.io/financealerts/' }}
           TELEGRAM_CHAT_ID: ${{ (github.event_name == 'schedule' || !inputs.dry_run) && secrets.TELEGRAM_CHAT_ID || '' }}
           TELEGRAM_BOT_TOKEN: ${{ (github.event_name == 'schedule' || !inputs.dry_run) && secrets.TELEGRAM_BOT_TOKEN || '' }}
         run: >-
           docker run --rm -v "$GITHUB_WORKSPACE:/app" -w /app
-          -e TICKER_LIST -e RSI_lower -e RSI_upper
+          -e TICKER_LIST -e RSI_lower -e RSI_upper -e SITE_BASE_URL
           -e TELEGRAM_CHAT_ID -e TELEGRAM_BOT_TOKEN
           financealerts:daily
       - name: Commit successful deliveries and changed local caches
@@ -71,6 +72,7 @@ jobs:
           retention-days: 7
           path: |
             config/tickers.txt
+            config/securities.csv
             data/*.csv
             data/alert_state.json
             data/price_cache_state.json

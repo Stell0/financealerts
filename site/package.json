@@ -1,0 +1,16 @@
+{
+  "name": "financealerts-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "preview": "node serve.mjs"
+  },
+  "dependencies": {
+    "echarts": "6.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  }
+}

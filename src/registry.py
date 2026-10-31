@@ -10,6 +10,28 @@ SYMBOL = re.compile(r"^[A-Z0-9][A-Z0-9.^=+-]{0,39}$")
 SECURITY_ID = re.compile(r"^[A-Za-z0-9_-]{1,128}$")
 ALIASES = {"GOOG": "GOOGL", "BTC-USD": "BTCUSD"}
 RESEARCH_ROLES = {"long", "short_candidate", "short_research_only"}
+PUBLIC_IDENTITY_FIELDS = (
+    "security_id", "ticker", "provider_symbol", "company_name", "venue_mic",
+    "currency", "instrument_type", "research_page", "status", "research_role",
+)
+
+
+def save_securities(path, securities):
+    """Persist only public identity fields for reproducible, network-free site builds."""
+    buffer = StringIO()
+    writer = csv.DictWriter(buffer, PUBLIC_IDENTITY_FIELDS, lineterminator="\n")
+    writer.writeheader()
+    for row in sorted(securities, key=lambda row: row["security_id"]):
+        writer.writerow({
+            field: row.get(field, "long" if field == "research_role" else "")
+            for field in PUBLIC_IDENTITY_FIELDS
+        })
+    path = Path(path)
+    if not path.exists() or path.read_text() != buffer.getvalue():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_suffix(".tmp")
+        temporary.write_text(buffer.getvalue())
+        temporary.replace(path)
 
 
 def normalize(value):

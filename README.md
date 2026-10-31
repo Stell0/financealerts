@@ -4,6 +4,8 @@ Daily RSI Buy/Sell and Short Watch notifications enriched with PaperTrader funda
 assessments. FinanceAlerts independently downloads Yahoo Finance prices,
 calculates TA-Lib indicators, rates both directions, and optionally sends one
 compact Telegram report. It never trades or modifies PaperTrader's portfolio.
+The independent static dashboard makes committed price, volume and RSI history
+browsable at **https://stell0.github.io/financealerts/**.
 
 ## Run locally
 
@@ -238,13 +240,123 @@ fail without modifying the cache. Provider failures may use a valid cache only w
 it already contains the latest completed session. No run requires the candle date
 to equal today.
 
+The canonical CSV schema is `Date,Open,High,Low,Close,Volume,RSI`. OHLCV remains
+authoritative; RSI is derived from the full stored adjusted closing series using
+the same TA-Lib RSI(14) function as alerts. The first 14 rows have empty RSI cells,
+never zero placeholders. RSI is serialized with 17 significant digits and read
+with round-trip float precision. Normalization and adjustment reconciliation use
+only OHLCV; delivery fingerprints still use only completed date and OHLCV.
+Historical price corrections recompute the entire retained RSI series.
+
+```sh
+# One bounded local pass; no Yahoo downloads and no changes to delivery state.
+.venv/bin/python scripts/migrate_rsi.py
+```
+
+Migration preserves every valid historical row and original OHLCV text, handles
+the older reordered columns, and atomically appends/replaces RSI. A second pass
+does not rewrite unchanged files. Matching cache hashes are updated without
+changing reconciliation dates or requested ranges; untrusted hashes stay
+untrusted. Corrupt files are reported and preserved while other files continue.
+Non-price CSVs are ignored. Ordinary daily execution runs this pass automatically,
+including caches of securities that are not actively scanned.
+
+## Static RSI dashboard
+
+Install the existing Python runtime and pinned site packages, then build and
+preview without any provider calls or Telegram credentials:
+
+```sh
+npm ci --prefix site
+.venv/bin/python scripts/build_site.py --output site/public
+npm run preview --prefix site
+# Open http://127.0.0.1:4173/financealerts/?ticker=NVDA
+```
+
+The build consumes `config/tickers.txt`, `config/short_watchlist.csv`, the public
+identity snapshot `config/securities.csv`, and the local canonical price CSVs.
+It never contacts PaperTrader or Yahoo. Normal scans refresh the identity
+snapshot through an allowlist of public fields; it contains no assessments or
+credentials. The site manifest includes every resolved monitored identity,
+including short/research-only entries and missing or stale caches. Historical
+cache files outside the monitored universe are migrated but not added as new
+watchlist securities. The initial migrated repository has **101 price CSVs**;
+the initial dashboard lists **113 securities**, with **97 available histories**.
+
+Search by ticker or company, sort by ticker or RSI, and filter by condition and
+universe. Selecting a row loads just that security's dataset. Price (line or
+adjusted candles), volume and RSI share dates, crosshairs, tooltips and zoom.
+Choose 1M/3M/6M/1Y/All; the initial view is approximately six months. The data
+table and CSV download expose the same historical values, including warm-up gaps.
+Missing caches stay listed with diagnostics; stale histories remain visible.
+The displayed data-as-of date refers to completed sessions, not real-time quotes.
+
+Green Buy circles mean **RSI <= `RSI_lower`**, default 30. Red Sell circles mean
+**RSI >= `RSI_upper`**, default 70. Every qualifying historical bar is shown by
+default; **First entry only** suppresses consecutive markers in the same region.
+Missing RSI or a neutral bar ends a region. These are retrospectively calculated
+RSI conditions, not trades or verified historical Telegram deliveries. The chart
+does not apply current fundamental research or the alert engine's support bands
+to historical dates. For short securities, a red marker is a potential bearish
+setup, not evidence that a put was bought or attractively priced.
+
+Stable links use provider symbols, for example `?ticker=NVDA`, `?ticker=0981.HK`
+and `?ticker=BTC-USD`. GOOG/GOOGL and BTCUSD/BTC-USD aliases resolve to the monitored
+identity with the existing price-selection rules. Selecting a security updates
+the URL; reload and browser navigation retain the selection. Unknown symbols
+show a return path to the security list. Assets use relative URLs so Pages'
+`/financealerts/` project subpath and custom domains both work.
+
+`SITE_BASE_URL` defaults to `https://stell0.github.io/financealerts/`. Set it to
+an absolute HTTP(S) site root for a custom deployment; it drives Telegram chart
+links and generated deployment metadata. In Actions, use the `SITE_BASE_URL`
+repository variable, and configure `RSI_LOWER`/`RSI_UPPER` consistently for both
+scans and Pages. Python consumes the existing `RSI_lower`/`RSI_upper` environment
+names. Builds are deterministic for the same inputs, configuration and commit:
+the committed snapshot timestamp, rather than wall-clock time, determines which
+session was expected when labeling stale data.
+
+`.github/workflows/pages.yml` publishes only from committed `main` with the
+official configure-pages, upload-pages-artifact and deploy-pages Actions. It
+runs on relevant main pushes, manual dispatch on main, and completion of the
+daily scan workflow (including a failed scan that saved partial progress).
+This last trigger is necessary because runtime pushes made with `GITHUB_TOKEN`
+do not trigger push workflows. Each serialized publication checks out current
+main, including its newly committed runtime data; queued or rerun older events
+cannot overwrite a newer deployment with an older checkout. Builds have no
+Telegram credentials and copy only explicit public assets and datasets.
+
+Enable **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+The workflow deploys to the `github-pages` environment after this branch merges;
+the PR workflow builds and tests the site without publishing. Generated
+`site/public/`, node modules, reports and per-security JSON histories are ignored
+by Git. ECharts **6.1.0** is pinned and copied locally with its LICENSE and NOTICE.
+No Quartz engine, backend, database or production Python server is required.
+
+The chart layout is adapted from PaperTrader's historical
+[`technicalRows()` / `technicalOption()`](https://github.com/Kabutojira/PaperTrader/blob/pre-research-only-20261018/site/papertrader/scripts/research-charts.inline.ts),
+[responsive chart styles](https://github.com/Kabutojira/PaperTrader/blob/pre-research-only-20261018/site/papertrader/research-charts.scss)
+and [local ECharts asset packaging](https://github.com/Kabutojira/PaperTrader/blob/pre-research-only-20261018/site/prepare-quartz.mjs).
+Only the shared-axis chart and asset patterns are reused, without MACD,
+Bollinger bands, portfolio or publishing components.
+
+If a dataset is unavailable, inspect its visible diagnostic and the latest daily
+scan log. Run the migration for missing/invalid RSI; repair corrupt OHLCV from a
+trusted adjusted-history source before retrying. A failed price refresh preserves
+the last valid cache. Staleness compares its last row with the expected completed
+exchange session at the committed snapshot time; acquired securities retain
+their history without expecting new bars. No-data short/research-only entries
+remain listed until price history exists. Refresh after publication if an old
+browser manifest refers to a dataset that is no longer present.
+
 ## Telegram output and retries
 
 Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` to enable HTML delivery. Buy comes
 before Sell, each sorted by descending rating. Short Watch follows both under
 **Short Watch — Put Candidates**, sorted by descending bearish-support rating,
 then ticker. Each complete ticker line contains
-linked ticker, stars and linked company name. TradingView uses the analyzed
+linked ticker, stars, linked company name and a **Chart** link to the FinanceAlerts
+dashboard. TradingView uses the analyzed
 market symbol and exchange; Bitcoin uses `BITSTAMP:BTCUSD`. Company links use
 existing PaperTrader research pages, otherwise the security's catalog anchor.
 Symbols awaiting registry import link to the catalog until their entry exists.
@@ -277,7 +389,7 @@ The serialized daily workflow runs at **15:00 ET (America/New_York)**, one hour
 before the regular 16:00 ET US market close, with daylight saving handled automatically.
 It builds the checked-out source, runs offline tests, pulls a consistent
 PaperTrader snapshot, merges tickers, scans, delivers and commits changed ticker,
-price-cache and delivery-state files. No-change runs skip commits. Partial
+price-cache, public identity snapshot and delivery-state files. No-change runs skip commits. Partial
 successful deliveries and caches are committed even if another ticker/send fails;
 the run still reports failure. GitHub schedules may start later than requested.
 
@@ -315,4 +427,17 @@ Short delivery keys and a console-only CLI integration with mocked Yahoo data
 and Telegram credentials disabled. Runtime commit tests create
 isolated Git repositories and prove no-change runs avoid empty commits and
 unrelated files remain unstaged. No test sends a real message or changes tracked
-price caches.
+price caches. Additional tests cover RSI migration, serialization hashes,
+historical threshold crossings, snapshot generation and all three Telegram links.
+
+```sh
+PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -v
+# After building site/public; Playwright renders real local ECharts charts.
+cd site
+npx playwright install chromium
+npm test
+```
+
+The browser suite checks SVG marker paths, tooltips, shared zoom extents, filters,
+direct links, CSV download, error recovery and a 390px mobile viewport. CI runs
+both the Python suite and these headless Chromium checks, without publishing.

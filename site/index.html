@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="FinanceAlerts daily adjusted prices, trading volume and historical RSI conditions."
+    />
+    <title>FinanceAlerts · Market monitor</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./style.css" />
+    <script defer src="./vendor/echarts.min.js"></script>
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#detail">Skip to security chart</a>
+    <header class="masthead">
+      <a class="brand" href="./"
+        ><span class="brand-icon" aria-hidden="true">FA</span>FinanceAlerts</a
+      >
+      <span class="header-note">DAILY MARKET RESEARCH</span>
+      <span class="feed"
+        ><span aria-hidden="true">●</span> Completed sessions only</span
+      >
+    </header>
+    <div class="intro">
+      <div>
+        <p class="eyebrow">THE MONITORED UNIVERSE</p>
+        <h1>Market monitor</h1>
+        <p>Price, volume and RSI. A clearer view of the daily extremes.</p>
+      </div>
+      <div id="overview" aria-live="polite">Loading committed market data…</div>
+    </div>
+    <main class="workspace">
+      <aside class="browser" aria-label="Security browser">
+        <div class="browser-heading">
+          <h2>Securities</h2>
+          <span id="count" class="badge">—</span>
+        </div>
+        <label class="search-label" for="search">Find a security</label>
+        <input
+          id="search"
+          type="search"
+          placeholder="Search ticker or company"
+          autocomplete="off"
+        />
+        <div class="filters">
+          <label
+            >Condition<select id="condition" aria-label="Condition">
+              <option value="">All conditions</option>
+              <option>Oversold</option>
+              <option>Neutral</option>
+              <option>Overbought</option>
+              <option>Unavailable</option>
+            </select></label
+          >
+          <label
+            >Universe<select id="universe" aria-label="Universe">
+              <option value="">All universes</option>
+              <option value="long">Long</option>
+              <option value="short">Short</option>
+              <option value="research_only">Research only</option>
+            </select></label
+          >
+          <label class="sort-label"
+            >Sort by<select id="sort" aria-label="Sort by">
+              <option value="ticker">Ticker A–Z</option>
+              <option value="rsi-asc">RSI low to high</option>
+              <option value="rsi-desc">RSI high to low</option>
+            </select></label
+          >
+        </div>
+        <div
+          id="list"
+          class="security-list"
+          aria-label="Monitored securities"
+        ></div>
+        <p id="list-empty" class="empty" hidden>
+          No securities match these filters.
+        </p>
+      </aside>
+      <section
+        id="detail"
+        class="detail"
+        aria-label="Security chart"
+        tabindex="-1"
+      >
+        <div id="status" role="status" aria-live="polite">
+          Loading securities…
+        </div>
+        <div id="security" hidden>
+          <div class="security-heading">
+            <div>
+              <p id="identity" class="eyebrow"></p>
+              <h2 id="company"></h2>
+            </div>
+            <button id="download" class="quiet-button" type="button" disabled>
+              Download CSV ↓
+            </button>
+          </div>
+          <div class="metrics">
+            <div><span>Adjusted close</span><strong id="price">—</strong></div>
+            <div><span>RSI (14)</span><strong id="rsi">—</strong></div>
+            <div>
+              <span>Technical condition</span><strong id="technical">—</strong>
+            </div>
+            <div><span>Data as of</span><strong id="asof">—</strong></div>
+          </div>
+          <p id="diagnostic" class="diagnostic" hidden></p>
+          <div id="chart-controls" class="chart-controls">
+            <div class="ranges" role="group" aria-label="Chart date range">
+              <button data-range="1">1M</button
+              ><button data-range="3">3M</button
+              ><button data-range="6" aria-pressed="true">6M</button
+              ><button data-range="12">1Y</button
+              ><button data-range="all">All</button>
+            </div>
+            <div class="chart-toggles">
+              <label><input id="candles" type="checkbox" /> Candlesticks</label>
+              <label
+                ><input id="entries" type="checkbox" /> First entry only</label
+              >
+            </div>
+          </div>
+          <div
+            id="chart"
+            role="img"
+            aria-label="Synchronized adjusted price, volume and RSI charts"
+          ></div>
+          <p id="marker-note" class="chart-note"></p>
+          <details id="data-details">
+            <summary>Accessible price and RSI data table</summary>
+            <div class="table-scroll">
+              <table>
+                <caption id="table-caption"></caption>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Adjusted close</th>
+                    <th>Volume</th>
+                    <th>RSI</th>
+                    <th>RSI condition</th>
+                  </tr>
+                </thead>
+                <tbody id="data-rows"></tbody>
+              </table>
+            </div>
+          </details>
+        </div>
+        <div id="unknown" hidden>
+          <h2>Security not found</h2>
+          <p id="unknown-message"></p>
+          <button id="return-list">Return to the security list</button>
+        </div>
+      </section>
+    </main>
+    <footer>
+      Daily adjusted Yahoo Finance prices · RSI(14), calculated with TA-Lib<br />
+      Retrospective RSI conditions are research observations, not trades or
+      historical Telegram deliveries. Not a real-time feed.
+    </footer>
+  </body>
+</html>

@@ -13,7 +13,7 @@ import yahoo_finance_api
 from notifications import YAHOO_EXCHANGES, deliver
 from papertrader_data import load_snapshot
 from ratings import rate, read_assessments, research_status
-from registry import read_short_watchlist, synchronize
+from registry import read_short_watchlist, save_securities, synchronize
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
@@ -94,6 +94,8 @@ def main(argv=None):
         argv[0] if argv else None,
         short_watchlist=read_short_watchlist("config/short_watchlist.csv"),
     )
+    save_securities("config/securities.csv", securities)
+    migration = yahoo_finance_api.migrate_caches(securities=securities)
     candidates, failures = scan(universe, read_assessments(text))
     try:
         deliver(candidates)
@@ -102,7 +104,7 @@ def main(argv=None):
             "Telegram delivery failed; undelivered alerts remain eligible for retry"
         )
         return 1
-    return 1 if failures else 0
+    return 1 if failures or migration["errors"] else 0
 
 
 if __name__ == "__main__":

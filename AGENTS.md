@@ -6,10 +6,19 @@ FinanceAlerts is a Python command-line application that downloads Yahoo Finance
 prices, calculates technical indicators, and reports Buy/Sell and Short Watch
 signals. Telegram delivery is optional. There is no web service or packaged Python
 application.
+The public web dashboard is a static GitHub Pages site; there is no backend.
 
 - `src/main.py`: CLI entry point, full-universe scan orchestration, and per-ticker
   failure isolation.
 - `src/registry.py`: additive ticker persistence, alias resolution and identity joins.
+- `config/securities.csv`: allowlisted public PaperTrader identity snapshot, refreshed
+  by normal scans and committed with runtime data for offline website builds.
+- `src/dashboard.py`, `src/site_config.py`: deterministic site datasets, pure
+  historical RSI markers and shared deployment/chart-link URL configuration.
+- `site/`: lightweight ECharts UI, pinned npm packages and Playwright tests;
+  generated `site/public/` and `node_modules/` must stay untracked.
+- `scripts/build_site.py`, `scripts/migrate_rsi.py`: local-only site generation
+  and bounded RSI backfill; neither may download market data.
 - `config/short_watchlist.csv`: required, version-controlled `ticker,mode,sector`
   contract; never regenerate it from PaperTrader or copy its entries into longs.
 - `src/papertrader_data.py`: read-only identity/assessment snapshots at one revision.
@@ -139,6 +148,46 @@ repaired data must pass the same cache integrity checks. SciPy supports repair.
 Use temporary directories and mocked downloads for tests; review data diffs
 separately from code changes.
 
+Canonical caches are `Date,Open,High,Low,Close,Volume,RSI`. RSI is derived via the
+existing `indicators.rsi` TA-Lib RSI(14), with empty warm-ups and 17 significant
+digits. Quantize/serialize authoritative OHLCV first, then compute RSI from those
+exact stored closes. Read with round-trip float precision. Keep derived columns
+out of Yahoo normalization, adjustment comparisons and alert bar fingerprints.
+Recompute the whole RSI series after corrected adjusted history. Migration must
+preserve all valid rows and OHLCV text, support old column order, update matching
+file hashes without advancing reconciliation dates, preserve corrupt caches,
+ignore non-price CSVs and avoid unchanged writes. Main runs it automatically.
+
+Build with `npm ci --prefix site` then `python scripts/build_site.py --output
+site/public`; preview with `npm run preview --prefix site` at
+`http://127.0.0.1:4173/financealerts/`. Builds use the committed public registry
+and caches only, never live providers or secrets. Include every monitored
+identity in the manifest even with missing/stale data. Preserve provider and
+GOOG/GOOGL/BTC alias semantics; lazily load one history per selected security.
+`SITE_BASE_URL` defaults to `https://stell0.github.io/financealerts/`; share its
+validated HTTP(S) root between Telegram Chart links and site metadata. Relative
+assets must work under the project subpath and custom domains.
+
+Historical chart markers use pure configured RSI thresholds (Buy <= RSI_lower,
+Sell >= RSI_upper), never fundamentals or support bands. First-entry mode only
+suppresses consecutive markers in the same region. Label circles as retrospective
+RSI conditions, not executed trades or evidence of Telegram deliveries; a short
+security's red circle does not establish put value. Three aligned price/volume/RSI
+grids share zoom/crosshairs; volume starts at zero, RSI is 0–100. Keep responsive
+cleanup, reduced motion, accessible controls/table, visible error states and CSV
+download. Chart code is adapted from PaperTrader's exact reference:
+https://github.com/Kabutojira/PaperTrader/blob/pre-research-only-20261018/site/papertrader/scripts/research-charts.inline.ts
+Also retain its responsive style and local ECharts packaging patterns, without
+Quartz or unrelated indicators. ECharts is pinned locally with LICENSE/NOTICE.
+
+Pages publication (`.github/workflows/pages.yml`) is serialized and main-only.
+It checks out the current main tip on pushes, manual dispatch and completion of
+the daily workflow, including failed scans that persisted partial progress.
+`workflow_run` is required because GITHUB_TOKEN runtime pushes do not trigger
+push workflows. Never publish pre-scan checkout data or expose runtime credentials.
+Use official Pages artifact/deployment Actions and the `github-pages` environment.
+Repository Settings → Pages → Source must be GitHub Actions.
+
 ## Verification
 
 Run the tracked offline suite with `PYTHONPATH=src python3 -m unittest discover -s tests -v`.
@@ -169,7 +218,7 @@ as a passing regression suite.
 CI builds the pinned Python 3.12 image and runs the offline suite without
 credentials. The serialized daily workflow runs at 15:00 America/New_York (ET), one
 hour before the regular 16:00 ET US market close. It builds the checkout and
-commits only changed config/tickers.txt, data/*.csv and the two
+commits only changed config/tickers.txt, config/securities.csv, data/*.csv and the two
 runtime JSON state files. `scripts/commit_runtime.sh` skips empty commits and
 refuses unrelated staged files. A scan failure still saves successful partial
 progress, then fails the job. Jobs check out the current branch tip on reruns.
@@ -179,3 +228,11 @@ Manual dispatch defaults to a console-only dry run
 without commits. Only the main image-build workflow publishes to Docker Hub.
 For documentation changes, checking content, paths and the diff is sufficient.
 Report what was actually checked and any checks that could not run.
+
+For dashboard changes, build the site and run `npm test --prefix site` after
+`npx --prefix site playwright install chromium` if no browser exists. Tests must
+verify real chart rendering, SVG marker paths, synchronized zoom, navigation,
+direct query links, Unicode-safe Telegram splitting and a mobile viewport; HTML
+substring assertions alone do not establish chart correctness. The PR workflow
+runs both Python and Playwright suites without publishing. Inspect screenshots
+of representative desktop/mobile charts as part of visual QA.
