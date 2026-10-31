@@ -29,3 +29,19 @@ jobs:
           -v "$GITHUB_WORKSPACE/tests:/app/tests:ro"
           -v "$GITHUB_WORKSPACE/scripts:/app/scripts:ro"
           financealerts:test python -m unittest discover -s tests -v
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - name: Install pinned dashboard and browser test dependencies
+        run: npm ci --prefix site
+      - name: Build static dashboard from committed data
+        run: >-
+          docker run --rm -v "$GITHUB_WORKSPACE:/app" -w /app
+          financealerts:test python scripts/build_site.py --output site/public
+      - name: Verify real chart rendering and navigation
+        working-directory: site
+        run: |
+          npx playwright install --with-deps chromium
+          npm test

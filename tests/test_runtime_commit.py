@@ -49,6 +49,7 @@ class RuntimeCommitTests(unittest.TestCase):
             )
             (root / "data/TSLA.csv").write_text("Date,Close\n2026-10-19,101\n")
             (root / "config/tickers.txt").write_text("AAPL\nTSLA\n")
+            (root / "config/securities.csv").write_text("security_id,ticker\npublic,AAPL\n")
             (root / ".env").write_text("PRIVATE=must-not-be-committed\n")
             subprocess.run(
                 ["bash", str(SCRIPT)], cwd=root, check=True, capture_output=True
@@ -60,7 +61,7 @@ class RuntimeCommitTests(unittest.TestCase):
                         root, "show", "--format=", "--name-only", "HEAD"
                     ).splitlines()
                 ),
-                {"config/tickers.txt", "data/TSLA.csv", "data/alert_state.json"},
+                {"config/tickers.txt", "config/securities.csv", "data/TSLA.csv", "data/alert_state.json"},
             )
             after = self.git(root, "rev-parse", "HEAD")
             subprocess.run(

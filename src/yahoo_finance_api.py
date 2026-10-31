@@ -1,5 +1,6 @@
 """FinanceAlerts-owned adjusted daily prices and exchange-session-aware caching."""
 
+import csv
 import hashlib
 import json
 import logging
@@ -12,6 +13,7 @@ import exchange_calendars as xcals
 import numpy as np
 import pandas as pd
 import yfinance as yf
+from indicators import rsi
 
 COLUMNS = ["Open", "High", "Low", "Close", "Volume"]
 CALENDARS = {"XNAS": "XNYS", "XOTC": "XNYS", "XKOS": "XKRX", "XOFF": "24/7"}
@@ -120,6 +122,79 @@ def _atomic_text(path, content):
     temporary.replace(path)
 
 
+def enrich_price_csv(content, ticker, completed, venue_mic=None):
+    """Validate all stored rows and append derived RSI without changing OHLCV text."""
+    rows = list(csv.reader(StringIO(content), strict=True))
+    if (
+        not rows or not rows[0] or rows[0][0] != "Date"
+        or len(rows[0]) != len(set(rows[0]))
+        or set(rows[0]) not in ({"Date", *COLUMNS}, {"Date", *COLUMNS, "RSI"})
+    ):
+        raise ValueError("Expected Date,Open,High,Low,Close,Volume[,RSI]")
+    if any(len(row) != len(rows[0]) for row in rows[1:]):
+        raise ValueError("Malformed price cache row")
+    raw = pd.read_csv(StringIO(content), index_col=0, float_precision="round_trip")
+    prices = normalize_prices(raw, ticker, completed, venue_mic)
+    dates = [row[0] for row in rows[1:]]
+    if prices.empty or dates != prices.index.strftime("%Y-%m-%d").tolist():
+        raise ValueError("Cache has invalid, duplicate, unordered or incomplete/non-session rows")
+    values = rsi(prices.copy())["RSI"]
+    output = StringIO()
+    writer = csv.writer(output, lineterminator="\n")
+    writer.writerow(["Date", *COLUMNS, "RSI"])
+    positions = [rows[0].index(field) for field in ["Date", *COLUMNS]]
+    for row, value in zip(rows[1:], values):
+        writer.writerow([
+            *[row[index] for index in positions],
+            format(value, ".17g") if np.isfinite(value) else "",
+        ])
+    return output.getvalue()
+
+
+def migrate_caches(cache_dir="data", securities=(), now=None):
+    """One local pass, no downloads; invalid files survive untouched and are reported."""
+    now = now or datetime.now(timezone.utc)
+    cache_dir = Path(cache_dir)
+    metadata_path = cache_dir / "price_cache_state.json"
+    metadata_valid = True
+    result = {"migrated": 0, "unchanged": 0, "ignored": 0, "errors": {}}
+    try:
+        metadata = json.loads(metadata_path.read_text()) if metadata_path.exists() else {}
+        if not isinstance(metadata, dict):
+            raise ValueError("Invalid price cache metadata")
+    except (OSError, ValueError) as error:
+        metadata, metadata_valid = {}, False
+        result["errors"][metadata_path.name] = str(error)
+        logging.error("Preserving invalid cache metadata: %s", error)
+    venues = {row["provider_symbol"]: row.get("venue_mic") for row in securities}
+    venues["GOOG"] = venues.get("GOOGL")
+    for path in sorted(cache_dir.glob("*.csv")):
+        try:
+            content = path.read_text()
+            header = next(csv.reader(StringIO(content)), [])
+            if "Date" not in header or not set(COLUMNS).intersection(header):
+                result["ignored"] += 1
+                continue
+            ticker = path.stem
+            completed = latest_completed_session(ticker, now, venues.get(ticker))
+            enriched = enrich_price_csv(content, ticker, completed, venues.get(ticker))
+            if enriched == content:
+                result["unchanged"] += 1
+                continue
+            _atomic_text(path, enriched)
+            previous = metadata.get(ticker)
+            if (isinstance(previous, dict) and previous.get("sha256")
+                    == hashlib.sha256(content.encode()).hexdigest()):
+                previous["sha256"] = hashlib.sha256(enriched.encode()).hexdigest()
+            result["migrated"] += 1
+        except (OSError, ValueError, TypeError, csv.Error) as error:
+            result["errors"][path.name] = str(error)
+            logging.error("Preserving invalid cache %s: %s", path.name, error)
+    if metadata_valid and metadata_path.exists():
+        _atomic_text(metadata_path, json.dumps(metadata, indent=2, sort_keys=True) + "\n")
+    return result
+
+
 def _has_nonpositive_prices(frame):
     columns = frame.columns.get_level_values(0)
     prices = frame.loc[:, columns.isin(COLUMNS[:-1])].apply(pd.to_numeric, errors="coerce")
@@ -164,7 +239,7 @@ def retrieve_daily_prices(
         try:
             content = cache.read_text()
             cached = normalize_prices(
-                pd.read_csv(StringIO(content), index_col=0),
+                pd.read_csv(StringIO(content), index_col=0, float_precision="round_trip"),
                 ticker,
                 completed,
                 venue_mic,
@@ -231,11 +306,16 @@ def retrieve_daily_prices(
     ]
     if combined.empty or combined.index[-1].date() != completed:
         raise ValueError(f"{ticker}: missing latest completed session {completed}")
-    content = combined.astype(float).to_csv(float_format="%.10g")
+    # Quantize authoritative prices first, then calculate RSI from exactly those
+    # serialized closes. Derived columns never participate in reconciliation.
+    content = enrich_price_csv(
+        combined.astype(float).to_csv(float_format="%.10g"), ticker, completed, venue_mic
+    )
     _atomic_text(cache, content)
     # Re-read serialized values so fingerprints and indicators are identical on reruns.
     combined = normalize_prices(
-        pd.read_csv(StringIO(content), index_col=0), ticker, completed, venue_mic
+        pd.read_csv(StringIO(content), index_col=0, float_precision="round_trip"),
+        ticker, completed, venue_mic
     )
     metadata[ticker] = {
         "sha256": hashlib.sha256(content.encode()).hexdigest(),

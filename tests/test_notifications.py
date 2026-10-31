@@ -75,7 +75,7 @@ class NotificationTests(unittest.TestCase):
         self.assertIn("Example &lt;A&amp;B&gt; &quot;Inc.&quot;", message)
         parser = Links()
         parser.feed(message)
-        self.assertEqual(len(parser.links), 6)
+        self.assertEqual(len(parser.links), 9)
         self.assertIn("symbol=NASDAQ%3AHIGH", parser.links[0])
         self.assertTrue(parser.links[1].endswith("/securities/security_HIGH"))
         self.assertEqual(len(included), 3)
@@ -150,7 +150,7 @@ class NotificationTests(unittest.TestCase):
             self.assertLessEqual(len(message.encode("utf-16-le")) // 2, 4096)
             parser = Links()
             parser.feed(message)
-            self.assertEqual(len(parser.links), 2 * len(included))
+            self.assertEqual(len(parser.links), 3 * len(included))
             self.assertTrue(message.endswith("</a>"))
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "state.json"

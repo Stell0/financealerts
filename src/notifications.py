@@ -11,6 +11,7 @@ from urllib.parse import quote, urlencode
 
 import telegram_alert
 from ratings import stars
+from site_config import chart_url
 
 BASE_URL = "https://kabutojira.github.io/PaperTrader"
 EXCHANGES = {
@@ -101,6 +102,7 @@ def ticker_line(candidate):
         f'<a href="{html.escape(tradingview_url(item), quote=True)}">{html.escape(item.ticker)}</a>'
         f" | {stars(candidate['score'])} | "
         f'<a href="{html.escape(research_url(item), quote=True)}">{html.escape(name)}</a>'
+        f' | <a href="{html.escape(chart_url(item), quote=True)}">Chart</a>'
     )
     if candidate["direction"] == "Short":
         line += (
