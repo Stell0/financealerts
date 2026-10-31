@@ -97,11 +97,17 @@ def research_url(item):
 def ticker_line(candidate):
     item = candidate["item"]
     name = (item.security or {}).get("company_name") or item.ticker
-    return (
+    line = (
         f'<a href="{html.escape(tradingview_url(item), quote=True)}">{html.escape(item.ticker)}</a>'
         f" | {stars(candidate['score'])} | "
         f'<a href="{html.escape(research_url(item), quote=True)}">{html.escape(name)}</a>'
     )
+    if candidate["direction"] == "Short":
+        line += (
+            f" | RSI {candidate['rsi']:.1f}"
+            f" | Research: {html.escape(candidate['research_status'])}"
+        )
+    return line
 
 
 def bar_identity(candidate):
@@ -160,14 +166,17 @@ def save_state(path, state):
 def message_chunks(candidates, limit=4096):
     """Split conservatively by raw HTML UTF-16 length, always at complete ticker lines."""
     message, included, section = "", [], None
-    for direction in ("Buy", "Sell"):
+    for direction in ("Buy", "Sell", "Short"):
         rows = sorted(
             (row for row in candidates if row["direction"] == direction),
             key=lambda row: (-row["score"], row["item"].ticker),
         )
         for row in rows:
             line = ticker_line(row)
-            header = f"<b>{direction}:</b>\n"
+            title = (
+                "Short Watch — Put Candidates" if direction == "Short" else direction + ":"
+            )
+            header = f"<b>{title}</b>\n"
             addition = (
                 ("\n\n" if message else "") + header if section != direction else "\n"
             ) + line
