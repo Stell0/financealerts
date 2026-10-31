@@ -9,9 +9,27 @@ APLD,active,AI infrastructure
 ONDS,active,Autonomous drones
 AEVA,active,LiDAR / robotics
 PDYN,active,Embodied AI
+CRML,active,Critical minerals
+ENVX,active,Advanced batteries
+EOSE,active,Energy storage
+LCID,active,Electric vehicles
+LWLG,active,AI photonics
+NPWR,active,Power generation
+POET,active,AI optical interconnects
+RZLV,active,AI commerce
 KSCP,research_only,Security robotics
 MVIS,research_only,LiDAR
 PSNY,research_only,Electric vehicles
 PLUG,research_only,Hydrogen
 ARQQ,research_only,Quantum security
 SPIR,research_only,Satellite data
+ARBE,research_only,LiDAR / robotics
+BLNK,research_only,EV charging
+CHPT,research_only,EV charging
+DVLT,research_only,AI / tokenization
+EVEX,research_only,Electric aviation
+EVTL,research_only,Electric aviation
+LIDR,research_only,LiDAR / robotics
+NVTS,research_only,Power semiconductors
+VERI,research_only,Enterprise AI
+WATT,research_only,Wireless power / IoT
