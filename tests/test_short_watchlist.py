@@ -52,11 +52,11 @@ class ShortRegistryTests(unittest.TestCase):
         rows = read_short_watchlist(WATCHLIST)
         self.assertEqual(
             [row["ticker"] for row in rows if row["mode"] == "active"],
-            "FCEL AI SPCE CIFR WULF BBAI APLD ONDS AEVA PDYN".split(),
+            ["FCEL","AI","SPCE","CIFR","WULF","BBAI","APLD","ONDS","AEVA","PDYN","CRML","ENVX","EOSE","LCID","LWLG","NPWR","POET","RZLV"].copy(),
         )
         self.assertEqual(
             [row["ticker"] for row in rows if row["mode"] == "research_only"],
-            "KSCP MVIS PSNY PLUG ARQQ SPIR".split(),
+            ["KSCP","MVIS","PSNY","PLUG","ARQQ","SPIR","ARBE","BLNK","CHPT","DVLT","EVEX","EVTL","LIDR","NVTS","VERI","WATT"].copy(),
         )
 
     def test_invalid_watchlist_fails_explicitly(self):
@@ -81,7 +81,7 @@ class ShortRegistryTests(unittest.TestCase):
             with self.assertRaises(FileNotFoundError):
                 read_short_watchlist(Path(directory) / "missing.csv")
 
-    def test_old_and_new_snapshots_exclude_all_sixteen_from_saved_longs(self):
+    def test_old_and_new_snapshots_exclude_all_watchlist_tickers_from_saved_longs(self):
         rows = read_short_watchlist(WATCHLIST)
         for new_schema in (False, True):
             with self.subTest(new_schema=new_schema), tempfile.TemporaryDirectory() as directory:
@@ -109,9 +109,9 @@ class ShortRegistryTests(unittest.TestCase):
                 path.write_text("LONG\nFCEL\nKSCP\n")
                 universe = synchronize(path, "FCEL AI KSCP LONG", imported, short_watchlist=rows)
                 self.assertEqual(path.read_text(), "LONG\n")
-                self.assertEqual(len(universe), 17)
-                self.assertEqual(sum(item.universe == "short" for item in universe), 10)
-                self.assertEqual(sum(item.universe == "research_only" for item in universe), 6)
+                self.assertEqual(len(universe), len(rows) + 1)
+                self.assertEqual(sum(item.universe == "short" for item in universe), sum(row["mode"] == "active" for row in rows))
+                self.assertEqual(sum(item.universe == "research_only" for item in universe), sum(row["mode"] == "research_only" for row in rows))
                 before = path.read_bytes(), path.stat().st_mtime_ns
                 self.assertEqual(
                     universe, synchronize(path, "FCEL", imported, short_watchlist=rows)
@@ -344,7 +344,7 @@ class ShortNotificationTests(unittest.TestCase):
 
 class ShortConsoleIntegrationTests(unittest.TestCase):
     @patch("yahoo_finance_api.yf.download")
-    def test_console_cli_all_sixteen_no_telegram_or_long_contamination(self, download):
+    def test_console_cli_all_watchlist_tickers_no_telegram_or_long_contamination(self, download):
         watchlist = read_short_watchlist(WATCHLIST)
         securities = [security("LONGBUY"), security("LONGSELL")]
         securities += [
@@ -400,12 +400,12 @@ class ShortConsoleIntegrationTests(unittest.TestCase):
                     )
                     self.assertFalse((root / "data/alert_state.json").exists())
                     bot.assert_not_called()
-                    self.assertEqual(download.call_count, 12)
+                    self.assertEqual(download.call_count, 18 + 2)
                     output.seek(0)
                     output.truncate()
                     self.assertEqual(main.main([]), 0)
                     self.assertEqual(output.getvalue(), first)
                     self.assertFalse((root / "data/alert_state.json").exists())
-                    self.assertEqual(len(list((root / "data").glob("*.csv"))), 12)
+                    self.assertEqual(len(list((root / "data").glob("*.csv"))), 18 + 2)
             finally:
                 os.chdir(previous)
