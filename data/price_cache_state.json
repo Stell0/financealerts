@@ -1,23 +1,23 @@
 {
   "000660.KS": {
-    "full_session": "2026-11-04",
-    "sha256": "8ed92f535628d1751adc59347cefab72e62728f412e834431100ed49db44ebf9",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "cfb1e8a649d4eee42d2b16a4ba64656aafd5f72b99242ce434659f62937b6da0",
+    "start": "2025-05-04"
   },
   "0981.HK": {
-    "full_session": "2026-11-04",
-    "sha256": "675e6594a2fa20cb66ba9a89b949961a3443b4ea40a778b2459e53a04734c097",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "e8fcd26b864b95c63165aa45c6d7c7092719470798ed1376447be3b49c6bbfe1",
+    "start": "2025-05-04"
   },
   "108490.KQ": {
-    "full_session": "2026-11-04",
-    "sha256": "b379cfa6b8ff3e26d7037bedfd2193d4dbb0f9b4640944ee6ba49fc3e41185c2",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "1f92378082d5a8bdb021941912d4d75223850ac827d3951b8bb0de86519d7b3a",
+    "start": "2025-05-04"
   },
   "3388.HK": {
-    "full_session": "2026-11-04",
-    "sha256": "8410a7a598252b04fad3fede050c9472c7be40ef0ca04fe90cd2d31d7427ff2e",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "9eec09c3ca7b8fb0de1a45161219f8524684074b18b2eaa0cf24f80fb1e96c12",
+    "start": "2025-05-04"
   },
   "ABBN.SW": {
     "full_session": "2026-10-30",
@@ -25,14 +25,14 @@
     "start": "2025-04-28"
   },
   "ABBNY": {
-    "full_session": "2026-11-04",
-    "sha256": "ecf3bd0c8db6ad7755ca238259109f681370714b12a1f38c3628cfb2e1bb0f01",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "8414dfb04c041dfa7e93732ef99e1b9229e5f7804da1dc4b155cea878ffd7e64",
+    "start": "2025-05-04"
   },
   "ABCL": {
-    "full_session": "2026-11-04",
-    "sha256": "57e4bbcdeef42b3d4aa4ebf2d1cf7255a17d2a37a5836039bf47395a78a9ed59",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "a615d9e5c60cf4db8533689413ffea545f3ccb6f405d2f92cd78f1a446d80fa3",
+    "start": "2025-05-04"
   },
   "AD.AS": {
     "full_session": "2026-10-30",
@@ -45,14 +45,14 @@
     "start": "2025-04-28"
   },
   "AEVA": {
-    "full_session": "2026-11-04",
-    "sha256": "88dd6dba9ae3e25ed2894517360aa2aff7400dfadf524a7258011dbaba1e86b3",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "611603f8797c700c8e45a8876d30310f53fbc13c11d8a8b851a40d45b5177e84",
+    "start": "2025-05-04"
   },
   "AI": {
-    "full_session": "2026-11-04",
-    "sha256": "c8f433e4181fca4e89c957ec5160857620917a8aa58f716d8fbf763f06aef1d4",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "3a058b573b78b2b899930ded22dfb84ab50e8de4c94a0296db2f85c148cced62",
+    "start": "2025-05-04"
   },
   "AKE.PA": {
     "full_session": "2026-10-30",
@@ -60,29 +60,29 @@
     "start": "2025-04-28"
   },
   "ALB": {
-    "full_session": "2026-11-04",
-    "sha256": "24819472a910c47ac1b3ddba7d4db93e2f3516837f7bb0954e214d7f2b492051",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "e298b44345c372d197803d9e4c65f614b2926fad716578d609b5c2acdf134d8d",
+    "start": "2025-05-04"
   },
   "AMAT": {
-    "full_session": "2026-11-04",
-    "sha256": "0871d3f7665efdcf95a510a0a9ef9a9cdcdd5f1a03b2fe4735bdf03ac2b27155",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "878e74a3b3af6ad41b10b35d8eb348ce3e077d3742b6eb3c889ff38d25f83a3f",
+    "start": "2025-05-04"
   },
   "AMD": {
-    "full_session": "2026-11-04",
-    "sha256": "eff9a8a8b7b54856221a53e1d70058600c4cb2cac692414111fe8d99c1cf2e16",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "b7510ce909b0463ef69b4c558b5eacedd14c5e3fb0f96f03c853ce43f38b646e",
+    "start": "2025-05-04"
   },
   "AMZN": {
-    "full_session": "2026-11-04",
-    "sha256": "da1101b74960a10a5bf3c8d5a89c3cded76de36970351fc1eb97ac76601cbeff",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "4e229fe13eb1710117199d02bde6ffd6bfe515844fb0a2961119df467db10697",
+    "start": "2025-05-04"
   },
   "ANET": {
-    "full_session": "2026-11-04",
-    "sha256": "d13ecdda77530d29f3b746a017bd1d1f9eec5494c897d1f773e1273196c29aa0",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "d4d8ae4d407d2408bb32e6abd9e0ad8f1cdfc44812c9dc51e1df8791e5647a54",
+    "start": "2025-05-04"
   },
   "ANIC.L": {
     "full_session": "2026-10-30",
@@ -90,14 +90,14 @@
     "start": "2025-04-28"
   },
   "APLD": {
-    "full_session": "2026-11-04",
-    "sha256": "75d4a487e526de4e945926baaf7fd0464a3784aea0ff6a60892f59d8e458cea1",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "a06ae5b99f117aaf158c8464b6b5038c5be8cc7e10a03b6ec91012a0dd1a372c",
+    "start": "2025-05-04"
   },
   "ASML": {
-    "full_session": "2026-11-04",
-    "sha256": "7ce0f69aa2d4af53cafb6ce40d212a7131518841bcf749bce53552bd0cdd702a",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "466c52087a05b09f738171294c59869300534ce48f16d32c7cbf5d46da036b85",
+    "start": "2025-05-04"
   },
   "ATKR": {
     "full_session": "2026-10-16",
@@ -105,9 +105,9 @@
     "start": "2025-04-14"
   },
   "AVGO": {
-    "full_session": "2026-11-04",
-    "sha256": "73be7da1edc3f1ee0381fec558833c765d75aa3dd84509f64815b5e45f1c3a09",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "101af99a0dc95ff8da55c7aac92fb60bf0b0c4318264c02f9d6b454ad4e68205",
+    "start": "2025-05-04"
   },
   "BAS.DE": {
     "full_session": "2026-10-30",
@@ -115,14 +115,14 @@
     "start": "2025-04-28"
   },
   "BBAI": {
-    "full_session": "2026-11-04",
-    "sha256": "fb6c98b8b679e0f1ac613716375524e4d78745fe59679438c2bce65f9e722faf",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "65b488dd314c29457fdba752b48a138b85e08506968c3a213a54cca161804b84",
+    "start": "2025-05-04"
   },
   "BE": {
-    "full_session": "2026-11-04",
-    "sha256": "ff2f3782e3f354ca8bbeb1b30aa08af20b20e7455cace3b44d0975266944e076",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "fd49e6213b31ee28eb4b4b30116162e19d6685c6161bd1f764431aa2d63eb760",
+    "start": "2025-05-04"
   },
   "BILL": {
     "full_session": "2026-11-04",
@@ -135,44 +135,44 @@
     "start": "2025-04-29"
   },
   "CDNS": {
-    "full_session": "2026-11-04",
-    "sha256": "c2bca4242c2671ae9689ab1d9220f5ca5f7ac23ec133a22e5528648fcf585255",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "ee9f7a7e6cf96ff32d8fd2894efa9ee4d1668019e610733b45ff831472345d37",
+    "start": "2025-05-04"
   },
   "CEG": {
-    "full_session": "2026-11-04",
-    "sha256": "5698fc1930b5c69044911124cbac5aaa82dcff7c75e9fcd4ad5b97d317fceab0",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "26712affd2228940d8ca6c2763b784b5b8369181ebfd3d9eafa3f6972360b1ef",
+    "start": "2025-05-04"
   },
   "CIFR": {
-    "full_session": "2026-11-04",
-    "sha256": "2b70f32aafed7fb9940e006336d82c1c8da5bd0a468aa66f55d07ed49fbb3d21",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "ac9218a2127c363963068d2881269084f28d0ca492300af8840a98389a02b649",
+    "start": "2025-05-04"
   },
   "COIN": {
-    "full_session": "2026-11-04",
-    "sha256": "6688eda94fb89f1238bfb5613bfe4ff10448d12b04ee3f86cbaa2032c9d48690",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "acaa26b7311ec57d77a32f94e177d7e7303a8b1b2a57774cfd43e12071865047",
+    "start": "2025-05-04"
   },
   "CRDO": {
-    "full_session": "2026-11-04",
-    "sha256": "c9fd880f9ec46f1f37d64024008ff21c59fc2d016df03b01e9f84cd613dcad72",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "5764e5ee6862a0b2335f9239536bf600cb6054382617983853aaccf20b33a4ad",
+    "start": "2025-05-04"
   },
   "CRML": {
-    "full_session": "2026-11-04",
-    "sha256": "0ca1ba83dc612ff1076e9c7387440cd212947a9c786e21199cb094235feaf6a3",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "59e70ac32564bdd5c2ea87f61cce97b17f29046a0cb4e93ac6f53bb4003143ef",
+    "start": "2025-05-04"
   },
   "CROX": {
-    "full_session": "2026-11-04",
-    "sha256": "6f183267bb004e93b7dbda833aaa62f593b324fd4267f0f4d15063f2ec0afa08",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "c6199f5fc80c6cf3e91e482f621e36220e3935da965f578c61260a5d8705b9bf",
+    "start": "2025-05-04"
   },
   "CRSR": {
-    "full_session": "2026-11-04",
-    "sha256": "980117666820a6826b47cb8a71d1279de18455804f7a809b821108ae974e9882",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "967ba662dd348392d33c8d7b1ed0dcd4de6eff36b3d5ad13cdd739bdabf3cc91",
+    "start": "2025-05-04"
   },
   "CRWD": {
     "full_session": "2026-11-04",
@@ -180,14 +180,14 @@
     "start": "2025-05-03"
   },
   "CSIQ": {
-    "full_session": "2026-11-04",
-    "sha256": "03dcaeb8920cf52d48a5b135d6e72ab7ae13a1773d0d53a8dff3c49dbd8b8d81",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "b4b450ded815a2352cfcc92fd25562aa331ec74564ccddb6eaf007997e056a05",
+    "start": "2025-05-04"
   },
   "CSL": {
-    "full_session": "2026-11-04",
-    "sha256": "449e2e9232be13eb21eae739fcb0c3ee8b5b28ba88485075098c384f834923e2",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "dc03d31cde64adf37390ad24d7fcdea1082a5bf10984efb972c86fa4eef1845f",
+    "start": "2025-05-04"
   },
   "DDD": {
     "full_session": "2026-11-04",
@@ -195,44 +195,44 @@
     "start": "2025-05-03"
   },
   "DDOG": {
-    "full_session": "2026-11-04",
-    "sha256": "32fabc660d8cffc5ef62a90cc948801572f7a55492cd49f597031775e27dcc47",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "d10bb86ec5a0af24945a3e501342848e6d7e4a5ef8c442709a50b74e590bd834",
+    "start": "2025-05-04"
   },
   "DLO": {
-    "full_session": "2026-11-04",
-    "sha256": "5ca0f84c55a94bced2f3be8d72750cb2d21455f4b177c8896781d6a47712b63b",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "080dd0a2226846287aa58aad2860f10c1854c6a86d642e30effd7eba8ad40197",
+    "start": "2025-05-04"
   },
   "DNA": {
-    "full_session": "2026-11-04",
-    "sha256": "e8de4f4610e66680176031604b55f248384bf4003aae3250bd4c58efe3ce3866",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "7fa082b0b6a1207cb714a86d1b7b92a876ada62bc5d8a0e30a67f78b580f2d5b",
+    "start": "2025-05-04"
   },
   "DPZ": {
-    "full_session": "2026-11-04",
-    "sha256": "b9142dcd710ef51a511c825b0a8ff8ff36033dd816ef55ce4b690c9f5a6d9371",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "5c1221353fad8f7740c2622c36f90a71465a7e4dff7f9c26ab2f651b3cccb652",
+    "start": "2025-05-04"
   },
   "ENPH": {
-    "full_session": "2026-11-04",
-    "sha256": "b94752afa81e5ef8b4971bc41b2350f3fed443f580aaf4a41f4e0a11909f1a30",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "29636eb8b1cb779fa92305415d6bbeee5eb175d19577ea2b381d76f40fe2b2ba",
+    "start": "2025-05-04"
   },
   "ENVX": {
-    "full_session": "2026-11-04",
-    "sha256": "895c059e53e963ba27fb29ae4b07dfd3db8d050dcbc6733a6a87f77cdac8a3d8",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "9ba15b6ae3294e52c7792df9c1281c62c77655f1764d1cace5ab6d7c2566fd77",
+    "start": "2025-05-04"
   },
   "EOSE": {
-    "full_session": "2026-11-04",
-    "sha256": "581f9557ee4c34e31d26b1a1eb7dfcfd68a3992c2a3896971e3579c5aed5d2f0",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "ec07a8a1386ceb3d7889ef70b1845c0f361ced97368158d58a2590449d7a3886",
+    "start": "2025-05-04"
   },
   "ETN": {
-    "full_session": "2026-11-04",
-    "sha256": "2a3188d8401d15a89222baa1d08cdb3ad522145c359428a3efc7f919330452c7",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "caf165ae3f297638a49c09955afaf58f670f291232de2898d59b35d94f60321b",
+    "start": "2025-05-04"
   },
   "EVK.DE": {
     "full_session": "2026-10-30",
@@ -240,39 +240,39 @@
     "start": "2025-04-28"
   },
   "FCEL": {
-    "full_session": "2026-11-04",
-    "sha256": "feebb1e76c9ef7731b1d0e138aa7fa45d49314b1647cec6f3524dca53e1e78cf",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "054488d3dfaa33235df04a6e6610c145806c1f116f55803ab165c978af163577",
+    "start": "2025-05-04"
   },
   "FCX": {
-    "full_session": "2026-11-04",
-    "sha256": "86f67d613209f8dfc050ac746ab83b81d89fdcce66e67437de55ce7d36933883",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "a13b9a98750314b524a601bb4a3142a9eff2d1cfd767fe2896fff36fbbacc73b",
+    "start": "2025-05-04"
   },
   "FISV": {
-    "full_session": "2026-11-04",
-    "sha256": "5f3d905be82de5e9df82dbc2b5762af779ef876bcd0ffad836474e69e1667a27",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "8f5aa31ac92da42101459f3f4b33723eff4aeedea675e7829ef27ee8fd513b32",
+    "start": "2025-05-04"
   },
   "FLNC": {
-    "full_session": "2026-11-04",
-    "sha256": "b4b01b9026b68aaafdecf4f815f2be7e96b809a9b17742fff094424d1b706d7a",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "e43cd022a26e5247cb94c6b84fd5d5c1b044d51115157b5f15ec27636810536f",
+    "start": "2025-05-04"
   },
   "FUC.F": {
-    "full_session": "2026-11-04",
-    "sha256": "aa8248745abd32c23f5c9ede6a2b31ce5ed327e1416fb95ef4676ce69a6062b5",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "dc3cc55417778bc01feb94cbec3d89cb3382060fbb06ad3614667f9525f1d29a",
+    "start": "2025-05-04"
   },
   "GEV": {
-    "full_session": "2026-11-04",
-    "sha256": "aa9ce6beba185c75ac7ac37b5bb472bbdb3e10fa296062d1c6515a8d39f1b4d8",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "24a74b802ee9103649638670ad1ee19d8a22178fe0c77397cf47809273e484fb",
+    "start": "2025-05-04"
   },
   "GOOG": {
-    "full_session": "2026-11-04",
-    "sha256": "8e5bc89c2051051896d7e3bb5ec3f1a85bb9bee1837691b4b8f23ec43bc649e2",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "87bca66969551128c5cbf7459ae15d57dc415fa6642db2c84c0e468f8c3f1679",
+    "start": "2025-05-04"
   },
   "GTLB": {
     "full_session": "2026-11-04",
@@ -280,69 +280,69 @@
     "start": "2025-05-03"
   },
   "HOOD": {
-    "full_session": "2026-11-04",
-    "sha256": "ed7b8afe1964c49e2b2d11bce3ecd4eacf19c5bba45c74f19d1d4eb439c27920",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "5b0326fdb9d90bc2f92114cc2f69b8525732b307dd82755b21366e03afbca980",
+    "start": "2025-05-04"
   },
   "INTC": {
-    "full_session": "2026-11-04",
-    "sha256": "c037cdc544cb9b5a7d61dfa7f3c3519ac2e0feea638a802c18febf80201fc3a0",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "156c665530135b41b466cbbfffe06a227e87488c98254248c01836669d68be4e",
+    "start": "2025-05-04"
   },
   "ISRG": {
-    "full_session": "2026-11-04",
-    "sha256": "42c10a2e1de4a1dceb6a2d3cdeba70afd16693c2e2f4c5ee1fdf2ed50ed1ba22",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "12b7171b8f36b7d40e88fb5fa4162fa190ea0978a5a1eecfeb7d60d8ff14f5f6",
+    "start": "2025-05-04"
   },
   "KTOS": {
-    "full_session": "2026-11-04",
-    "sha256": "19dd2a05856e4874bdf9950da35ed0b1ad6123d1d9028d572a249d877ac1fb1f",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "26c65af4a5a1b7603b26b19fea3a2f2295b0dd92814ee3ccd00d184f99bd8cd1",
+    "start": "2025-05-04"
   },
   "LAC": {
-    "full_session": "2026-11-04",
-    "sha256": "9ba3ba8293d05aff76eac3b8d766a148b48603b8068a193ddcba5be1594497bd",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "3e8c4aad718b433291ea773e0d11a882b71b648058ed14d5bbd0340c26e41374",
+    "start": "2025-05-04"
   },
   "LCID": {
-    "full_session": "2026-11-04",
-    "sha256": "28825589ef0bf8d914782557d696135330a6882bf61e46414a83842cca527c07",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "7a767ef4b6c6d4d04837d63ff0acb2803745688067537e5f80489a08f66f6fdd",
+    "start": "2025-05-04"
   },
   "LH": {
-    "full_session": "2026-11-04",
-    "sha256": "9a7939347840b5453e006fd52f2f6366ad5fae3f50e8055334b0c4da6afb1a93",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "ecf6fc7e32e73b79d6f6d2ced99e4c6cd267ceef239398d4f09f7ec8899e9130",
+    "start": "2025-05-04"
   },
   "LLY": {
-    "full_session": "2026-11-04",
-    "sha256": "f647ab7fce6c2f9af49940ddd7843aa304489a79f1f9652cb4632ecc638568fa",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "08c44768539d35b0c668ed5140428a1ad9429344ce1cd05fc17f08eedab49ae8",
+    "start": "2025-05-04"
   },
   "LMND": {
-    "full_session": "2026-11-04",
-    "sha256": "93f3a2fdd7214cd93912306f28258f9f19ab2d9d6b3d94173b73a61e55f64027",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "bc7bf94f7225aab8ba324794bfb6176413a87190481844041d6d72b0cf66d01f",
+    "start": "2025-05-04"
   },
   "LUNR": {
-    "full_session": "2026-11-04",
-    "sha256": "18f26d99f7a467f1828b77a27c1bb562f951b748e591e09f91edc978147727a6",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "f8c9471c1fa87410b5ad335457af4f19a6bd2c513561cdde7b7252868c053f0c",
+    "start": "2025-05-04"
   },
   "LWLG": {
-    "full_session": "2026-11-04",
-    "sha256": "6153078a961804078eeffa6b0dcdb05d8ab15d0b9bdd93ba4ba464470311e282",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "02468a858255e8613b5eccaaff3e02230b033a77e0d635b745d3852010db3f78",
+    "start": "2025-05-04"
   },
   "MA": {
-    "full_session": "2026-11-04",
-    "sha256": "675e2a3641072fdd64e720c2faef36466c811df4a57549709eddee3a8953dc3e",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "739afb1937a74f3be9de80bef04ddcd54414cac933b404d2f6a6a6ba8f0a3eed",
+    "start": "2025-05-04"
   },
   "MDB": {
-    "full_session": "2026-11-04",
-    "sha256": "9a53ab34dda52afcbe7c4106d85ec9c98dab38981bd86ca0b498a619b03e97a2",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "f147598629e2dfd5fdb6838f1567b9dc8c06aa14e190a0fc7c50003c90946df1",
+    "start": "2025-05-04"
   },
   "MELI": {
     "full_session": "2026-11-04",
@@ -350,49 +350,49 @@
     "start": "2025-05-03"
   },
   "META": {
-    "full_session": "2026-11-04",
-    "sha256": "e68bb83cb8c1d5fa52b1ffc7d0c40a5f2bf5e47741c205324afced7fc1ae9921",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "59db36df8340729c95d42446b90e2c329dade6696f8b26e7133fc18b8e023d96",
+    "start": "2025-05-04"
   },
   "MP": {
-    "full_session": "2026-11-04",
-    "sha256": "7c19b9dc869dd13b510b3bd8a50040fe5149681dd5ceb545f8a7680445f9123d",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "443827510e69facb87a92ba3c690e20d2db21a045d5b9b361bc75e3173187dad",
+    "start": "2025-05-04"
   },
   "MRVL": {
-    "full_session": "2026-11-04",
-    "sha256": "bfdd94f261d487f6378771dd665155e8e4ab656d31674dd32b4d0f99aa13e86d",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "22e64dea3b574af4f7081452df3b148edf1d517336ac6555f1157ae796ad0397",
+    "start": "2025-05-04"
   },
   "MSFT": {
-    "full_session": "2026-11-04",
-    "sha256": "21c67a5e2b927b23882680fb308746444e6bf571d9917e454a213ff98d4e3ed0",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "4deee5ecaf60c093876fa21b4ff38e51153933f53ad384013d4ff4eaf2fac33f",
+    "start": "2025-05-04"
   },
   "MSTR": {
-    "full_session": "2026-11-04",
-    "sha256": "7315a3161f73065ed8d3dbd3b89865919bb21a8048ba77efa0a5957b79ba7f85",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "09ab56e2eba9e1815a04bf33a828713b78616030eb46f901f3c312103f273bda",
+    "start": "2025-05-04"
   },
   "MTLS": {
-    "full_session": "2026-11-04",
-    "sha256": "424e1e6b9e04df478762ac8f98df7069ab0ed4091eade03d95e43985162af600",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "1da13d1f8928e9da29541d3f79c953657d6920d8cae857cb3ab83d9e918540ed",
+    "start": "2025-05-04"
   },
   "MU": {
-    "full_session": "2026-11-04",
-    "sha256": "568cbcd7dbe4f15990c6419cea1e977178a6e376efe6173fb732e22c5c15a90c",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "a409056df9a895079e0d6c4b98b061355c4abdc246992d94fa2c01337b91b1df",
+    "start": "2025-05-04"
   },
   "NBIS": {
-    "full_session": "2026-11-04",
-    "sha256": "071b542ceb4b3db2c167aab351f86248fceb37ba26cadca489762652f14bb5e2",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "908de8f811ba5409a341402000667fe73bc771085e8d6bcd53389ebc4aa7bdbf",
+    "start": "2025-05-04"
   },
   "NET": {
-    "full_session": "2026-11-04",
-    "sha256": "ac895231c1d210a8bf24dccdc84642debc65b8d682bb92f8c9a208e1ff446b21",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "d0d80672d3e8dfc8e1f5f873db81eb2a9b8573ccb8bf12c7d769adf4c3cbfc81",
+    "start": "2025-05-04"
   },
   "NIB.F": {
     "full_session": "2026-10-30",
@@ -400,34 +400,34 @@
     "start": "2025-04-28"
   },
   "NOMD": {
-    "full_session": "2026-11-04",
-    "sha256": "42ac991acfbd1162c7f6ba5f362bffcef19868a1ec2dac9255636e792ca38514",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "a4897844268fda3ecff05b2f8d58b87f6a09c96748551df2d1ea0cd72f60844b",
+    "start": "2025-05-04"
   },
   "NPWR": {
-    "full_session": "2026-11-04",
-    "sha256": "c0c120d3571ae8aa1f332ff06620d9af90fd24a78ae4f0a26532f4f3e7fdb5b7",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "e2a885d4ef2fe9659c5786a985efb7becf9f7280d8a8ad3b898a85092ad5cc24",
+    "start": "2025-05-04"
   },
   "NVDA": {
-    "full_session": "2026-11-04",
-    "sha256": "0c1e9b26fd45b443807a54b37be05201176a5461caf5971877754a796789acdc",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "c4effad9316fe335f3d688814ec4952f91a098dea60dd4fe6367c7ecaa72f58f",
+    "start": "2025-05-04"
   },
   "OKTA": {
-    "full_session": "2026-11-04",
-    "sha256": "1a884cd9b5268395b4889e404bb770730ddbc5a3cd7cbaf312c320db873eac30",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "81718073ed34954a8993b79017df4771e0ff3c87c14ffc9f7ea6700298189c5c",
+    "start": "2025-05-04"
   },
   "ONDS": {
-    "full_session": "2026-11-04",
-    "sha256": "4d981b641fcac7e6d655b1988ef822b27396ca5465d74f0d0c84a9936ede4816",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "95ffbffbe72fd57a338cc3bf0471d6d61c223da1c3738e72d30fd2f3edb221b4",
+    "start": "2025-05-04"
   },
   "ORCL": {
-    "full_session": "2026-11-03",
-    "sha256": "99a0fa42a72c90332b7dea4c73db040dda406bdca4ead5d90221e4bb0ff092c8",
-    "start": "2025-05-02"
+    "full_session": "2026-11-05",
+    "sha256": "371f45c8cc4d56fd3c27c8680c8bbb2a66b2cc234abfdf1fb4d29be0acfc669e",
+    "start": "2025-05-04"
   },
   "P": {
     "full_session": "2026-11-04",
@@ -435,9 +435,9 @@
     "start": "2025-05-03"
   },
   "PANW": {
-    "full_session": "2026-11-04",
-    "sha256": "6e4dc72458c98dcc332c47fc475f4311f6347d49f62c1e37e15d12577282578d",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "8ddd2eb82fbe6d2546a7575558a9defa50f2945f96ce74113f60d5991d8b3817",
+    "start": "2025-05-04"
   },
   "PARRO.PA": {
     "full_session": "2026-10-30",
@@ -445,44 +445,44 @@
     "start": "2025-04-28"
   },
   "PATH": {
-    "full_session": "2026-11-04",
-    "sha256": "bc366591be2e1ea447ca88ea599210e2d580786ce7e05b2f33bb09a4a21dc207",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "eeffa8416d268d13a7783a0438be7acf5bd81c77a0936a24cfaa7bdfd7c5e89a",
+    "start": "2025-05-04"
   },
   "PDYN": {
-    "full_session": "2026-11-04",
-    "sha256": "006d99cdc3d49c3537f39416b92a1afa838ee66ddd948c46fa5efbd6c819d0db",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "bde330b4c572433961b6169719df27ae5ad868f26d29f74f31e5b2848bbc4852",
+    "start": "2025-05-04"
   },
   "PL": {
-    "full_session": "2026-11-04",
-    "sha256": "d6e8df637e21b5c2e604c30e223592d13d1fc32701a060309fc0f19ab7191645",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "37cd7d3e383d18d6504a3b877c637078a10a8482aa87eee3b7270f81f02d0380",
+    "start": "2025-05-04"
   },
   "PLS.AX": {
-    "full_session": "2026-11-04",
-    "sha256": "d63287b221e71846b9dc89e0ce826545423865a8eaaa1ed74df79c43d1bd817a",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "2e0a035e9dd6c297cf8256b6420d2f3b810ab956c1a740d38bc2af3cad70c6db",
+    "start": "2025-05-04"
   },
   "PLTR": {
-    "full_session": "2026-11-04",
-    "sha256": "058f1d967bcc30e45c39bf80dc9631a1da9a0f5c4c85e53e93f35d3e28ff7de5",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "7f2b1e7ec6430329332ea1777a23a1c04f12e77fd68f8dcce4e1d7d4aba50425",
+    "start": "2025-05-04"
   },
   "POET": {
-    "full_session": "2026-11-04",
-    "sha256": "d0853e54c1431705fb9fba5d62be382e7f4a49b72ef8a30b0cb8db882243ecf0",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "ccc191012d74cde28e1c6c40ae26c0f9198b116972035742463f9995b1a9dc49",
+    "start": "2025-05-04"
   },
   "POWL": {
-    "full_session": "2026-11-04",
-    "sha256": "cfbdfdbaf3018933517b715bba8185eac92600b20fb5be819f341902eee26442",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "cbe23e1342167d7bef5f60cc3c645c1614ff927ea8917c719b0b5bfa3c3f865c",
+    "start": "2025-05-04"
   },
   "PRLB": {
-    "full_session": "2026-11-04",
-    "sha256": "45750acdbe65c86a37147a18fd82e4f607a1689d9bcfb7fa82137bb76475559a",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "7e32c8cf39d60db2d3d10d1f7dd816e391765a637e061537bedd909bd4b0ee35",
+    "start": "2025-05-04"
   },
   "PRX.AS": {
     "full_session": "2026-10-30",
@@ -495,94 +495,94 @@
     "start": "2025-04-28"
   },
   "PWR": {
-    "full_session": "2026-11-03",
-    "sha256": "f21d22d59f2f615b8e50df069ee2fc9176f9b1f8008694ce343948549a86b752",
-    "start": "2025-05-02"
+    "full_session": "2026-11-05",
+    "sha256": "feb0b8ebad3d136288b5328504b15c042112f8f1a64683a7c7b388c263b6bc14",
+    "start": "2025-05-04"
   },
   "PYPL": {
-    "full_session": "2026-11-04",
-    "sha256": "6f876b5af3e250d78ae9df5088468116ffbd9ada68df97c280e6654b648b5040",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "0c801cebd0c090d0b57ccf81710a67def2ac6f3104ee64b11b928faf8c2fa77d",
+    "start": "2025-05-04"
   },
   "QCOM": {
-    "full_session": "2026-11-04",
-    "sha256": "784effd772503b87628c40522484c1566efeb68a1807fee53c4243808e984593",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "25eb21aad0ec85e11d1dfe8df08c1ab05d56169e2eb8a7b3bfa8b3f8e8c5991f",
+    "start": "2025-05-04"
   },
   "RBLX": {
-    "full_session": "2026-11-04",
-    "sha256": "764a1e89474394c71ecb0661d815ba33f79c3ba3f0af81e380110bc14b8ea2cf",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "00550539a06fa98417bee48534a60ac1c66e8dc9ef9fa27af022cddfe3dae718",
+    "start": "2025-05-04"
   },
   "RIO": {
-    "full_session": "2026-11-04",
-    "sha256": "6efa8c43bf7b8d25e985d032f6aad2611bb307760ca157f6bd49fbfeb80aed52",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "2d49a505cc53569041e937d87d95578276c7714b4b31490b106a2f0f7adc20e0",
+    "start": "2025-05-04"
   },
   "RKLB": {
-    "full_session": "2026-11-04",
-    "sha256": "d1a6bca113d7bb558f5f174a29fbe1aa210205f99d9c75f4c9b4254a4a05132c",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "2b2317490b5ba56460410cc59733a747529c3519ba4919424360b151751d3e79",
+    "start": "2025-05-04"
   },
   "RTX": {
-    "full_session": "2026-11-04",
-    "sha256": "49178f071efc2574d646135586afe33796c472c080f98658f7d71450829c2052",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "1905b7f8903ab5b3f56adddde8f84a2aa307736d7a78348dfa8cf4b710708b2f",
+    "start": "2025-05-04"
   },
   "RXRX": {
-    "full_session": "2026-11-04",
-    "sha256": "8e818f6127ee7e24633e7b814eccdd0862d3d82550ea43700cd51ab1c8a6910c",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "92ea40f4d285d5357213f5645f782efd9b734ab7bd6e3690c30200522aecb3a0",
+    "start": "2025-05-04"
   },
   "RZLV": {
-    "full_session": "2026-11-04",
-    "sha256": "4b93722e7592bf0450230862aac8630445dff83f01f807ea1964a7339a8efea7",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "edd61ca2e6f7b423f295a19aefa8df1838db120f181a4cb820dae287eb0a20fd",
+    "start": "2025-05-04"
   },
   "SCCO": {
-    "full_session": "2026-11-04",
-    "sha256": "59d1333a46335f86ee4708fd520e3d005d6a66384d3a73af8f1a98a3b6cb082e",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "34cf9705a27b48bb778a128bf84e6dd8935aa015f7edc3628dfb20d283637bf7",
+    "start": "2025-05-04"
   },
   "SGML": {
-    "full_session": "2026-11-04",
-    "sha256": "c70047f6b364dbcc592496de8ae12ceeb76f84b38c29d1bae43efce0d7b43509",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "630e68a80298e8f04b13ebf1d0189f1e24ceff6152f100718abed2a24f0cd87b",
+    "start": "2025-05-04"
   },
   "SNOW": {
-    "full_session": "2026-11-04",
-    "sha256": "d5a1baf44e387d1cbade2b7a987cbeb99bd950e76440912a372d4cb7dc9580ed",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "67de7c386873a45dd24f8b73e5b93aba184378ad00a3440fc4068d39194f141c",
+    "start": "2025-05-04"
   },
   "SNPS": {
-    "full_session": "2026-11-04",
-    "sha256": "c4718adc0c970044154b9a86421b104257c2a2e81fcde6dc808a8d9d7bf2b51c",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "a784f4c0234ddad25af34e03843bc566e67ca8fc608514bf99ea7bc4b159cc44",
+    "start": "2025-05-04"
   },
   "SOFI": {
-    "full_session": "2026-11-04",
-    "sha256": "d43e8e62bb8b1a003dba922b235faa236d07bc4302820f531f892bc33484556f",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "933511915add3076adb74ebef06945403cbd74f0eec72a96c7432a7e45007b7a",
+    "start": "2025-05-04"
   },
   "SPCE": {
-    "full_session": "2026-11-04",
-    "sha256": "04b8eb9f64289716fbf81888c787c3d9d1b6ce996df0bfa92602ed89a4a5865e",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "94c3b8f674dc87baf1600d54fe94fedce58bef6bb00bb343a40f3b96c5df33e2",
+    "start": "2025-05-04"
   },
   "SPCX": {
-    "full_session": "2026-11-04",
-    "sha256": "f0cc1e60354c7a44c61ebb2481b256ef807acb91b302a0aa82712eb3b840d87c",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "39c13e4993892df4d4d0302d05a3a58d59f3c23e232b4db3db5bee98a4ccd8b0",
+    "start": "2025-05-04"
   },
   "SPOT": {
-    "full_session": "2026-11-04",
-    "sha256": "0f808291f959099dd94ff9d0ce41da1db120d07885f8dfdaa6f3c75cdea65efc",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "a102949613ba482e3d3ef894c2645f315185586601c5f9833acac12fbd5641e1",
+    "start": "2025-05-04"
   },
   "SQM": {
-    "full_session": "2026-11-04",
-    "sha256": "1c3fdd1b5bf739a0bfc10e8300ef0e5725982a647ce39c0cc2f43ea9589d35b2",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "826e39c986e0da34074132a617417448369e03ba57a3aca1418bfdee34281a79",
+    "start": "2025-05-04"
   },
   "SSU.VI": {
     "full_session": "2026-10-30",
@@ -595,14 +595,14 @@
     "start": "2025-04-28"
   },
   "SSYS": {
-    "full_session": "2026-11-04",
-    "sha256": "12080db2a7b8f429117ffa66a8e3b26d253297f63cc6e213ffa3b828462bd061",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "b279dfd7b512385ed94be952cdbb32825d77459558f9d146963a9b3a9d32ed43",
+    "start": "2025-05-04"
   },
   "STX": {
-    "full_session": "2026-11-04",
-    "sha256": "bc2022c507f67ce2aefe805a8ae0b922c1ab2c7c092ac9ff2f979b0da335258f",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "33dde93cdbfa6a8be67710acfa8e7b9710b54e4a34f33989315c564982ea1c93",
+    "start": "2025-05-04"
   },
   "SU.PA": {
     "full_session": "2026-10-30",
@@ -610,64 +610,64 @@
     "start": "2025-04-28"
   },
   "TCEHY": {
-    "full_session": "2026-11-04",
-    "sha256": "81e2b6fb3ffa7641e607c6c2c7b3214d63ea95dec20328bc2ce9216e7b313c84",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "11b2a123212fe1eb9cd95adc67af0f45beee9664965c1157b700843b2fede832",
+    "start": "2025-05-04"
   },
   "TDY": {
-    "full_session": "2026-11-03",
-    "sha256": "c68bff2353784d6fc33fe0f949a8fc8dd76d80a65175137cfd4bad7b20b04f49",
-    "start": "2025-05-02"
+    "full_session": "2026-11-05",
+    "sha256": "32e72c607a90d5b39d81af38ab86d6d1053faef7f1c384f97ea9c3b328a4d8ac",
+    "start": "2025-05-04"
   },
   "TSLA": {
-    "full_session": "2026-11-04",
-    "sha256": "f6b8847c2230cff57767a36d27bbe8a453c8ce45f2abc2842b42b0c2e4b2d6e5",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "e139fe90f0e5c534391df9a2a0f9305b7f99aeae6dfa1a181de8ae8828f357e5",
+    "start": "2025-05-04"
   },
   "TSM": {
-    "full_session": "2026-11-04",
-    "sha256": "0f0e284d0e2423e114453b3cc6665713622fb1827a9f8b40117843b0cdbed28c",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "ed9f584ee0cbd60b49e8d2f622c9613700ed71c9e1482a5281e7d435068a0c4b",
+    "start": "2025-05-04"
   },
   "TWST": {
-    "full_session": "2026-11-04",
-    "sha256": "7b391e954b8fc526fde119869c8c6c7e63dda3b84e6cab81f2687c55fc184cc0",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "a2a4ed9d592c6d6bc7d342f5174909aae2374d3c74077c7e9e44846008c0dc0c",
+    "start": "2025-05-04"
   },
   "TX": {
-    "full_session": "2026-11-03",
-    "sha256": "6495e5556249ca14d38f2a75857c946d8a1750cbcd6e281ac9f1d477ac417e70",
-    "start": "2025-05-02"
+    "full_session": "2026-11-05",
+    "sha256": "5cf8d4ea6c14a2e9c2d40dfa07ed48eb08f4f9174e77693ae7efaab2d111c645",
+    "start": "2025-05-04"
   },
   "TXN": {
-    "full_session": "2026-11-04",
-    "sha256": "70bb15e1a17833b84fae59a7ae7e42417a1b615f20d8554accf7c83b4842081a",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "cf3fa351a0af0f1ae545c7156c272535839e3cc79462c03fb1a83f5d680263c9",
+    "start": "2025-05-04"
   },
   "UBER": {
-    "full_session": "2026-11-04",
-    "sha256": "e37621117031d7076e5c475827fbd45445e16e5c273bd3abd592e0b95e2d7f3c",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "8c14f267990bf76b319cbf1e7266b01ddc76653bfb396f73de21be8287b88893",
+    "start": "2025-05-04"
   },
   "V": {
-    "full_session": "2026-11-04",
-    "sha256": "5543bd827d70c1724aa70a3d009baec1dd14b54b6042a84cffd0dd4e2327ff05",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "3dbe5cd105b86f9c9d53b7e4ad56f852e8a5730c0483a36b32717f4312be781f",
+    "start": "2025-05-04"
   },
   "VALE": {
-    "full_session": "2026-11-04",
-    "sha256": "ca50dcf97b81f31e5b87e3cffc84fac118aef7f63f5be57fcf5316af8f278489",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "b33dd910ac2732232c6d9bd1db7146ec3a79924bcba9275f44b2cb7a32ab0aaa",
+    "start": "2025-05-04"
   },
   "VLO": {
-    "full_session": "2026-11-04",
-    "sha256": "1d9ede5319d34e4d80971df39dc3c645e0077faf23f82c9c74a7a8ea79e77a9d",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "34074b224d9862b7432e3535be5c32e919d2686b4e2e4ffee7459f365b76daf8",
+    "start": "2025-05-04"
   },
   "VLTO": {
-    "full_session": "2026-11-04",
-    "sha256": "9f27695773f3e0632e08fe4ed90e00df91775fb7c06b252911149496eb67645c",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "04d3852996b0c558f2bfb1f0a257e0cb3b766282de1940bdda1ab3c791adf0d9",
+    "start": "2025-05-04"
   },
   "VRT": {
     "full_session": "2026-11-04",
@@ -675,38 +675,38 @@
     "start": "2025-05-03"
   },
   "VST": {
-    "full_session": "2026-11-04",
-    "sha256": "5aa27f9aeaadbbc8dc02bf90af20d69313966e6b470d33333609baa4413c8662",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "f5bf6d4bd46e305d6eeac22acbbc97540521f3fdde6ca7344b40f9842da8110f",
+    "start": "2025-05-04"
   },
   "WDC": {
-    "full_session": "2026-11-04",
-    "sha256": "bf707d5d5899a1828b74e81e1d940f331f2c638f01bf741f95405a8fbb39d7a5",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "618c0edcdba3ae5c0ed4151b7d2fdbe12afbfc3feb7230b7adfc452d3ade6674",
+    "start": "2025-05-04"
   },
   "WTI": {
-    "full_session": "2026-11-04",
-    "sha256": "b1cb1613436fc874a67b2d4427237799b95da215609619679bfe1a41913538c2",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "51d63b74d3865f876bd7b8602dda75f07cff96b1886c247b58d71cc138c1b8d2",
+    "start": "2025-05-04"
   },
   "WULF": {
-    "full_session": "2026-11-04",
-    "sha256": "e6e257a8825bbf2af8160906358e823f237d12f0a9fe854000e4b994011396bf",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "a194bd32750107815d4e237fb08d2eafd1d7bbf9b634df67aaabf1636e68b5d4",
+    "start": "2025-05-04"
   },
   "XMTR": {
-    "full_session": "2026-11-04",
-    "sha256": "ec209ec82332643ec5db883b04b5d52ceb8c7850af4e765d0e98a783ef3693f1",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "d6efa88a5ecba8547dceb3894ffbdde5d589e8b266fcc7d76409fe1616d85305",
+    "start": "2025-05-04"
   },
   "XYL": {
-    "full_session": "2026-11-04",
-    "sha256": "4281422069cc4642ba1532864a73cb1baf77dc641a4e52bcdd94a3cf68093f18",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "c97b2ca4fcdecd29adce085b8e747bc171c9294ccbb421dd90aba60935d8a18e",
+    "start": "2025-05-04"
   },
   "YEC.F": {
-    "full_session": "2026-11-04",
-    "sha256": "0b5a93081583d8686b4028731021a6584355493c803981b00573b423dad05be7",
-    "start": "2025-05-03"
+    "full_session": "2026-11-05",
+    "sha256": "8aa052287671620fab588b0e9da227fb0e5c900aaf87340c99452e26cd5d59cb",
+    "start": "2025-05-04"
   }
 }
