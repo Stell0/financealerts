@@ -130,9 +130,9 @@
     "start": "2025-05-05"
   },
   "BTC-USD": {
-    "full_session": "2026-11-06",
-    "sha256": "dcba5721724c7bd61d40eb13d7a70185bd7a29ea2f4e19082f25d55db04374e2",
-    "start": "2025-05-05"
+    "full_session": "2026-11-07",
+    "sha256": "55eec23a907ce10a3e85e012f03be80051f62da54f4bd24f7647901c45b05630",
+    "start": "2025-05-06"
   },
   "CDNS": {
     "full_session": "2026-11-06",
@@ -461,7 +461,7 @@
   },
   "PLS.AX": {
     "full_session": "2026-11-06",
-    "sha256": "a57b1abaae1a6e20c4e94e218ae5bddd13336884fc85c3ad9923525c4bef94e3",
+    "sha256": "be702ea60adc3aa285c9b6a983e6708af53f12321eaecd7b8c21229eaa90d17a",
     "start": "2025-05-05"
   },
   "PLTR": {
@@ -486,7 +486,7 @@
   },
   "PRX.AS": {
     "full_session": "2026-11-06",
-    "sha256": "f130232d740a9957ae59b126caa540f8b137ef356e4b99d930b7085548f91552",
+    "sha256": "7bc939abb6a73c4544db44d794f3303d2b568d333985d180f4c24add2388582b",
     "start": "2025-05-05"
   },
   "PRY.MI": {
