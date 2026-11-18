@@ -1,7 +1,7 @@
 {
   "delivered": {
     "0981.HK:Buy": "9bbf83ae0b74ebfd024ddf97ec7932d49fd00d2ec338d9d3f9d272b22eb46dbe",
-    "3388.HK:Buy": "12159bbf12b086ee6f892635a878d67595f12da29db04fdce943f19d4bf8f815",
+    "3388.HK:Buy": "9292a2d5fc61381a9450bfda44319b6945b36e31c94ba9ad79dde8aae203123f",
     "ABBNY:Buy": "72d27cc0ff9387851af25f013a0f60069ea3719b630674651b714cbff59fd354",
     "AD.AS:Sell": "d518c8a6c348555fe326aa5a5f96b78e117b49b58c0d05816432378753360b9f",
     "ALB:Buy": "77e81164e30c1c903720bfd4daf437ccdbb198bd33f45b793b7b3b1adbcc5cd3",
@@ -70,7 +70,7 @@
     "WDC:Buy": "1adfc756df4f2f11bedc1b921e5f21d8466499cd7e749fda1a597a35990a0456",
     "WTI:Buy": "b2cdb101b73daca5c20184a7e33d2a873979d356838def0af473b90d5792f354",
     "XYL:Buy": "ec41f0a4e4f2f36360c2121752cbdbb47946990afd1b42d0b590d804d93a33f3",
-    "YEC.F:Buy": "0319434bb92d704009e3fcd276ca32de9f42411ca7d1315db8d415c12de261b8"
+    "YEC.F:Buy": "ec7c7e3f891b5250cedcd7523a4732cb409d1de2e9b3a190dade97bc8e0a8ee8"
   },
   "version": 1
 }
